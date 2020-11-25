@@ -1,0 +1,72 @@
+import javafx.animation.AnimationTimer;
+import javafx.application.Application;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+import java.io.Serializable;
+import java.util.Hashtable;
+
+//TODO serializable transient and stuff
+
+public class Game extends Application implements Serializable
+{
+//    private transient SinglePlayerGame game;
+    private transient Menu menu;
+
+    private GlobalConfig config;
+
+    private boolean soundOn;
+
+    private KeyCode PlayerOneMoveKey;
+    private KeyCode PlayerOneFireKey;
+    private KeyCode PlayerOnePowerUpKey;
+
+    private KeyCode PlayerTwoMoveKey;
+    private KeyCode PlayerTwoFireKey;
+    private KeyCode PlayerTwoPowerUpKey;
+
+    private Hashtable<String, Integer> leaderBoards;
+
+    @Override
+    public void init() throws Exception
+    {
+        super.init();
+        config = new GlobalConfig();
+
+
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception
+    {
+        // init menu
+        menu = new Menu(stage);
+        //stage setup
+
+        stage.setHeight(config.getSCREEN_HEIGHT());
+        stage.setWidth(config.getSCREEN_WIDTH());
+        stage.setResizable(false);
+        stage.setTitle("Allegiance - A Unique take on Color Switch!");
+        stage.setX(200);
+        stage.setY(200);
+        stage.initStyle(StageStyle.UTILITY);
+
+        //go to menu
+
+        stage.setScene(menu.getScene());
+
+        // for now go to game
+
+
+
+        stage.show();
+    }
+
+    @Override
+    public void stop() throws Exception
+    {
+        super.stop();
+    }
+}
