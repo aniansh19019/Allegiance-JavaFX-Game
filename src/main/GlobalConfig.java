@@ -1,3 +1,5 @@
+package main;
+
 public class GlobalConfig
 {
     final private int SCREEN_WIDTH = 500;

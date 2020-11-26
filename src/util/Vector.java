@@ -66,6 +66,12 @@ public class Vector
         this.y+=other.y;
     }
 
+    public void subtract(Vector other)
+    {
+        this.x-=other.x;
+        this.y-=other.y;
+    }
+
     public double dot(Vector other)
     {
         return this.x*other.x + this.y*other.y;

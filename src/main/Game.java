@@ -1,7 +1,7 @@
-import javafx.animation.AnimationTimer;
+package main;
+
 import javafx.application.Application;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -12,7 +12,7 @@ import java.util.Hashtable;
 
 public class Game extends Application implements Serializable
 {
-//    private transient SinglePlayerGame game;
+//    private transient main.SinglePlayerGame game;
     private transient Menu menu;
 
     private GlobalConfig config;

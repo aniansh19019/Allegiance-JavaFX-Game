@@ -1,18 +1,18 @@
+package main;
+
 import game_object.PlayerShip;
+import game_object.RotatingArmsObstacle;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import util.CollisionRectangle;
 import util.Sprite;
-import util.Vector;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,6 +31,7 @@ public class SinglePlayerGame implements Serializable
     private PlayerShip ship;
     private ArrayList<String> inputList;
     private Sprite testSprite;
+    private RotatingArmsObstacle testObstacle;
 
     //user info
 
@@ -58,14 +59,20 @@ public class SinglePlayerGame implements Serializable
         //init ship
         ship = new PlayerShip();
         ship.setPosition(config.getSCREEN_WIDTH()/2, 0.5* config.getSCREEN_HEIGHT());
-        ship.setImage("file:res/img/spaceShip.png");
-        ship.setImageScaleFactor(0.2);
+        ship.setNormalImage("file:res/img/ships/ship_1_pink.png");
+        ship.setThrustImage("file:res/img/ships/ship_1_pink_fire.png");
+
+        ship.setImageScaleFactor(0.6);
 
         //init test sprite
         testSprite = new Sprite();
         testSprite.setImage("file:res/img/obstacle.png");
-        testSprite.setImageScaleFactor(0.7);
+        testSprite.setImageScaleFactor(0.4);
         testSprite.setPosition(config.getSCREEN_WIDTH()/2, config.getSCREEN_HEIGHT()/2);
+
+        //init test obstacle
+        testObstacle = new RotatingArmsObstacle();
+        testObstacle.setPosition(0,0);
 
         //init KeyEvents
 
@@ -74,7 +81,6 @@ public class SinglePlayerGame implements Serializable
             String keyName = event.getCode().toString();
             if(!inputList.contains(keyName))
                 inputList.add(keyName);
-            System.out.println(inputList);
         });
         scene.setOnKeyReleased((KeyEvent event) ->
         {
@@ -129,8 +135,10 @@ public class SinglePlayerGame implements Serializable
             {
                 if(ship.getPosition().getY()<lineOfControl) // bring everything down in the frame
                 {
-                    ship.getPosition().add(new Vector(0,Math.abs(ship.getVelocity().getY())));
-                    testSprite.getPosition().add(new Vector(0,Math.abs(ship.getVelocity().getY())));
+                    ship.shiftPosition(ship.getVelocity());
+                    testSprite.shiftPosition(ship.getVelocity());
+                    testObstacle.shiftPosition(ship.getVelocity());
+
                 }
                 else // turn off shifting
                 {
@@ -139,7 +147,14 @@ public class SinglePlayerGame implements Serializable
             }
              //draw stuff
             drawShip();
-            drawTestSprite(l);
+            drawObstacles();
+            //drawTestSprite(l);
+        }
+
+        private void drawObstacles()
+        {
+            testObstacle.update();
+            testObstacle.render(context);
         }
 
         private void drawScore()
@@ -177,10 +192,22 @@ public class SinglePlayerGame implements Serializable
             {
                 ship.boost();
             }
+            else
+            {
+                ship.unBoost();
+                //TODO stop unnecessary calls
+            }
+
+            if(inputList.contains("X"))
+            {
+                ship.fire();
+            }
+
             if(ship.getPosition().getY()<lineOfControl)
             {
                 shiftWindow();
             }
+
 
             ship.update();
             ship.render(context);

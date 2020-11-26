@@ -2,6 +2,7 @@ package util;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import main.GlobalConfig;
 
 public class Sprite
 {
@@ -11,13 +12,35 @@ public class Sprite
     private Image image;
     private boolean isVisible;
     private boolean isMovable;
+    private boolean isInFrame;
     private CollisionRectangle boundary;
     private double imageScaleFactor;
     private GameColor color;
+    private final static GlobalConfig config;
+    private final static double screenOffset = 50;
+
+    static
+    {
+        config = new GlobalConfig();
+    }
+
+
 
     //TODO implement standard animation routines
 
+
     //getters and setters
+
+
+    public boolean isInFrame()
+    {
+        return isInFrame;
+    }
+
+    public void setInFrame(boolean inFrame)
+    {
+        isInFrame = inFrame;
+    }
 
     public boolean isVisible()
     {
@@ -67,6 +90,11 @@ public class Sprite
     public void setAcceleration(Vector acceleration)
     {
         setAcceleration(acceleration.getX(), acceleration.getY());
+    }
+
+    public void shiftPosition(Vector delta) // for shifting everything down
+    {
+        position.subtract(delta);
     }
 
     public Image getImage()
@@ -132,6 +160,7 @@ public class Sprite
         imageScaleFactor = 1;
         isMovable = true;
         isVisible = true;
+        isInFrame = true;
         color = GameColor.NONE;
     }
 
@@ -153,6 +182,18 @@ public class Sprite
         {
             acceleration.set(0,0);
             velocity.set(0,0);
+        }
+        if(getPosition().getY() > config.getSCREEN_HEIGHT()+screenOffset ||
+                getPosition().getY() < -screenOffset ||
+                getPosition().getX() > config.getSCREEN_HEIGHT()+screenOffset ||
+                getPosition().getX() < -screenOffset)
+        {
+            //outside the frame
+            isInFrame = false;
+        }
+        else
+        {
+            isInFrame = true;
         }
     }
 
