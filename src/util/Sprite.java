@@ -4,8 +4,11 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import main.GlobalConfig;
 
-public class Sprite
+//TODO sprite implements an interface drawable which obstacle also implements
+
+public class Sprite implements Drawable
 {
+    private boolean localShowBounds;
     private Vector position;
     private Vector velocity;
     private Vector acceleration;
@@ -16,7 +19,7 @@ public class Sprite
     private CollisionRectangle boundary;
     private double imageScaleFactor;
     private GameColor color;
-    private final static GlobalConfig config;
+    public final static GlobalConfig config;
     private final static double screenOffset = 50;
 
     static
@@ -30,6 +33,17 @@ public class Sprite
 
 
     //getters and setters
+
+
+    public boolean isLocalShowBounds()
+    {
+        return localShowBounds;
+    }
+
+    public void setLocalShowBounds(boolean localShowBounds)
+    {
+        this.localShowBounds = localShowBounds;
+    }
 
 
     public boolean isInFrame()
@@ -162,11 +176,12 @@ public class Sprite
         isVisible = true;
         isInFrame = true;
         color = GameColor.NONE;
+        localShowBounds=true;
     }
 
     public CollisionRectangle getBoundary()
     {
-        boundary.setPos(position.getX(), position.getY());
+        boundary.setPos(position.getX()- boundary.getW() / 2, position.getY()- boundary.getH() / 2);
         return boundary;
     }
 
@@ -221,7 +236,7 @@ public class Sprite
 
     public boolean didCollide(Sprite other)
     {
-        return this.boundary.didCollide(other.boundary);
+        return getBoundary().didCollide(other.getBoundary());
     }
 
     public void render(GraphicsContext context)
@@ -231,6 +246,12 @@ public class Sprite
         {
             context.drawImage(image, position.getX() - boundary.getW() / 2, position.getY() - boundary.getH() / 2, image.getWidth() * imageScaleFactor, image.getHeight() * imageScaleFactor);
         }
+
+        if(config.getSHOW_COLLISION_BOUNDS() && isLocalShowBounds())
+        {
+            this.getBoundary().render(context);
+        }
+
     }
 
     @Override

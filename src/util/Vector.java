@@ -77,6 +77,12 @@ public class Vector
         return this.x*other.x + this.y*other.y;
     }
 
+    public double cross(Vector other)
+    {
+//        return 0;
+        return ((this.x*other.y) - (this.y*other.x)); // magnitude of cross product
+    }
+
     @Override
     public String toString()
     {

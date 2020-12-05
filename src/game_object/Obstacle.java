@@ -1,9 +1,10 @@
 package game_object;
 
+import util.Drawable;
 import util.Sprite;
 import util.Vector;
-
-abstract public class Obstacle
+//TODO another interface needed for sprite and Obstacle
+abstract public class Obstacle implements Drawable
 {
     private int level;
     private double speed;
@@ -15,6 +16,13 @@ abstract public class Obstacle
     {
         return position;
     }
+
+    abstract public void update();
+
+    abstract public void shiftPosition(Vector delta);
+
+    abstract public boolean isInFrame();
+
 
     public void setPosition(double x, double y)
     {

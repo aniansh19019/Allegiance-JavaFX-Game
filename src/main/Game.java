@@ -53,6 +53,12 @@ public class Game extends Application implements Serializable
         stage.setY(200);
         stage.initStyle(StageStyle.UTILITY);
 
+        //test stuff
+
+//        TestStuff stuff = new TestStuff(stage);
+//        stage.setScene(stuff.getScene());
+
+
         //go to menu
 
         stage.setScene(menu.getScene());

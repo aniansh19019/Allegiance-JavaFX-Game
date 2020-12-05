@@ -1,111 +1,24 @@
 package util;
 
-import javafx.geometry.Point2D;
+import javafx.geometry.Point3D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import javafx.scene.transform.Rotate;
 
 import java.util.List;
 
-public class CollisionRectangle implements Drawable
+public class TestCollisionPolygon implements Drawable
 {
-    private double x;
-    private double y;
-    private double w;
-    private double h;
-
-    private double angle;
-    private double pivotX;
-    private double pivotY;
-
     private Polygon poly;
+    private double x, y, w, h;
 
-    public double getAngle()
-    {
-        return angle;
-    }
-
-    public void setAngle(double angle)
-    {
-        this.angle = angle;
-    }
-
-    public double getPivotX()
-    {
-        return pivotX;
-    }
-
-    public void setPivotX(double pivotX)
-    {
-        this.pivotX = pivotX;
-    }
-
-    public double getPivotY()
-    {
-        return pivotY;
-    }
-
-    public void setPivotY(double pivotY)
-    {
-        this.pivotY = pivotY;
-    }
-
-    public double getX()
-    {
-        return x;
-    }
-
-    public void setX(double x)
+    public TestCollisionPolygon(double x, double y, double w, double h)
     {
         this.x = x;
-        updatePoly();
-    }
-
-    public double getY()
-    {
-        return y;
-    }
-
-    public void setY(double y)
-    {
         this.y = y;
-        updatePoly();
-    }
-
-
-    //! only to be used while the initial scaling! Not afterwards!
-    public double getW()
-    {
-        return w;
-    }
-
-    public void setW(double w)
-    {
         this.w = w;
-        updatePoly();
-    }
-
-    public double getH()
-    {
-        return h;
-    }
-
-    public void setH(double h)
-    {
         this.h = h;
-        updatePoly();
-    }
 
-    public void setPos(double x, double y)
-    {
-        this.x = x;
-        this.y = y;
-        updatePoly();
-    }
-
-    public void updatePoly()
-    {
         this.poly = new Polygon();
         this.poly.getPoints().addAll(new Double[]{
                 x, y,
@@ -115,23 +28,10 @@ public class CollisionRectangle implements Drawable
         });
     }
 
-    public CollisionRectangle(double x, double y, double w, double h)
+
+    public Polygon rotate(double angle)
     {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
-
-        updatePoly();
-        this.angle=0;
-        this.pivotX=x;
-        this.pivotY=y;
-    }
-
-
-    public Polygon rotate()
-    {
-        Rotate r = new Rotate(angle,pivotX,pivotY); // rotate transform with the specified angle
+        Rotate r = new Rotate(angle,x,y); // rotate transform with the specified angle
 
         double[] points = new double[poly.getPoints().size()]; // priitive points
         Double[] newPoints = new Double[poly.getPoints().size()]; // wrapper points
@@ -154,14 +54,13 @@ public class CollisionRectangle implements Drawable
         return retval;
     }
 
-
-    public boolean didCollide(CollisionRectangle other)
+    public boolean didCollide(TestCollisionPolygon other)
     {
         //if any of the lines intersect with each other, the polygons have collided
         //TODO include the case when one rectangle contains the other
 
-        List<Double> myList = this.rotate().getPoints();
-        List<Double> otherList = other.rotate().getPoints();
+        List<Double> myList = this.poly.getPoints();
+        List<Double> otherList = other.poly.getPoints();
 
         LineSegment[] myLines = new LineSegment[myList.size()/2];
         LineSegment[] otherLines = new LineSegment[otherList.size()/2];
@@ -173,7 +72,7 @@ public class CollisionRectangle implements Drawable
             double bx = myList.get( 2*( (i+1)%myLines.length ));
             double by = myList.get( 2*((i+1)%myLines.length)+1);
             myLines[i] = new LineSegment(ax, ay, bx, by);
-//            System.out.println("Mine: "+myLines[i]);
+            System.out.println("Mine: "+myLines[i]);
         }
 
 
@@ -184,7 +83,7 @@ public class CollisionRectangle implements Drawable
             double bx = otherList.get( 2*( (i+1)%(otherLines.length/2) ));
             double by = otherList.get( 2*((i+1)%(otherLines.length/2))+1);
             otherLines[i] = new LineSegment(ax, ay, bx, by);
-//            System.out.println("Other: " + otherLines[i]);
+            System.out.println("Other: " + otherLines[i]);
         }
 
         for(int i=0; i< myLines.length; i++) // check if any lines intersect
@@ -193,7 +92,7 @@ public class CollisionRectangle implements Drawable
             {
                 if(myLines[i].intersect(otherLines[j]))
                 {
-//                    System.out.println(myLines[i]+" with " + otherLines[j]);
+                    System.out.println(myLines[i]+" with " + otherLines[j]);
                     return true;
                 }
             }
@@ -206,7 +105,7 @@ public class CollisionRectangle implements Drawable
     {
         double[] pointsX = new double[poly.getPoints().size()/2];
         double[] pointsY = new double[poly.getPoints().size()/2];
-        Object[] allPoints = rotate().getPoints().toArray();
+        Object[] allPoints = poly.getPoints().toArray();
 
 
         for(int i=0; i<poly.getPoints().size(); i++)
@@ -220,21 +119,11 @@ public class CollisionRectangle implements Drawable
                 pointsY[i/2] = (double)allPoints[i];
             }
         }
-        context.setStroke(Paint.valueOf("ffffff"));
-        context.strokePolygon(pointsX, pointsY, pointsX.length);
+
+        context.fillPolygon(pointsX, pointsY, pointsX.length);
 
 
     }
-
-//    public boolean didCollide(CollisionRectangle other)
-//    {
-//        boolean didNotCollide =
-//                this.x + this.w < other.x ||
-//                        other.x + other.w <this.x ||
-//                        this.y + this.h < other.y ||
-//                        other.y + other.h < this.y;
-//        return !didNotCollide;
-//    }
 
 
 }

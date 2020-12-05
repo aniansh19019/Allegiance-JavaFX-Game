@@ -3,6 +3,7 @@ package game_object;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
+import main.GlobalConfig;
 import util.GameColor;
 import util.Sprite;
 import util.Vector;
@@ -12,6 +13,8 @@ import java.util.Iterator;
 
 public class PlayerShip extends Sprite
 {
+    private int shipType;
+    private boolean isBoosted;
     private Image normalImage;
     private Image thrustImage;
     private static Media thrustSound;
@@ -20,6 +23,17 @@ public class PlayerShip extends Sprite
     private static final int maxBulletNum;
     private ArrayList<Bullet> bulletsFired;
     private ArrayList<Bullet> bulletsAmmo;
+    private final static GlobalConfig config;
+
+    public boolean isBoosted()
+    {
+        return isBoosted;
+    }
+
+    public void setBoosted(boolean boosted)
+    {
+        isBoosted = boosted;
+    }
 
     public Image getThrustImage()
     {
@@ -54,23 +68,80 @@ public class PlayerShip extends Sprite
 
     static
     {
+        config = new GlobalConfig();
         gravity = new Vector(0,0.1);
         boostVelocity = new Vector(0,-3);
         maxBulletNum = 5;
         //init sound
     }
 
-    public PlayerShip()
+    @Override
+    public void setColor(GameColor color)
     {
+        super.setColor(color);
+        setShip();
+    }
+
+    public void setShipType(int shipType)
+    {
+        this.shipType = shipType;
+        setShip();
+    }
+
+    private void setShip()
+    {
+        String colorStr="";
+        switch (getColor())
+        {
+            case RED:
+                colorStr = "red";
+                break;
+            case GREEN:
+                colorStr = "green";
+                break;
+            case BLUE:
+                colorStr = "blue";
+                break;
+            case YELLOW:
+                colorStr = "yellow";
+                break;
+            case ALL:
+                colorStr = "pink";
+                break;
+            case NONE:
+                colorStr = "none";
+                break;
+        }
+        setNormalImage("file:res/img/ships/ship_"+shipType+"_"+colorStr+".png");
+        setThrustImage("file:res/img/ships/ship_"+shipType+"_"+colorStr+"_fire.png");
+
+        System.out.println("file:res/img/ships/ship_"+shipType+"_"+colorStr+".png");
+
+        //TODO set appropriate scale factors
+    }
+
+    public PlayerShip(GameColor color, int shipType)
+    {
+
+        this.shipType=shipType;
+
+        this.setColor(color);
+
+        setPosition(config.getSCREEN_WIDTH()/2, 0.5* config.getSCREEN_HEIGHT()); // set ship initial position
+        setImageScaleFactor(0.6);
+        //TODO set this in setShip
+
         setAcceleration(gravity);// gravity
-        setColor(GameColor.RED);
         bulletsFired = new ArrayList<Bullet>();
         bulletsAmmo = new ArrayList<Bullet>();
+        isBoosted = false;
     }
 
     public void boost()
     {
+        isBoosted = true;
         setVelocity(boostVelocity);
+        setAcceleration(0,0); // switch off acceleration
         switchImage(thrustImage);
         //play sound
     }
@@ -78,6 +149,8 @@ public class PlayerShip extends Sprite
     public void unBoost()
     {
         switchImage(normalImage);
+        setAcceleration(gravity); // switch on gravity
+        isBoosted=false;
         //stop sound
     }
     public void fire()
@@ -131,7 +204,7 @@ public class PlayerShip extends Sprite
     public void render(GraphicsContext context)
     {
         //do not center ship sprite at the center
-        super.render(context);
+
 
         if(!bulletsFired.isEmpty())
         {
@@ -140,6 +213,8 @@ public class PlayerShip extends Sprite
                 bulletsFired.get(i).render(context);
             }
         }
+        //render bullet first and then the ship
+        super.render(context);
     }
 
     public void destroy()
