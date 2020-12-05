@@ -19,7 +19,14 @@ abstract public class Obstacle implements Drawable
 
     abstract public void update();
 
-    abstract public void shiftPosition(Vector delta);
+    public void shiftPosition(Vector delta)
+    {
+        getPosition().subtract(delta);
+        for(int i=0 ;i<4; i++)
+        {
+            getSegments()[i].shiftPosition(delta);
+        }
+    }
 
     abstract public boolean isInFrame();
 

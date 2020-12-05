@@ -18,8 +18,7 @@ public class Bullet extends Sprite
     public Bullet(PlayerShip ship)
     {
         super();
-        setImage("file:res/img/spaceMissiles_001.png");
-        setImageScaleFactor(0.3);
+//        setImage("file:res/img/powerups/bullet_powerup.png");
         setPosition(ship.getPosition());
         setVelocity(0, bulletVelocity);
     }

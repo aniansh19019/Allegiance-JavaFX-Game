@@ -162,7 +162,7 @@ public class PlayerShip extends Sprite
 
         if(bulletsFired.size()<maxBulletNum)
         {
-            bulletsFired.add(new Bullet(this));
+            bulletsFired.add(new GrenadeBullet(this));
         }
     }
 

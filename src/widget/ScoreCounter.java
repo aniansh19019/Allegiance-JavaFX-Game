@@ -1,6 +1,8 @@
 package widget;
 
-public class ScoreCounter
+import util.Sprite;
+
+public class ScoreCounter extends Sprite
 {
 
 }

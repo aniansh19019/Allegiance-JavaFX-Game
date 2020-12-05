@@ -8,6 +8,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import util.CollisionRectangle;
@@ -21,9 +24,16 @@ import java.util.Random;
 //TODO pause button
 // TODO this is for testing right now
 // TODO store all references in Game SinglePLayerGame Menu
+//TODO detect placement overlaps
+//TODO normalise ship widths
+
 public class SinglePlayerGame implements Serializable
 {
     private static final int NUM_SCREENS = 3;
+    private static final double BULLET_POWERUP_PROB = 0.1;
+    private static final double TIME_BULLET_POWERUP_PROB = 0.08;
+    private static final double PROTECTION_POWERUP_PROB = 0.06;
+    private static final double TIME_POWERUP_PROB = 0.05;
 
 
     private Scene scene;
@@ -38,8 +48,11 @@ public class SinglePlayerGame implements Serializable
     private Sprite testSprite;
     private RotatingArmsObstacle testObstacle;
     private Obstacle[] obstacles; // to store all obstacles
-    private PowerUp[] powerups; // to store all powerups/collectibles
+    private PowerUp[] powerUps; // to store all powerups/collectibles
+    private StarPowerUp[] stars; // to store all the stars
+    private CollisionRectangle bottomCollisionDetector; // to denote the bottom of the frame
     private Random rand;
+    private double score;
 
     //user info
 
@@ -49,6 +62,8 @@ public class SinglePlayerGame implements Serializable
     {
         //init utils
         rand = new Random();
+        //init score to 0
+        score=0;
         //init vars
         inputList = new ArrayList<String>();
         //init config
@@ -74,7 +89,13 @@ public class SinglePlayerGame implements Serializable
         initObstacles();
 
         //init powerups
-        initPowerups();
+        initPowerUps();
+
+        //init stars
+        initStars();
+
+        //init screen bottom collision rectangle
+        bottomCollisionDetector = new CollisionRectangle(0, config.getSCREEN_HEIGHT()-10, config.getSCREEN_WIDTH(), 10);
 
         //init KeyEvents
 
@@ -96,15 +117,27 @@ public class SinglePlayerGame implements Serializable
 
     }
 
-    private void initPowerups()
+    private void initStars()
     {
         //TODO change this to be random
         //randomly with low chance spawn other powerups
-        powerups = new PowerUp[NUM_SCREENS];
+        stars = new StarPowerUp[NUM_SCREENS];
 
         for(int i = 0; i< NUM_SCREENS; i++)
         {
-            powerups[i] = new ColorSwitcher(-(i*config.getSCREEN_HEIGHT() + config.getSCREEN_HEIGHT()/2));
+            stars[i] = new StarPowerUp(-(i*config.getSCREEN_HEIGHT() + 0.5*config.getSCREEN_HEIGHT()));
+        }
+    }
+
+    private void initPowerUps()
+    {
+        //TODO change this to be random
+        //randomly with low chance spawn other powerups
+        powerUps = new PowerUp[NUM_SCREENS];
+
+        for(int i = 0; i< NUM_SCREENS; i++)
+        {
+            powerUps[i] = new ColorSwitcher(-(i*config.getSCREEN_HEIGHT() + 0.25*config.getSCREEN_HEIGHT()));
         }
     }
 
@@ -115,14 +148,15 @@ public class SinglePlayerGame implements Serializable
 
         for(int i = 0; i< NUM_SCREENS; i++)
         {
-            obstacles[i] = new RotatingArmsObstacle();
+            double yVal = -i*config.getSCREEN_HEIGHT();
+
             if(i%2==0)
             {
-                obstacles[i].setPosition(30, -i*config.getSCREEN_HEIGHT());
+                obstacles[i] = new RotatingSatellitesObstacle(yVal);
             }
             else
             {
-                obstacles[i].setPosition(config.getSCREEN_WIDTH()-30, -i*config.getSCREEN_HEIGHT());
+                obstacles[i] = new RotatingSatellitesObstacle(yVal);
             }
         }
 
@@ -131,7 +165,24 @@ public class SinglePlayerGame implements Serializable
 
     private void pauseGame()
     {
+        gameLoop.stop();
 
+        //darken screen
+
+        //display menu
+
+        //resume maybe
+    }
+
+    private boolean toss(double probability)
+    {
+        int numToss = (int) (1/probability);
+
+        if(rand.nextInt(numToss) == 0) // probability chance
+        {
+            return true;
+        }
+        return false;
     }
 
     public Scene getScene()
@@ -171,7 +222,6 @@ public class SinglePlayerGame implements Serializable
             context.setFill(Color.web(config.getBACKGROUND_COLOR()));
             context.fillRect(0, 0, config.getSCREEN_WIDTH(), 3*config.getSCREEN_HEIGHT());//replace with background
 
-
             if(shiftingWindow)  //shift everything
             {
                 if(ship.getPosition().getY()<lineOfControl && ship.getVelocity().getY()<=0) // bring everything down in the frame
@@ -179,15 +229,13 @@ public class SinglePlayerGame implements Serializable
                     //shift ship and bullets
                     ship.shiftPosition(ship.getVelocity());
 
-                    //shift obstacles and powerups
+                    //shift obstacles and powerups and stars
                     for(int i = 0; i< NUM_SCREENS; i++)
                     {
                         obstacles[i].shiftPosition(ship.getVelocity()); // shift obstacles
-                        powerups[i].shiftPosition(ship.getVelocity()); // shift powerups
+                        powerUps[i].shiftPosition(ship.getVelocity()); // shift powerups
+                        stars[i].shiftPosition(ship.getVelocity()); // shift stars
                     }
-
-                    //shift powerups
-
                 }
                 else // turn off shifting
                 {
@@ -198,11 +246,22 @@ public class SinglePlayerGame implements Serializable
 
             drawObstacles();
             drawPowerUps();
+            drawStars();
             drawShip(l);
+            drawScore();
+            drawMisc();
 
             //check for collisions
             checkCollisions();
 
+        }
+
+        private void drawMisc()
+        {
+            if(config.getSHOW_COLLISION_BOUNDS())
+            {
+                bottomCollisionDetector.render(context);
+            }
         }
 //TODO move update inside render
         private void drawObstacles()
@@ -233,16 +292,18 @@ public class SinglePlayerGame implements Serializable
             //create new obstacle
             //TODO randomise this
 
+            double yVal = -(NUM_SCREENS -1)*config.getSCREEN_HEIGHT();
 
-            obstacles[NUM_SCREENS -1] = new RotatingArmsObstacle();
+
+//            obstacles[NUM_SCREENS -1] = new RotatingArmsObstacle();
 
             if(obstacleCount%2==0)
             {
-                obstacles[NUM_SCREENS -1].setPosition(30, -(NUM_SCREENS -1)*config.getSCREEN_HEIGHT());
+                obstacles[NUM_SCREENS -1] = new RotatingArmsObstacle(30, yVal);
             }
             else
             {
-                obstacles[NUM_SCREENS -1].setPosition(config.getSCREEN_WIDTH()-30, -(NUM_SCREENS -1)*config.getSCREEN_HEIGHT());
+                obstacles[NUM_SCREENS -1] = new RotatingArmsObstacle(config.getSCREEN_WIDTH()-30, yVal);
             }
 //            obstacles[NUM_OBSTACLES-1].setPosition(20,-(NUM_OBSTACLES-1)*config.getSCREEN_HEIGHT());
             obstacleCount++;
@@ -250,59 +311,100 @@ public class SinglePlayerGame implements Serializable
 
         private void drawScore()
         {
-
+            context.setFont(Font.loadFont(config.getPRIMARY_FONT(), 20));
+            context.setFill(Paint.valueOf(config.getREGULAR_FONT_COLOR()));
+            context.setTextAlign(TextAlignment.RIGHT);
+            context.fillText("Score: 234"+ (int)score, config.getSCREEN_WIDTH() - 10, 30 );
         }
 
-        private void drawPowerUps()
+        private void drawStars()
         {
             for(int i = 0; i< NUM_SCREENS; i++)
             {
-                powerups[i].update();
-                powerups[i].render(context);
+                stars[i].update();
+                stars[i].render(context);
             }
 
             //check if obstacle 0 is in frame
 
-            if(!powerups[0].isInFrame())
+            if(!stars[0].isInFrame())
             {
-                spawnNewPowerup();
-                System.out.println("Spawning new Powerup!");
+                spawnNewStar();
+                System.out.println("Spawning new Star!");
             }
         }
 
-        private void spawnNewPowerup()
+        private void spawnNewStar()
         {
             //shift everything in array
             for(int i = 0; i< NUM_SCREENS -1; i++)
             {
-                powerups[i] = powerups[i+1];
+                stars[i] = stars[i+1];
 //                System.out.println(powerups[i]);
             }
             //create new obstacle
             //TODO randomise this
 
 
-            powerups[NUM_SCREENS -1] = new ColorSwitcher(-((NUM_SCREENS-1)*config.getSCREEN_HEIGHT() + config.getSCREEN_HEIGHT()/2));
+            stars[NUM_SCREENS -1] = new StarPowerUp(-((NUM_SCREENS-1)*config.getSCREEN_HEIGHT() + 0*config.getSCREEN_HEIGHT()));
         }
 
-        private void drawBullets()
+        private void drawPowerUps()
         {
-
-        }
-
-        private void drawTestSprite(long l)
-        {
-            if(testSprite.getPosition().getY()> config.getSCREEN_HEIGHT()*1.2)
+            for(int i = 0; i< NUM_SCREENS; i++)
             {
-                testSprite.setPosition(config.getSCREEN_WIDTH()/2, -0.2*config.getSCREEN_HEIGHT());
+                powerUps[i].update();
+                powerUps[i].render(context);
             }
-            Rotate r = new Rotate(l/10000000, testSprite.getPosition().getX(), testSprite.getPosition().getY());
-            context.save();
-            context.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
-            testSprite.update();
-            testSprite.render(context);
-            context.restore();
+
+            //check if obstacle 0 is in frame
+
+            if(!powerUps[0].isInFrame())
+            {
+                spawnNewPowerUp();
+                System.out.println("Spawning new Powerup!");
+            }
         }
+
+        private void spawnNewPowerUp()
+        {
+            //shift everything in array
+            for(int i = 0; i< NUM_SCREENS -1; i++)
+            {
+                powerUps[i] = powerUps[i+1];
+//                System.out.println(powerups[i]);
+            }
+            //create new obstacle
+            //TODO randomise this
+
+            //coordinate for new powerup
+            double yVal = -( (NUM_SCREENS-1)*config.getSCREEN_HEIGHT() + 0*config.getSCREEN_HEIGHT());
+
+
+            if(toss(BULLET_POWERUP_PROB))
+            {
+                powerUps[NUM_SCREENS-1] = new BulletPowerUp(yVal);
+            }
+            else if(toss(TIME_BULLET_POWERUP_PROB))
+            {
+                powerUps[NUM_SCREENS-1] = new TimeBulletPowerUp(yVal);
+            }
+            else if(toss(TIME_POWERUP_PROB))
+            {
+                powerUps[NUM_SCREENS-1] = new TimePowerUp(yVal);
+            }
+            else if(toss(PROTECTION_POWERUP_PROB))
+            {
+                powerUps[NUM_SCREENS-1] = new ProtectionPowerUp(yVal);
+            }
+            else
+            {
+                powerUps[NUM_SCREENS-1] = new ColorSwitcher(yVal);
+            }
+        }
+
+
+
 
         private void drawShip(long l)
         {
