@@ -84,6 +84,9 @@ public class RotatingSatellitesObstacle extends RotatingObstacle
             {
                 segment.getBoundary().render(context);
             }
+            //render effects
+            segment.renderEffects(context);
+
             tempAngle+=90; // rotate arms 90 degree out of phase with each other
         }
     }

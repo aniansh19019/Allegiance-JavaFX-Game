@@ -2,6 +2,7 @@ package game_object;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Rotate;
+import util.PurpleExplosionEffect;
 import util.Sprite;
 
 public abstract class PowerUp extends Sprite
@@ -47,6 +48,14 @@ public abstract class PowerUp extends Sprite
         {
             getBoundary().render(context);
         }
+    }
+
+    public void destroy()
+    {
+        setActive(false);
+        setVisible(false);
+
+        //addEffect(new PurpleExplosionEffect(getPosition()));//TODO change this
     }
 }
 

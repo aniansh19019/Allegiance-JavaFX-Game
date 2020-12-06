@@ -4,15 +4,15 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import main.GlobalConfig;
-import util.GameColor;
-import util.Sprite;
-import util.Vector;
+import util.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 public class PlayerShip extends Sprite
 {
+    private static Random rand;
     private int shipType;
     private boolean isBoosted;
     private Image normalImage;
@@ -20,10 +20,30 @@ public class PlayerShip extends Sprite
     private static Media thrustSound;
     private static Vector gravity;
     private static Vector boostVelocity;
-    private static final int maxBulletNum;
+    private static final int maxBulletNum = 5;
     private ArrayList<Bullet> bulletsFired;
     private ArrayList<Bullet> bulletsAmmo;
     private final static GlobalConfig config;
+
+    public ArrayList<Bullet> getBulletsFired()
+    {
+        return bulletsFired;
+    }
+
+    public ArrayList<Bullet> getBulletsAmmo()
+    {
+        return bulletsAmmo;
+    }
+
+    public void addAmmo(Bullet bullet)
+    {
+//        addCollectEffect();
+        if(bulletsAmmo.size()<=maxBulletNum)
+        {
+            System.out.println(bullet);
+            bulletsAmmo.add(bullet);
+        }
+    }
 
     public boolean isBoosted()
     {
@@ -55,6 +75,11 @@ public class PlayerShip extends Sprite
         return normalImage;
     }
 
+    public void addCollectEffect()
+    {
+        addEffect(new PurpleExplosionEffect(getPosition()));
+    }
+
     public void setNormalImage(Image normalImage)
     {
         this.normalImage = normalImage;
@@ -71,7 +96,7 @@ public class PlayerShip extends Sprite
         config = new GlobalConfig();
         gravity = new Vector(0,0.1);
         boostVelocity = new Vector(0,-3);
-        maxBulletNum = 5;
+        rand = new Random();
         //init sound
     }
 
@@ -115,7 +140,7 @@ public class PlayerShip extends Sprite
         setNormalImage("file:res/img/ships/ship_"+shipType+"_"+colorStr+".png");
         setThrustImage("file:res/img/ships/ship_"+shipType+"_"+colorStr+"_fire.png");
 
-        System.out.println("file:res/img/ships/ship_"+shipType+"_"+colorStr+".png");
+//        System.out.println("file:res/img/ships/ship_"+shipType+"_"+colorStr+".png");
 
         //TODO set appropriate scale factors
     }
@@ -155,14 +180,11 @@ public class PlayerShip extends Sprite
     }
     public void fire()
     {
-        //TODO update
-        //TODO check for bullet out of bound
-        // Obstacle handled first then bullet
-        // Fire one at a time
-
-        if(bulletsFired.size()<maxBulletNum)
+        if(!bulletsAmmo.isEmpty())
         {
-            bulletsFired.add(new GrenadeBullet(this));
+            Bullet fired = bulletsAmmo.remove(0);
+            fired.fire();
+            bulletsFired.add(fired);
         }
     }
 
@@ -220,10 +242,36 @@ public class PlayerShip extends Sprite
     public void destroy()
     {
         //sound and explosion animation
+        setVisible(false);
+        setActive(false);
+        AnimatedEffect effect = new ShipExplosionEffect(getPosition());
+//        effect.setImageScaleFactor(2);
+        addEffect(effect);
+
+    }
+
+    public void revive()
+    {
+        //effect
+        addEffect(new ReviveAnimation(getPosition()));
+        setVisible(true);
+        setActive(true);
     }
 
 
+    public void switchColor()
+    {
+        GameColor currentColor = getColor();
+        int choice=0;
+        do
+        {
+            choice = rand.nextInt(4);
+        }while(choice== currentColor.ordinal());
 
+        setColor(GameColor.values()[choice]);
+//        addCollectEffect();
+        //TODO change this effect
+    }
 
 
     @Override

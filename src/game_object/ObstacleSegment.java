@@ -9,6 +9,7 @@ public class ObstacleSegment extends Sprite
     {
         super();
         setLocalShowBounds(false);
+        setRenderEffects(false);
     }
 
 //    @Override

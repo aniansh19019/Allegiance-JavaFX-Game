@@ -11,6 +11,7 @@ public abstract class RotatingObstacle extends Obstacle
     {
         angle = 0;
 
+
     }
 
     public double getAngle()
@@ -31,6 +32,13 @@ public abstract class RotatingObstacle extends Obstacle
     public void setAngleDelta(double angleDelta)
     {
         this.angleDelta = angleDelta;
+    }
+
+    @Override
+    public void setSpeed(double speed)
+    {
+        super.setSpeed(speed);
+        setAngleDelta(speed);
     }
 
     @Override

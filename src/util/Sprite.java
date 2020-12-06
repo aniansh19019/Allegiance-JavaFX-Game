@@ -4,6 +4,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import main.GlobalConfig;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 //TODO sprite implements an interface drawable which obstacle also implements
 
 public class Sprite implements Drawable
@@ -16,11 +19,49 @@ public class Sprite implements Drawable
     private boolean isVisible;
     private boolean isMovable;
     private boolean isInFrame;
+    private boolean isActive;
     private CollisionRectangle boundary;
     private double imageScaleFactor;
     private GameColor color;
     public final static GlobalConfig config;
     private final static double screenOffset = 50;
+    private ArrayList<AnimatedEffect> effects;
+    private boolean renderEffects;
+
+    public boolean isActive()
+    {
+        return isActive;
+    }
+
+    public void setActive(boolean active)
+    {
+        isActive = active;
+    }
+
+    public ArrayList<AnimatedEffect> getEffects()
+    {
+        return effects;
+    }
+
+    public void setEffects(ArrayList<AnimatedEffect> effects)
+    {
+        this.effects = effects;
+    }
+
+    public boolean isRenderEffects()
+    {
+        return renderEffects;
+    }
+
+    public void setRenderEffects(boolean renderEffects)
+    {
+        this.renderEffects = renderEffects;
+    }
+
+    public void addEffect(AnimatedEffect effect)
+    {
+        effects.add(effect);
+    }
 
     static
     {
@@ -109,6 +150,15 @@ public class Sprite implements Drawable
     public void shiftPosition(Vector delta) // for shifting everything down
     {
         position.subtract(delta);
+
+        //shift effects
+        if(!effects.isEmpty())
+        {
+            for(int i=0; i< effects.size(); i++)
+            {
+                effects.get(i).shiftPosition(delta);
+            }
+        }
     }
 
     public Image getImage()
@@ -177,6 +227,9 @@ public class Sprite implements Drawable
         isInFrame = true;
         color = GameColor.NONE;
         localShowBounds=true;
+        effects = new ArrayList<AnimatedEffect>();
+        renderEffects=true;
+        isActive=true;
     }
 
     public CollisionRectangle getBoundary()
@@ -210,6 +263,25 @@ public class Sprite implements Drawable
         {
             isInFrame = true;
         }
+
+
+        if(!effects.isEmpty()) // update effects
+        {
+            Iterator itr = effects.iterator();
+
+            while (itr.hasNext())
+            {
+                AnimatedEffect currentEffect = (AnimatedEffect) itr.next();
+                if(currentEffect.isFinished())
+                {
+                    itr.remove();
+                }
+                else
+                {
+                    currentEffect.update();
+                }
+            }
+        }
     }
 
     public void setPosition(double x, double y)
@@ -236,7 +308,23 @@ public class Sprite implements Drawable
 
     public boolean didCollide(Sprite other)
     {
-        return getBoundary().didCollide(other.getBoundary());
+//        System.out.println(isActive);
+        if(this.isActive() && other.isActive())
+        {
+            return getBoundary().didCollide(other.getBoundary());
+        }
+        return false;
+    }
+
+    public void renderEffects(GraphicsContext context)
+    {
+        if(!effects.isEmpty())
+        {
+            for(int i=0; i < effects.size(); i++)
+            {
+                effects.get(i).render(context);
+            }
+        }
     }
 
     public void render(GraphicsContext context)
@@ -245,6 +333,12 @@ public class Sprite implements Drawable
         if (isVisible)
         {
             context.drawImage(image, position.getX() - boundary.getW() / 2, position.getY() - boundary.getH() / 2, image.getWidth() * imageScaleFactor, image.getHeight() * imageScaleFactor);
+        }
+        //render effects
+
+        if(renderEffects)
+        {
+            renderEffects(context);
         }
 
         if(config.getSHOW_COLLISION_BOUNDS() && isLocalShowBounds())

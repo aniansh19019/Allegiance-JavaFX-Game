@@ -1,5 +1,7 @@
 package game_object;
 
+import util.YellowExplosionEffect;
+
 public class StarPowerUp extends PowerUp
 {
 
@@ -8,5 +10,12 @@ public class StarPowerUp extends PowerUp
         super(y);
         setImage("file:res/img/powerups/star.png");
         setImageScaleFactor(0.3);
+    }
+
+    @Override
+    public void destroy()
+    {
+        super.destroy();
+        addEffect(new YellowExplosionEffect(getPosition()));
     }
 }

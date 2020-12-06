@@ -2,7 +2,7 @@ package main;
 
 public class GlobalConfig
 {
-    final private boolean SHOW_COLLISION_BOUNDS = true;
+    final private boolean SHOW_COLLISION_BOUNDS = false;
     final private int SCREEN_WIDTH = 500;
     final private int SCREEN_HEIGHT = 700;
 
