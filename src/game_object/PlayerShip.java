@@ -12,6 +12,7 @@ import java.util.Random;
 
 public class PlayerShip extends Sprite
 {
+    private static int PROTECTION_MAX_LIMIT = 1000;
     private static Random rand;
     private int shipType;
     private boolean isBoosted;
@@ -24,6 +25,19 @@ public class PlayerShip extends Sprite
     private ArrayList<Bullet> bulletsFired;
     private ArrayList<Bullet> bulletsAmmo;
     private final static GlobalConfig config;
+    private AnimatedEffect protectionPowerUpEffect;
+    private boolean isProtected;
+    private int protectionCounter;
+
+    public boolean isProtected()
+    {
+        return isProtected;
+    }
+
+    public void setProtected(boolean aProtected)
+    {
+        isProtected = aProtected;
+    }
 
     public ArrayList<Bullet> getBulletsFired()
     {
@@ -140,9 +154,36 @@ public class PlayerShip extends Sprite
         setNormalImage("file:res/img/ships/ship_"+shipType+"_"+colorStr+".png");
         setThrustImage("file:res/img/ships/ship_"+shipType+"_"+colorStr+"_fire.png");
 
+        if(this.isBoosted)
+        {
+            switchImage(thrustImage);
+        }
+
 //        System.out.println("file:res/img/ships/ship_"+shipType+"_"+colorStr+".png");
 
         //TODO set appropriate scale factors
+    }
+
+
+    public void protectionOn()
+    {
+        //sound on
+
+        addEffect(new ReviveEffect(getPosition()));
+        isProtected=true;
+        if(!getEffects().contains(protectionPowerUpEffect))
+            addEffect(protectionPowerUpEffect);
+    }
+
+    public void protectionOff()
+    {
+        //sound off
+        addEffect(new ReverseReviveEffect(getPosition()));
+        isProtected=false;
+        if(getEffects().contains(protectionPowerUpEffect))
+        {
+            getEffects().remove(protectionPowerUpEffect);
+        }
     }
 
     public PlayerShip(GameColor color, int shipType)
@@ -160,6 +201,9 @@ public class PlayerShip extends Sprite
         bulletsFired = new ArrayList<Bullet>();
         bulletsAmmo = new ArrayList<Bullet>();
         isBoosted = false;
+        protectionPowerUpEffect= new ShipProtectEffect(getPosition());
+        isProtected=false;
+        protectionCounter=0;
     }
 
     public void boost()
@@ -207,6 +251,29 @@ public class PlayerShip extends Sprite
     public void update()
     {
         super.update();
+        //update effects
+        protectionPowerUpEffect.setPosition(getPosition());
+        for(int i=0; i<getEffects().size(); i++)
+        {
+            if(getEffects().get(i).getClass() == ReviveEffect.class || getEffects().get(i).getClass() == ReverseReviveEffect.class)
+            {
+                getEffects().get(i).setPosition(getPosition());
+            }
+        }
+
+        //check protection
+
+        if(isProtected)
+        {
+            protectionCounter++;
+            if(protectionCounter>=PROTECTION_MAX_LIMIT)
+            {
+                protectionOff();
+                protectionCounter=0;
+            }
+        }
+
+        //update bullets
         if(!bulletsFired.isEmpty())
         {
             Iterator bulletsIterator = bulletsFired.iterator();
@@ -253,7 +320,7 @@ public class PlayerShip extends Sprite
     public void revive()
     {
         //effect
-        addEffect(new ReviveAnimation(getPosition()));
+        addEffect(new ReviveEffect(getPosition()));
         setVisible(true);
         setActive(true);
     }

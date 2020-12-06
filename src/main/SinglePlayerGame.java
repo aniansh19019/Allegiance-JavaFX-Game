@@ -11,17 +11,19 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import util.*;
+import widget.AmmoDisplay;
+import widget.StarDisplay;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
+//TODO off center effects fix
+//TODO save game
 //TODO pause button
-// TODO this is for testing right now
 // TODO store all references in Game SinglePLayerGame Menu
 //TODO detect placement overlaps
 //TODO normalise ship widths
@@ -31,10 +33,10 @@ import java.util.Random;
 public class SinglePlayerGame implements Serializable
 {
     private static final int NUM_SCREENS = 3;
-    private static final double BULLET_POWERUP_PROB = 0.5;
-    private static final double TIME_BULLET_POWERUP_PROB = 0.5;
-    private static final double PROTECTION_POWERUP_PROB = 0.06;
-    private static final double TIME_POWERUP_PROB = 0.5;
+    private static final double BULLET_POWERUP_PROB = 0.2;
+    private static final double TIME_BULLET_POWERUP_PROB = 0.2;
+    private static final double PROTECTION_POWERUP_PROB = 0.2;
+    private static final double TIME_POWERUP_PROB = 0.2;
 
 
     private Scene scene;
@@ -53,7 +55,10 @@ public class SinglePlayerGame implements Serializable
     private StarPowerUp[] stars; // to store all the stars
     private Sprite bottomCollisionDetector; // to denote the bottom of the frame
     private Random rand;
+    private int starCount;
     private double score;
+    private AmmoDisplay ammoDisplay;
+    private StarDisplay starDisplay;
 //    private AnimatedEffect effects;
 
     //user info
@@ -65,7 +70,7 @@ public class SinglePlayerGame implements Serializable
         //init utils
         rand = new Random();
         //init score to 0
-        score=0;
+        starCount =0;
         //init vars
         inputList = new ArrayList<String>();
         //init config
@@ -86,6 +91,15 @@ public class SinglePlayerGame implements Serializable
         //init ship
         //TODO select ship from menu
         ship = new PlayerShip(GameColor.values()[rand.nextInt(4)], 2);
+
+        //init ammoDisplay
+
+        ammoDisplay = new AmmoDisplay(ship.getBulletsAmmo());
+
+        //init starDisplay
+
+        starDisplay = new StarDisplay();
+
 
         //init obstacles
         initObstacles();
@@ -141,7 +155,7 @@ public class SinglePlayerGame implements Serializable
 
         for(int i = 0; i< NUM_SCREENS; i++)
         {
-            powerUps[i] = new ColorSwitcher(-(i*config.getSCREEN_HEIGHT() + 0.25*config.getSCREEN_HEIGHT()));
+            powerUps[i] = new BulletPowerUp(-(i*config.getSCREEN_HEIGHT() + 0.25*config.getSCREEN_HEIGHT()));
         }
     }
 
@@ -212,6 +226,9 @@ public class SinglePlayerGame implements Serializable
         private long firedTime=0;
         private final long fireDelay = 1000000000;
         private ArrayList<AnimatedEffect> effects;
+        private boolean isSlow;
+        private final long slowTimeLimit = 1000;
+        private long slowTimeCounter;
 
 
         public GameAnimationTimer()
@@ -222,16 +239,22 @@ public class SinglePlayerGame implements Serializable
             lineOfControl = config.getSCREEN_HEIGHT()*0.4;
             windowShiftDelta = 1.5;
             screenRectangle = new CollisionRectangle(0,0,config.getSCREEN_WIDTH(), config.getSCREEN_HEIGHT());
+            slowTimeCounter = 0;
+        }
+
+        public void cleanSlate()
+        {
+            context.setFill(Color.web(config.getBACKGROUND_COLOR()));
+            context.fillRect(0, 0, config.getSCREEN_WIDTH(), 3*config.getSCREEN_HEIGHT());//replace with background
         }
 
         @Override
         public void handle(long l)
         {
             //erase stuff
-            context.setFill(Color.web(config.getBACKGROUND_COLOR()));
-            context.fillRect(0, 0, config.getSCREEN_WIDTH(), 3*config.getSCREEN_HEIGHT());//replace with background
 
-            if(shiftingWindow)  //shift everything
+
+            if(shiftingWindow && ship.isActive())  //shift everything
             {
                 if(ship.getPosition().getY()<lineOfControl && ship.getVelocity().getY()<=0) // bring everything down in the frame
                 {
@@ -265,24 +288,36 @@ public class SinglePlayerGame implements Serializable
 
 
 
+            if(isSlow) //draw stuff
+            {
+                slowTimeCounter++;
+                if (slowTimeCounter >= slowTimeLimit)
+                {
+                    isSlow = false;
+                    slowTimeCounter = 0;
+                }
+            }
 
-            drawShip(l);
+                cleanSlate();
+                drawShip(l);
 
-            drawObstacles();
+                drawObstacles(l);
 
-            drawStars();
+                drawStars(l);
 
-            drawPowerUps();
+                drawPowerUps(l);
 
-            drawScore();
-            drawMisc();
+                drawScore();
+                drawMisc(l);
+
+
 
             //check for collisions
             checkCollisions();
 
         }
 
-        private void drawMisc()
+        private void drawMisc(long l)
         {
             if(config.getSHOW_COLLISION_BOUNDS())
             {
@@ -301,7 +336,17 @@ public class SinglePlayerGame implements Serializable
                     }
                     else
                     {
-                        currentEffect.update();
+                        if(isSlow)
+                        {
+                            if(slowTimeCounter%2==0)
+                            {
+                                currentEffect.update();
+                            }
+                        }
+                        else
+                        {
+                            currentEffect.update();
+                        }
                         currentEffect.render(context);
                     }
                 }
@@ -310,11 +355,22 @@ public class SinglePlayerGame implements Serializable
 
         }
 //TODO move update inside render
-        private void drawObstacles()
+        private void drawObstacles(long l)
         {
             for(int i = 0; i< NUM_SCREENS; i++)
             {
-                obstacles[i].update();
+                if(isSlow)
+                {
+                    if(slowTimeCounter%2==0)
+                    {
+                        obstacles[i].update();
+                    }
+                }
+                else
+                {
+                    obstacles[i].update();
+                }
+
                 obstacles[i].render(context);
             }
 
@@ -360,14 +416,32 @@ public class SinglePlayerGame implements Serializable
             context.setFont(Font.loadFont(config.getPRIMARY_FONT(), 20));
             context.setFill(Paint.valueOf(config.getREGULAR_FONT_COLOR()));
             context.setTextAlign(TextAlignment.RIGHT);
-            context.fillText("Score: "+ (int)score, config.getSCREEN_WIDTH() - 10, 30 );
+            context.fillText("Score: "+ (int) score, config.getSCREEN_WIDTH() - 10, 30 );
+
+            //render ammo display
+
+            ammoDisplay.render(context);
+
+            //render star display
+            starDisplay.update(starCount);
+            starDisplay.render(context);
         }
 
-        private void drawStars()
+        private void drawStars(long l)
         {
             for(int i = 0; i< NUM_SCREENS; i++)
             {
-                stars[i].update();
+                if(isSlow)
+                {
+                    if(slowTimeCounter%2==0)
+                    {
+                        stars[i].update();
+                    }
+                }
+                else
+                {
+                    stars[i].update();
+                }
                 stars[i].render(context);
             }
 
@@ -395,11 +469,21 @@ public class SinglePlayerGame implements Serializable
             stars[NUM_SCREENS -1] = new StarPowerUp(-((NUM_SCREENS-1)*config.getSCREEN_HEIGHT() + 0*config.getSCREEN_HEIGHT()));
         }
 
-        private void drawPowerUps()
+        private void drawPowerUps(long l)
         {
             for(int i = 0; i< NUM_SCREENS; i++)
             {
-                powerUps[i].update();
+                if(isSlow)
+                {
+                    if(slowTimeCounter%2==0)
+                    {
+                        powerUps[i].update();
+                    }
+                }
+                else
+                {
+                    powerUps[i].update();
+                }
                 powerUps[i].render(context);
             }
 
@@ -525,19 +609,23 @@ public class SinglePlayerGame implements Serializable
                     }
                     else if(current.getClass() == ProtectionPowerUp.class)
                     {
-                        // TODO implement this
+                        ship.protectionOn();
                     }
                     else if(current.getClass() == TimePowerUp.class)
                     {
                         //TODO implement this
+                        isSlow=true;
+                        //TODO add screen overlay animation
                     }
+                    score+=50;
                     current.destroy();// destroy powerup from canvas
 
                 }
 
                 if(ship.didCollide(stars[i]))
                 {
-                    score++;
+                    starCount++;
+                    score+=50;
                     stars[i].destroy();
 //                    ship.addCollectEffect();
                     //TODO change thi®s

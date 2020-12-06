@@ -122,7 +122,8 @@ abstract public class Obstacle implements Drawable
         }
         else // collided with obstacle
         {
-            return true;
+            if(!ship.isProtected())
+                return true;
         }
         //check missiles
 
@@ -181,7 +182,7 @@ abstract public class Obstacle implements Drawable
         //explosion at hitPosition
         //TODO add more explosions
 
-        segments[0].addEffect(new ExplosionEffect(hitPosition));
+        segments[0].addEffect(new DebrisExplosionEffect(hitPosition));
 
         //sounds
 

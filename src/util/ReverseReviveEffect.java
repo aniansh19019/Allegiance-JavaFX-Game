@@ -2,13 +2,13 @@ package util;
 
 import javafx.scene.image.Image;
 
-public class ReviveAnimation extends AnimatedEffect
+public class ReverseReviveEffect extends AnimatedEffect
 {
     @Override
     public void loadFrames()
     {
         String fileBasePath = "file:res/img/effects/revive_animation/Slice_";
-        for(int i = 1; i<=20; i++)
+        for(int i = 20; i>=1; i--)
         {
             String filePath = fileBasePath;
             filePath= filePath + i + ".png";
@@ -20,7 +20,7 @@ public class ReviveAnimation extends AnimatedEffect
         setImage(getFrames().get(0));
     }
 
-    public ReviveAnimation(Vector position)
+    public ReverseReviveEffect(Vector position)
     {
         loadFrames();
         setImageScaleFactor(1.3);
