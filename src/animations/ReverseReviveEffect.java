@@ -1,20 +1,17 @@
-package util;
+package animations;
 
 import javafx.scene.image.Image;
+import util.Vector;
 
-public class TimeEffect extends AnimatedEffect
+public class ReverseReviveEffect extends AnimatedEffect
 {
     @Override
     public void loadFrames()
     {
-        String fileBasePath = "file:res/img/effects/time_effect/time_effect_";
-        for(int i = 1; i<=15; i++)
+        String fileBasePath = "file:res/img/effects/revive_animation/Slice_";
+        for(int i = 20; i>=1; i--)
         {
             String filePath = fileBasePath;
-            if(i<10)
-            {
-                filePath+="0";
-            }
             filePath= filePath + i + ".png";
 
             //load image
@@ -24,12 +21,12 @@ public class TimeEffect extends AnimatedEffect
         setImage(getFrames().get(0));
     }
 
-    public TimeEffect(Vector position)
+    public ReverseReviveEffect(Vector position)
     {
         loadFrames();
-        setImageScaleFactor(1);
+        setImageScaleFactor(1.3);
         setPosition(position);
         setLoopFrames(false);
-        setAnimationSpeed(0.3);
+        setAnimationSpeed(0.6);
     }
 }

@@ -1,8 +1,6 @@
-package game_object;
+package game_object.bullets;
 
-import util.ExplosionEffect;
-import util.PurpleExplosionEffect;
-import util.TimeEffect;
+import game_object.PlayerShip;
 
 public class TimeBullet extends Bullet
 {

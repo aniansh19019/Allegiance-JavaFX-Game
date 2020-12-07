@@ -1,21 +1,17 @@
 package main;
 
 import game_object.PlayerShip;
-import game_object.RotatingArmsObstacle;
+import game_object.obstacles.RotatingArmsObstacle;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import util.CollisionRectangle;
 import util.Sprite;
 import util.TestCollisionPolygon;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 //TODO pause button

@@ -1,23 +1,25 @@
-package util;
+package animations;
 
 import javafx.scene.image.Image;
+import util.Vector;
 
-public class DebrisExplosionEffect extends AnimatedEffect
+public class ShipExplosionEffect extends AnimatedEffect
 {
-    public DebrisExplosionEffect(Vector position)
+
+    public ShipExplosionEffect(Vector position)
     {
         loadFrames();
-        setImageScaleFactor(1.5);
+        setImageScaleFactor(2);
         setPosition(position);
         setLoopFrames(false);
-        setAnimationSpeed(0.3);
+        setAnimationSpeed(0.6);
     }
 
     @Override
     public void loadFrames()
     {
-        String fileBasePath = "file:res/img/effects/Explosion3/00";
-        for(int i = 1; i<=30; i++)
+        String fileBasePath = "file:res/img/effects/ship_explosion_effect/ship_explode_effect_";
+        for(int i = 1; i<=64; i++)
         {
             String filePath = fileBasePath;
             if(i<10)

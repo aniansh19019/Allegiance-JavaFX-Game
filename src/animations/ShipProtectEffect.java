@@ -1,16 +1,21 @@
-package util;
+package animations;
 
 import javafx.scene.image.Image;
+import util.Vector;
 
-public class ReverseReviveEffect extends AnimatedEffect
+public class ShipProtectEffect extends AnimatedEffect
 {
     @Override
     public void loadFrames()
     {
-        String fileBasePath = "file:res/img/effects/revive_animation/Slice_";
-        for(int i = 20; i>=1; i--)
+        String fileBasePath = "file:res/img/effects/ship_protect_effect/ship_protect_effect_";
+        for(int i = 1; i<=15; i++)
         {
             String filePath = fileBasePath;
+            if(i<10)
+            {
+                filePath+="0";
+            }
             filePath= filePath + i + ".png";
 
             //load image
@@ -20,12 +25,12 @@ public class ReverseReviveEffect extends AnimatedEffect
         setImage(getFrames().get(0));
     }
 
-    public ReverseReviveEffect(Vector position)
+    public ShipProtectEffect(Vector position)
     {
         loadFrames();
         setImageScaleFactor(1.3);
         setPosition(position);
-        setLoopFrames(false);
+        setLoopFrames(true);
         setAnimationSpeed(0.6);
     }
 }

@@ -1,23 +1,14 @@
-package util;
+package animations;
 
 import javafx.scene.image.Image;
+import util.Vector;
 
-public class ShipExplosionEffect extends AnimatedEffect
+public class ColorSwitchEffect extends AnimatedEffect
 {
-
-    public ShipExplosionEffect(Vector position)
-    {
-        loadFrames();
-        setImageScaleFactor(2);
-        setPosition(position);
-        setLoopFrames(false);
-        setAnimationSpeed(0.6);
-    }
-
     @Override
     public void loadFrames()
     {
-        String fileBasePath = "file:res/img/effects/ship_explosion_effect/ship_explode_effect_";
+        String fileBasePath = "file:res/img/effects/color_switch_effect/color_switch_";
         for(int i = 1; i<=64; i++)
         {
             String filePath = fileBasePath;
@@ -32,5 +23,14 @@ public class ShipExplosionEffect extends AnimatedEffect
             getFrames().add(new Image(filePath));
         }
         setImage(getFrames().get(0));
+    }
+
+    public ColorSwitchEffect(Vector position)
+    {
+        loadFrames();
+        setImageScaleFactor(1.4);
+        setPosition(position);
+        setLoopFrames(false);
+        setAnimationSpeed(1);
     }
 }

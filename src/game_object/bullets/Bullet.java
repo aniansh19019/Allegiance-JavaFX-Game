@@ -1,8 +1,7 @@
-package game_object;
+package game_object.bullets;
 
-import javafx.scene.canvas.GraphicsContext;
+import game_object.PlayerShip;
 import main.GlobalConfig;
-import util.ExplosionEffect;
 import util.Sprite;
 
 public class Bullet extends Sprite

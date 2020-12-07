@@ -1,25 +1,31 @@
-package util;
+package animations;
 
 import javafx.scene.image.Image;
+import util.Vector;
 
-public class PurpleExplosionEffect extends AnimatedEffect
+public class ExplosionEffect extends AnimatedEffect
 {
-    public PurpleExplosionEffect(Vector position)
+
+    public ExplosionEffect(Vector position)
     {
         loadFrames();
-        setImageScaleFactor(1.3);
+        setImageScaleFactor(1.5);
         setPosition(position);
         setLoopFrames(false);
-        setAnimationSpeed(1);
+        setAnimationSpeed(0.4);
     }
 
     @Override
     public void loadFrames()
     {
-        String fileBasePath = "file:res/img/effects/PurpleExplosion/explosion_purple_";
-        for(int i = 29; i<=84; i++)
+        String fileBasePath = "file:res/img/effects/Explosion4/00";
+        for(int i = 1; i<=25; i++)
         {
             String filePath = fileBasePath;
+            if(i<10)
+            {
+                filePath+="0";
+            }
             filePath= filePath + i + ".png";
 
             //load image

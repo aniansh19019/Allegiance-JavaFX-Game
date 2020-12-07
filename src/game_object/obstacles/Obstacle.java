@@ -1,5 +1,11 @@
-package game_object;
+package game_object.obstacles;
 
+import animations.ExplosionEffect;
+import animations.PurpleExplosionEffect;
+import animations.TimeEffect;
+import game_object.PlayerShip;
+import game_object.bullets.Bullet;
+import game_object.bullets.GrenadeBullet;
 import util.*;
 
 import java.util.ArrayList;
@@ -9,13 +15,28 @@ import java.util.Random;
 //TODO another interface needed for sprite and Obstacle
 abstract public class Obstacle implements Drawable
 {
-    private static double MAX_EXPLOSION_VELOCITY_X = 18;
-    private static double MAX_EXPLOSION_VELOCITY_Y = 10;
+    private static double MAX_EXPLOSION_VELOCITY_X = 22;
+    private static double MAX_EXPLOSION_VELOCITY_Y = 14;
+    private static double MAX_SPEED = 10;
+    private static double MIN_SPEED=1;
+    private static int MAX_LEVEL = 100;
     private static Random rand;
     private int level;
     private double speed;
     private Vector position;
     private boolean isDestroyed;
+
+    public void setCW(boolean CW)
+    {
+
+    }
+
+    public void calcSpeedFromLevel()
+    {
+        double newSpeed = MIN_SPEED + (MAX_SPEED-MIN_SPEED)*((double)level/MAX_LEVEL);
+        setSpeed(newSpeed);
+//        System.out.println(speed);
+    }
 
     public boolean isDestroyed()
     {
@@ -92,8 +113,9 @@ abstract public class Obstacle implements Drawable
         this.segments = segments;
     }
 
-    public Obstacle()
+    public Obstacle(int level)
     {
+        this.level=level;
         isDestroyed=false;
         position = new Vector(0,0);
         segments = new ObstacleSegment[4];
@@ -102,7 +124,7 @@ abstract public class Obstacle implements Drawable
             //init Obstacle Segment objects
             segments[i] = new ObstacleSegment();
         }
-        speed=1;
+        calcSpeedFromLevel();
 
     }
 
@@ -114,6 +136,8 @@ abstract public class Obstacle implements Drawable
         if(collisionColor == ship.getColor()) // passing through
         {
             //can add effects here
+            //TODO beware! multiple executions!
+//            ship.addScore(50);
 
         }
         else if(collisionColor == GameColor.NONE) // not interacting with the obstacle
@@ -122,8 +146,16 @@ abstract public class Obstacle implements Drawable
         }
         else // collided with obstacle
         {
-            if(!ship.isProtected())
+            if(ship.isProtected())
+            {
+                ship.addEffect(new PurpleExplosionEffect(ship.getPosition()));
+                destroy();
+            }
+            else
+            {
                 return true;
+            }
+
         }
         //check missiles
 
@@ -140,13 +172,16 @@ abstract public class Obstacle implements Drawable
                 {
                     if(current.getClass() == GrenadeBullet.class) // grenade bullet
                     {
-                        destroy(current.getPosition());
+                        destroy();
+                        segments[0].addEffect(new ExplosionEffect(current.getPosition()));
+                        ship.addScore(200);
                     }
                     else // ice bullet
                     {
                         //slow down obstacle
                         this.setSpeed(this.getSpeed()/2);
                         this.segments[0].addEffect(new TimeEffect(current.getPosition()));
+                        ship.addScore(100);
                         //TODO implement this and use speed in rotating obstacle to get delta angle
                     }
 
@@ -177,12 +212,12 @@ abstract public class Obstacle implements Drawable
         return GameColor.NONE; // if not colliding
     }
 
-    public void destroy(Vector hitPosition)
+    public void destroy()
     {
         //explosion at hitPosition
         //TODO add more explosions
 
-        segments[0].addEffect(new DebrisExplosionEffect(hitPosition));
+
 
         //sounds
 

@@ -1,8 +1,7 @@
-package game_object;
+package game_object.powerups;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Rotate;
-import util.PurpleExplosionEffect;
 import util.Sprite;
 
 public abstract class PowerUp extends Sprite

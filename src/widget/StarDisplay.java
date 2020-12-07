@@ -1,6 +1,6 @@
 package widget;
 
-import game_object.StarPowerUp;
+import game_object.powerups.StarPowerUp;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;

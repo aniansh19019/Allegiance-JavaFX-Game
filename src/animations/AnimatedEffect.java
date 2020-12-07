@@ -1,7 +1,8 @@
-package util;
+package animations;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import util.Sprite;
 
 import java.util.ArrayList;
 

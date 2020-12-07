@@ -1,16 +1,21 @@
-package util;
+package animations;
 
 import javafx.scene.image.Image;
+import util.Vector;
 
-public class YellowExplosionEffect extends AnimatedEffect
+public class TimeEffect extends AnimatedEffect
 {
     @Override
     public void loadFrames()
     {
-        String fileBasePath = "file:res/img/effects/YellowExplosion/explosion_yellow_";
-        for(int i = 29; i<=84; i++)
+        String fileBasePath = "file:res/img/effects/time_effect/time_effect_";
+        for(int i = 1; i<=15; i++)
         {
             String filePath = fileBasePath;
+            if(i<10)
+            {
+                filePath+="0";
+            }
             filePath= filePath + i + ".png";
 
             //load image
@@ -20,12 +25,12 @@ public class YellowExplosionEffect extends AnimatedEffect
         setImage(getFrames().get(0));
     }
 
-    public YellowExplosionEffect(Vector position)
+    public TimeEffect(Vector position)
     {
         loadFrames();
-        setImageScaleFactor(1.3);
+        setImageScaleFactor(1);
         setPosition(position);
         setLoopFrames(false);
-        setAnimationSpeed(1);
+        setAnimationSpeed(0.3);
     }
 }

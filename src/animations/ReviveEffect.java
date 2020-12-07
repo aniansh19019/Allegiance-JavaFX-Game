@@ -1,20 +1,17 @@
-package util;
+package animations;
 
 import javafx.scene.image.Image;
+import util.Vector;
 
-public class ColorSwitchEffect extends AnimatedEffect
+public class ReviveEffect extends AnimatedEffect
 {
     @Override
     public void loadFrames()
     {
-        String fileBasePath = "file:res/img/effects/color_switch_effect/color_switch_";
-        for(int i = 1; i<=64; i++)
+        String fileBasePath = "file:res/img/effects/revive_animation/Slice_";
+        for(int i = 1; i<=20; i++)
         {
             String filePath = fileBasePath;
-            if(i<10)
-            {
-                filePath+="0";
-            }
             filePath= filePath + i + ".png";
 
             //load image
@@ -24,12 +21,12 @@ public class ColorSwitchEffect extends AnimatedEffect
         setImage(getFrames().get(0));
     }
 
-    public ColorSwitchEffect(Vector position)
+    public ReviveEffect(Vector position)
     {
         loadFrames();
-        setImageScaleFactor(1.4);
+        setImageScaleFactor(1.3);
         setPosition(position);
         setLoopFrames(false);
-        setAnimationSpeed(1);
+        setAnimationSpeed(0.6);
     }
 }

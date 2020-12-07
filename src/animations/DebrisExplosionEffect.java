@@ -1,11 +1,11 @@
-package util;
+package animations;
 
 import javafx.scene.image.Image;
+import util.Vector;
 
-public class ExplosionEffect extends AnimatedEffect
+public class DebrisExplosionEffect extends AnimatedEffect
 {
-
-    public ExplosionEffect(Vector position)
+    public DebrisExplosionEffect(Vector position)
     {
         loadFrames();
         setImageScaleFactor(1.5);
@@ -17,8 +17,8 @@ public class ExplosionEffect extends AnimatedEffect
     @Override
     public void loadFrames()
     {
-        String fileBasePath = "file:res/img/effects/Explosion4/00";
-        for(int i = 1; i<=25; i++)
+        String fileBasePath = "file:res/img/effects/Explosion3/00";
+        for(int i = 1; i<=30; i++)
         {
             String filePath = fileBasePath;
             if(i<10)

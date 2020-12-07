@@ -1,6 +1,13 @@
 package main;
 
+import animations.AnimatedEffect;
 import game_object.*;
+import game_object.bullets.GrenadeBullet;
+import game_object.bullets.TimeBullet;
+import game_object.obstacles.Obstacle;
+import game_object.obstacles.RotatingArmsObstacle;
+import game_object.obstacles.RotatingSatellitesObstacle;
+import game_object.powerups.*;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -56,12 +63,14 @@ public class SinglePlayerGame implements Serializable
     private Sprite bottomCollisionDetector; // to denote the bottom of the frame
     private Random rand;
     private int starCount;
-    private double score;
     private AmmoDisplay ammoDisplay;
     private StarDisplay starDisplay;
+    private int level;
 //    private AnimatedEffect effects;
 
     //user info
+
+
 
 
 
@@ -73,6 +82,7 @@ public class SinglePlayerGame implements Serializable
         starCount =0;
         //init vars
         inputList = new ArrayList<String>();
+        level=1;
         //init config
         this.config = new GlobalConfig();
         //init stage
@@ -147,6 +157,8 @@ public class SinglePlayerGame implements Serializable
         }
     }
 
+
+
     private void initPowerUps()
     {
         //TODO change this to be random
@@ -155,8 +167,14 @@ public class SinglePlayerGame implements Serializable
 
         for(int i = 0; i< NUM_SCREENS; i++)
         {
-            powerUps[i] = new BulletPowerUp(-(i*config.getSCREEN_HEIGHT() + 0.25*config.getSCREEN_HEIGHT()));
+            powerUps[i] = new ProtectionPowerUp(-(i*config.getSCREEN_HEIGHT() + 0.25*config.getSCREEN_HEIGHT()));
         }
+    }
+
+    private Obstacle getRandomObstacle()
+    {
+
+        return null;
     }
 
     private void initObstacles()
@@ -170,11 +188,11 @@ public class SinglePlayerGame implements Serializable
 
             if(i%2==0)
             {
-                obstacles[i] = new RotatingSatellitesObstacle(yVal);
+                obstacles[i] = new RotatingSatellitesObstacle(yVal, level);
             }
             else
             {
-                obstacles[i] = new RotatingSatellitesObstacle(yVal);
+                obstacles[i] = new RotatingSatellitesObstacle(yVal, level);
             }
         }
 
@@ -401,14 +419,17 @@ public class SinglePlayerGame implements Serializable
 
             if(obstacleCount%2==0)
             {
-                obstacles[NUM_SCREENS -1] = new RotatingArmsObstacle(50, yVal);
+                obstacles[NUM_SCREENS -1] = new RotatingArmsObstacle(50, yVal, level);
+                obstacles[NUM_SCREENS-1].setCW(false);
             }
             else
             {
-                obstacles[NUM_SCREENS -1] = new RotatingArmsObstacle(config.getSCREEN_WIDTH()-50, yVal);
+                obstacles[NUM_SCREENS -1] = new RotatingArmsObstacle(config.getSCREEN_WIDTH()-50, yVal, level);
             }
 //            obstacles[NUM_OBSTACLES-1].setPosition(20,-(NUM_OBSTACLES-1)*config.getSCREEN_HEIGHT());
             obstacleCount++;
+            //increment level
+            level++;
         }
 
         private void drawScore()
@@ -416,7 +437,7 @@ public class SinglePlayerGame implements Serializable
             context.setFont(Font.loadFont(config.getPRIMARY_FONT(), 20));
             context.setFill(Paint.valueOf(config.getREGULAR_FONT_COLOR()));
             context.setTextAlign(TextAlignment.RIGHT);
-            context.fillText("Score: "+ (int) score, config.getSCREEN_WIDTH() - 10, 30 );
+            context.fillText("Score: "+ ship.getScore(), config.getSCREEN_WIDTH() - 10, 30 );
 
             //render ammo display
 
@@ -533,9 +554,6 @@ public class SinglePlayerGame implements Serializable
             }
         }
 
-
-
-
         private void drawShip(long l)
         {
 
@@ -565,6 +583,7 @@ public class SinglePlayerGame implements Serializable
             ship.update();
             ship.render(context);
         }
+
         private void shiftWindow()
         {
             shiftingWindow =true;
@@ -615,9 +634,10 @@ public class SinglePlayerGame implements Serializable
                     {
                         //TODO implement this
                         isSlow=true;
+                        slowTimeCounter=0;
                         //TODO add screen overlay animation
                     }
-                    score+=50;
+                    ship.addScore(50);
                     current.destroy();// destroy powerup from canvas
 
                 }
@@ -625,7 +645,7 @@ public class SinglePlayerGame implements Serializable
                 if(ship.didCollide(stars[i]))
                 {
                     starCount++;
-                    score+=50;
+                    ship.addScore(50);
                     stars[i].destroy();
 //                    ship.addCollectEffect();
                     //TODO change thi®s

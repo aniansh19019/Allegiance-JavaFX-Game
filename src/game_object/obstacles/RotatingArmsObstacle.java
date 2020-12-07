@@ -1,18 +1,17 @@
-package game_object;
+package game_object.obstacles;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Rotate;
 import main.GlobalConfig;
 import util.GameColor;
-import util.Vector;
 
-public class RotatingSatellitesObstacle extends RotatingObstacle
+//TODO add rotation direction switch
+public class RotatingArmsObstacle extends RotatingObstacle
 {
-
-    private final static String redArm = "file:res/img/obstacles/red_sat.png";
-    private final static String greenArm = "file:res/img/obstacles/green_sat.png";
-    private final static String blueArm = "file:res/img/obstacles/blue_sat.png";
-    private final static String yellowArm = "file:res/img/obstacles/yellow_sat.png";
+    private final static String redArm = "file:res/img/obstacles/rotating_arm_red.png";
+    private final static String greenArm = "file:res/img/obstacles/rotating_arm_green.png";
+    private final static String blueArm = "file:res/img/obstacles/rotating_arm_blue.png";
+    private final static String yellowArm = "file:res/img/obstacles/rotating_arm_yellow.png";
 
     private static final GlobalConfig config;
 
@@ -20,9 +19,9 @@ public class RotatingSatellitesObstacle extends RotatingObstacle
     {
         config = new GlobalConfig();
     }
-
-    public RotatingSatellitesObstacle(double y)
+    public RotatingArmsObstacle(double x, double y, int level)
     {
+        super(level);
         //set sprite images
         getSegments()[0].setImage(redArm);
         getSegments()[1].setImage(greenArm);
@@ -39,37 +38,27 @@ public class RotatingSatellitesObstacle extends RotatingObstacle
         for(int i=0; i<4; i++)
         {
             ObstacleSegment segment = getSegments()[i];
-            //set scale
-            segment.setImageScaleFactor(0.65);
+            segment.setImageScaleFactor(0.3);
         }
+        //after init segments, set position
 
-        // after init segments, set position
-        setPosition(config.getSCREEN_WIDTH()/2, y);
-
+        setPosition(x,y);
     }
 
+//    @Override
 
 
 
-
-    @Override
-    public boolean isInFrame()
-    {
-        if(getPosition().getY() - getSegments()[0].getBoundary().getH() > config.getSCREEN_HEIGHT())
-        {
-            return false;
-        }
-        return true;
-    }
-
+//TODO add connector
     @Override
     public void render(GraphicsContext context)
     {
+//        System.out.println("Angle delta in rotating arms obstacle: " + getAngleDelta());
         double tempAngle = getAngle();
         for(int i=0; i<4; i++)
         {
             ObstacleSegment segment = getSegments()[i];
-            Rotate r = new Rotate(tempAngle, segment.getPosition().getX(), segment.getPosition().getY()+100+segment.getBoundary().getH()/2);
+            Rotate r = new Rotate(tempAngle, segment.getPosition().getX(), segment.getPosition().getY()+20+segment.getBoundary().getH()/2);
             context.save();
             context.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
             segment.render(context);
@@ -78,7 +67,7 @@ public class RotatingSatellitesObstacle extends RotatingObstacle
             //rotate collision polygon
             segment.getBoundary().setAngle(tempAngle);
             segment.getBoundary().setPivotX(segment.getPosition().getX());
-            segment.getBoundary().setPivotY(segment.getPosition().getY()+100+segment.getBoundary().getH()/2);
+            segment.getBoundary().setPivotY(segment.getPosition().getY()+20+segment.getBoundary().getH()/2);
             //render bounds
             if(config.getSHOW_COLLISION_BOUNDS())
             {
@@ -87,7 +76,21 @@ public class RotatingSatellitesObstacle extends RotatingObstacle
             //render effects
             segment.renderEffects(context);
 
+
             tempAngle+=90; // rotate arms 90 degree out of phase with each other
         }
+    }
+
+
+
+    @Override
+    public boolean isInFrame()
+    {
+//        System.out.println(getPosition().getY() - getSegments()[0].getBoundary().getH());
+        if(getPosition().getY() - getSegments()[0].getBoundary().getH() > config.getSCREEN_HEIGHT())
+        {
+            return false;
+        }
+        return true;
     }
 }

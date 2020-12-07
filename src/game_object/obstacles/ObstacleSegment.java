@@ -1,4 +1,4 @@
-package game_object;
+package game_object.obstacles;
 
 import javafx.scene.canvas.GraphicsContext;
 import util.Sprite;

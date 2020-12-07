@@ -1,9 +1,7 @@
-package game_object;
+package game_object.powerups;
 
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.transform.Rotate;
-import util.ColorSwitchEffect;
-import util.YellowExplosionEffect;
+import animations.ColorSwitchEffect;
+import game_object.powerups.PowerUp;
 
 public class ColorSwitcher extends PowerUp
 {

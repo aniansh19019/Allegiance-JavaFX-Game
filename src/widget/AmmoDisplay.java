@@ -1,11 +1,9 @@
 package widget;
 
-import com.sun.javafx.iio.gif.GIFImageLoader2;
-import game_object.Bullet;
+import game_object.bullets.Bullet;
 import javafx.scene.canvas.GraphicsContext;
 import main.GlobalConfig;
 import util.Drawable;
-import util.Sprite;
 
 import java.util.ArrayList;
 

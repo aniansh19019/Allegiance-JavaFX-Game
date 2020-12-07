@@ -1,7 +1,6 @@
-package game_object;
+package game_object.powerups;
 
-import util.PurpleExplosionEffect;
-import util.YellowExplosionEffect;
+import animations.PurpleExplosionEffect;
 
 public class TimeBulletPowerUp extends PowerUp
 {

@@ -1,5 +1,7 @@
 package game_object;
 
+import animations.*;
+import game_object.bullets.Bullet;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
@@ -28,6 +30,22 @@ public class PlayerShip extends Sprite
     private AnimatedEffect protectionPowerUpEffect;
     private boolean isProtected;
     private int protectionCounter;
+    private int score;
+
+    public void addScore(int increment)
+    {
+        score+=increment;
+    }
+
+    public int getScore()
+    {
+        return score;
+    }
+
+    public void setScore(int score)
+    {
+        this.score = score;
+    }
 
     public boolean isProtected()
     {
@@ -54,7 +72,6 @@ public class PlayerShip extends Sprite
 //        addCollectEffect();
         if(bulletsAmmo.size()<=maxBulletNum)
         {
-            System.out.println(bullet);
             bulletsAmmo.add(bullet);
         }
     }
@@ -168,7 +185,7 @@ public class PlayerShip extends Sprite
     public void protectionOn()
     {
         //sound on
-
+        protectionCounter=0;
         addEffect(new ReviveEffect(getPosition()));
         isProtected=true;
         if(!getEffects().contains(protectionPowerUpEffect))
@@ -185,6 +202,20 @@ public class PlayerShip extends Sprite
             getEffects().remove(protectionPowerUpEffect);
         }
     }
+
+//    @Override
+//    public CollisionRectangle getBoundary()
+//    {
+//        if(isProtected)
+//        {
+//            protectionPowerUpEffect.getBoundary();
+//        }
+//        else
+//        {
+//            return super.getBoundary();
+//        }
+//
+//    }
 
     public PlayerShip(GameColor color, int shipType)
     {
@@ -204,6 +235,7 @@ public class PlayerShip extends Sprite
         protectionPowerUpEffect= new ShipProtectEffect(getPosition());
         isProtected=false;
         protectionCounter=0;
+        score=0;
     }
 
     public void boost()

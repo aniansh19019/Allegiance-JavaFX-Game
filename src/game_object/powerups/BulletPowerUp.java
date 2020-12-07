@@ -1,6 +1,6 @@
-package game_object;
+package game_object.powerups;
 
-import util.YellowExplosionEffect;
+import animations.YellowExplosionEffect;
 
 public class BulletPowerUp extends PowerUp
 {

@@ -1,14 +1,15 @@
-package util;
+package animations;
 
 import javafx.scene.image.Image;
+import util.Vector;
 
-public class ReviveEffect extends AnimatedEffect
+public class YellowExplosionEffect extends AnimatedEffect
 {
     @Override
     public void loadFrames()
     {
-        String fileBasePath = "file:res/img/effects/revive_animation/Slice_";
-        for(int i = 1; i<=20; i++)
+        String fileBasePath = "file:res/img/effects/YellowExplosion/explosion_yellow_";
+        for(int i = 29; i<=84; i++)
         {
             String filePath = fileBasePath;
             filePath= filePath + i + ".png";
@@ -20,12 +21,12 @@ public class ReviveEffect extends AnimatedEffect
         setImage(getFrames().get(0));
     }
 
-    public ReviveEffect(Vector position)
+    public YellowExplosionEffect(Vector position)
     {
         loadFrames();
         setImageScaleFactor(1.3);
         setPosition(position);
         setLoopFrames(false);
-        setAnimationSpeed(0.6);
+        setAnimationSpeed(1);
     }
 }
