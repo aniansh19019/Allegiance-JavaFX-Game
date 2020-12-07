@@ -8,6 +8,7 @@ import game_object.bullets.TimeBullet;
 import game_object.obstacles.*;
 import game_object.powerups.*;
 import javafx.animation.AnimationTimer;
+import javafx.geometry.Pos;
 import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -49,9 +50,9 @@ import java.util.Random;
 public class SinglePlayerGame implements Serializable
 {
     private static final int NUM_SCREENS = 3;
-    private static final double BULLET_POWERUP_PROB = 0.4;
-    private static final double TIME_BULLET_POWERUP_PROB = 0.4;
-    private static final double PROTECTION_POWERUP_PROB = 0.01;
+    private static final double BULLET_POWERUP_PROB = 0.1;
+    private static final double TIME_BULLET_POWERUP_PROB = 0.2;
+    private static final double PROTECTION_POWERUP_PROB = 0.8;
     private static final double TIME_POWERUP_PROB = 0.4;
 
     //init sounds
@@ -80,6 +81,8 @@ public class SinglePlayerGame implements Serializable
     private AmmoDisplay ammoDisplay;
     private StarDisplay starDisplay;
     private int level;
+    private PauseMenu pauseMenu;
+    private MenuButton pauseButton;
 //    private AnimatedEffect effects;
 
     //user info
@@ -117,6 +120,7 @@ public class SinglePlayerGame implements Serializable
         //init root node
         this.root = new StackPane();
         root.getChildren().add(gameCanvas);
+
         //init scene
         scene = new Scene(root);
         //init ship
@@ -164,6 +168,24 @@ public class SinglePlayerGame implements Serializable
         ImageCursor cursor = new ImageCursor(cursorImage);
         backGroundMusic.play();
 
+        //init pause menu
+
+        pauseButton = new MenuButton(e -> pauseGame());
+        pauseButton.setNormalImageString("file:res/img/ui_elements/pause_blue.png");
+        pauseButton.setHoverImageString("file:res/img/ui_elements/pause_yellow.png");
+        pauseButton.setClickImageString("file:res/img/ui_elements/pause_orange.png");
+        pauseButton.loadImages();
+        pauseButton.getButton().setScaleX(0.13);
+        pauseButton.getButton().setScaleY(0.13);
+
+        //add pause button
+
+        this.root.getChildren().add(pauseButton.getButton());
+        this.root.setAlignment(pauseButton.getButton(), Pos.TOP_LEFT);
+        pauseButton.getButton().setTranslateX(-120);
+        pauseButton.getButton().setTranslateY(-110);
+
+
         this.root.setCursor(cursor);
 
 
@@ -199,7 +221,7 @@ public class SinglePlayerGame implements Serializable
 
         for(int i = 0; i< NUM_SCREENS; i++)
         {
-            powerUps[i] = new TimePowerUp(-(i*config.getSCREEN_HEIGHT() + 0.25*config.getSCREEN_HEIGHT()));
+            powerUps[i] = new ColorSwitcher(-(i*config.getSCREEN_HEIGHT() + 0.25*config.getSCREEN_HEIGHT()));
         }
     }
 
@@ -233,7 +255,14 @@ public class SinglePlayerGame implements Serializable
 
     private void pauseGame()
     {
+        //TODO draw overlay and play sound
+        Image pauseOverlay = new Image("file:res/img/overlays/pause_overlay.png");
+        context.drawImage(pauseOverlay, 0, 0);
+
         gameLoop.stop();
+        pauseMenu = new PauseMenu(e -> resumeGame(), null, null, null);
+        root.getChildren().add(pauseMenu.getLayer());
+        root.getChildren().remove(pauseButton.getButton());
 
         //darken screen
 
@@ -260,8 +289,15 @@ public class SinglePlayerGame implements Serializable
 
     private void gameOver()
     {
-//        context.
+        System.out.println("Game Over");
+    }
 
+    private void resumeGame()
+    {
+        //play sound
+        root.getChildren().remove(pauseMenu.getLayer());
+        root.getChildren().add(pauseButton.getButton());
+        gameLoop.start();
     }
 
 
@@ -636,8 +672,8 @@ public class SinglePlayerGame implements Serializable
                 //check collision with lower boundary
                 if(ship.didCollide(bottomCollisionDetector))
                 {
-                    System.out.println("Game Over");
                     ship.destroy();
+                    gameOver();
                 }
 
                 //check with other objects
@@ -645,8 +681,8 @@ public class SinglePlayerGame implements Serializable
                 {
                     //game over
                     //TODO implement this
-                    System.out.println("Game Over");
                     ship.destroy();
+                    gameOver();
                 }
 
                 if(ship.didCollide(powerUps[i]))

@@ -1,10 +1,13 @@
 package main;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import org.w3c.dom.events.MouseEvent;
 
-public class MenuButtons
+public class MenuButton
 {
     private String normalImageString;
     private String hoverImageString;
@@ -39,18 +42,17 @@ public class MenuButtons
         button.setImage(normalImage);
     }
 
-    public MenuButtons()
+    public MenuButton(EventHandler<? super javafx.scene.input.MouseEvent> handler )
     {
         button = new ImageView();
-
         button.setOnMouseEntered(e -> button.setImage(hoverImage));
         button.setOnMouseExited(e-> button.setImage(normalImage));
         button.setOnMousePressed(e -> button.setImage(clickImage));
-        button.setOnMouseReleased(e->button.setImage(normalImage));
+        button.setOnMouseReleased(handler);
     }
 
-    public Node getLayout()
+    public Node getButton()
     {
-        return null;
+        return button;
     }
 }
