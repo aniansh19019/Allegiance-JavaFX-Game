@@ -2,8 +2,12 @@ package main;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -22,9 +26,17 @@ public class Menu
         //init config
         config = new GlobalConfig();
 
+        //init cursor
+
+//        Image cursorImage = new Image("file:res/img/ui_elements/cursor_white.png");
+//        ImageCursor cursor = new ImageCursor(cursorImage);
+
+
 
         //init sample menu
         BorderPane pane = new BorderPane();
+//        pane.setCursor(cursor);
+
 
         Button button = new Button("Play main.Game!");
         pane.setCenter(button);

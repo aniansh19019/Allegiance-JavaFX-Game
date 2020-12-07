@@ -4,6 +4,7 @@ import animations.*;
 import game_object.bullets.Bullet;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import main.GlobalConfig;
 import util.*;
@@ -14,13 +15,22 @@ import java.util.Random;
 
 public class PlayerShip extends Sprite
 {
+
+    //sounds
+    private static AudioClip destroySound;
+    private static AudioClip protectionOnSound;
+    private static AudioClip protectionOffSound;
+    private static AudioClip protectionSound;
+    private static AudioClip thrustSound;
+
+    //sounds
     private static int PROTECTION_MAX_LIMIT = 1000;
     private static Random rand;
     private int shipType;
     private boolean isBoosted;
     private Image normalImage;
     private Image thrustImage;
-    private static Media thrustSound;
+//    private static Media thrustSound;
     private static Vector gravity;
     private static Vector boostVelocity;
     private static final int maxBulletNum = 5;
@@ -129,6 +139,14 @@ public class PlayerShip extends Sprite
         boostVelocity = new Vector(0,-3);
         rand = new Random();
         //init sound
+        //init sounds
+        destroySound = new AudioClip("file:res/sound/ship_explode.mp3");
+        thrustSound = new AudioClip("file:res/sound/thrust_sound.mp3");
+        thrustSound.setCycleCount(AudioClip.INDEFINITE);
+        protectionOnSound = new AudioClip("file:res/sound/protection_on.mp3");
+        protectionOffSound = new AudioClip("file:res/sound/protection_off.mp3");
+        protectionSound = new AudioClip("file:res/sound/protection_shield_effect.mp3");
+        protectionSound.setCycleCount(AudioClip.INDEFINITE);
     }
 
     @Override
@@ -184,6 +202,8 @@ public class PlayerShip extends Sprite
 
     public void protectionOn()
     {
+        protectionOnSound.play();
+        protectionSound.play();
         //sound on
         protectionCounter=0;
         addEffect(new ReviveEffect(getPosition()));
@@ -194,6 +214,8 @@ public class PlayerShip extends Sprite
 
     public void protectionOff()
     {
+        protectionOffSound.play();
+        protectionSound.stop();
         //sound off
         addEffect(new ReverseReviveEffect(getPosition()));
         isProtected=false;
@@ -236,6 +258,8 @@ public class PlayerShip extends Sprite
         isProtected=false;
         protectionCounter=0;
         score=0;
+
+
     }
 
     public void boost()
@@ -245,6 +269,7 @@ public class PlayerShip extends Sprite
         setAcceleration(0,0); // switch off acceleration
         switchImage(thrustImage);
         //play sound
+        thrustSound.play();
     }
 
     public void unBoost()
@@ -253,6 +278,7 @@ public class PlayerShip extends Sprite
         setAcceleration(gravity); // switch on gravity
         isBoosted=false;
         //stop sound
+        thrustSound.stop();
     }
     public void fire()
     {
@@ -346,6 +372,10 @@ public class PlayerShip extends Sprite
         AnimatedEffect effect = new ShipExplosionEffect(getPosition());
 //        effect.setImageScaleFactor(2);
         addEffect(effect);
+
+//        AudioClip
+        destroySound.play();
+        //turn off all other sounds
 
     }
 

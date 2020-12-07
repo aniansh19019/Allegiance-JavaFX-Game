@@ -19,8 +19,8 @@ public class ColorSwitchEffect extends AnimatedEffect
             filePath= filePath + i + ".png";
 
             //load image
-
-            getFrames().add(new Image(filePath));
+            if(i%2==0) // take only odd frames
+                getFrames().add(new Image(filePath));
         }
         setImage(getFrames().get(0));
     }

@@ -2,10 +2,16 @@ package game_object.powerups;
 
 import animations.ColorSwitchEffect;
 import game_object.powerups.PowerUp;
+import javafx.scene.media.AudioClip;
 
 public class ColorSwitcher extends PowerUp
 {
 
+    private static AudioClip collectSound;
+    static
+    {
+        collectSound = new AudioClip("file:res/sound/color_switcher_effect.mp3");
+    }
 
     public ColorSwitcher(double y)
     {
@@ -18,6 +24,9 @@ public class ColorSwitcher extends PowerUp
     @Override
     public void destroy()
     {
+        //play sound
+        collectSound.play();
+
         super.destroy();
         addEffect(new ColorSwitchEffect(getPosition()));
     }

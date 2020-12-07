@@ -6,6 +6,7 @@ import animations.TimeEffect;
 import game_object.PlayerShip;
 import game_object.bullets.Bullet;
 import game_object.bullets.GrenadeBullet;
+import javafx.scene.media.AudioClip;
 import util.*;
 
 import java.util.ArrayList;
@@ -25,6 +26,13 @@ abstract public class Obstacle implements Drawable
     private double speed;
     private Vector position;
     private boolean isDestroyed;
+    //sounds
+    private static AudioClip timeBulletSound;
+    private static AudioClip bulletHitSound;
+    private static AudioClip destroySound;
+    private static AudioClip destroyByShieldSound;
+    private static AudioClip tickTickSound;
+    //sounds
 
     public void setCW(boolean CW)
     {
@@ -52,6 +60,12 @@ abstract public class Obstacle implements Drawable
 
     static{
         rand = new Random();
+        //init sounds
+        bulletHitSound = new AudioClip("file:res/sound/bullet_hit.mp3");
+        timeBulletSound = new AudioClip("file:res/sound/time_effect.mp3");
+        destroyByShieldSound = new AudioClip("file:res/sound/protection_destroy_obstacle.mp3");
+        tickTickSound = new AudioClip("file:res/sound/time_effect.mp3");
+//        destroyByShieldSound = new AudioClip("file:res/sound/protection_destroy_obstacle.mp3");
     }
 
     public Vector getPosition()
@@ -149,6 +163,7 @@ abstract public class Obstacle implements Drawable
             if(ship.isProtected())
             {
                 ship.addEffect(new PurpleExplosionEffect(ship.getPosition()));
+                destroyByShieldSound.play();
                 destroy();
             }
             else
@@ -175,9 +190,12 @@ abstract public class Obstacle implements Drawable
                         destroy();
                         segments[0].addEffect(new ExplosionEffect(current.getPosition()));
                         ship.addScore(200);
+                        bulletHitSound.play();
                     }
                     else // ice bullet
                     {
+                        timeBulletSound.play();
+                        tickTickSound.play();
                         //slow down obstacle
                         this.setSpeed(this.getSpeed()/2);
                         this.segments[0].addEffect(new TimeEffect(current.getPosition()));

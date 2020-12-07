@@ -7,11 +7,14 @@ import game_object.bullets.TimeBullet;
 import game_object.obstacles.*;
 import game_object.powerups.*;
 import javafx.animation.AnimationTimer;
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
@@ -26,9 +29,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
-
+//TODO sounds: timeslow, music, game end, revive,
 //TODO juice up the game!
-
+//TODO add overlays
 
 //TODO off center effects fix
 //TODO save game
@@ -42,10 +45,15 @@ import java.util.Random;
 public class SinglePlayerGame implements Serializable
 {
     private static final int NUM_SCREENS = 3;
-    private static final double BULLET_POWERUP_PROB = 0.1;
-    private static final double TIME_BULLET_POWERUP_PROB = 0.1;
-    private static final double PROTECTION_POWERUP_PROB = 0.1;
-    private static final double TIME_POWERUP_PROB = 0.1;
+    private static final double BULLET_POWERUP_PROB = 0.4;
+    private static final double TIME_BULLET_POWERUP_PROB = 0.4;
+    private static final double PROTECTION_POWERUP_PROB = 0.01;
+    private static final double TIME_POWERUP_PROB = 0.4;
+
+    //init sounds
+    private static AudioClip timePowerupOnSound;
+    private static AudioClip timePowerupOffSound;
+    private static AudioClip backGroundMusic;
 
 
     private Scene scene;
@@ -71,6 +79,13 @@ public class SinglePlayerGame implements Serializable
 //    private AnimatedEffect effects;
 
     //user info
+
+    static {
+        timePowerupOnSound = new AudioClip("file:res/sound/time_powerup_on.mp3");
+        timePowerupOffSound = new AudioClip("file:res/sound/time_power_up_off.mp3");
+        backGroundMusic = new AudioClip("file:res/sound/Automation.mp3");
+        backGroundMusic.setCycleCount(AudioClip.INDEFINITE);
+    }
 
 
 
@@ -140,6 +155,13 @@ public class SinglePlayerGame implements Serializable
             String keyName = event.getCode().toString();
             inputList.remove(keyName);
         });
+        // init cursor
+        Image cursorImage = new Image("file:res/img/ui_elements/cursor_arrow.png");
+        ImageCursor cursor = new ImageCursor(cursorImage);
+        backGroundMusic.play();
+
+        this.root.setCursor(cursor);
+
 
 
         gameLoop.start();
@@ -198,7 +220,7 @@ public class SinglePlayerGame implements Serializable
             }
             else
             {
-                obstacles[i] = new DoubleRotatingSatellitesObstacle(yVal, level);
+                obstacles[i] = new SlidingBulbsObstacle(yVal, level);
             }
         }
 
@@ -317,6 +339,7 @@ public class SinglePlayerGame implements Serializable
                 slowTimeCounter++;
                 if (slowTimeCounter >= slowTimeLimit)
                 {
+                    timePowerupOffSound.play();
                     isSlow = false;
                     slowTimeCounter = 0;
                 }
@@ -640,6 +663,7 @@ public class SinglePlayerGame implements Serializable
                         //TODO implement this
                         isSlow=true;
                         slowTimeCounter=0;
+                        timePowerupOnSound.play();
                         //TODO add screen overlay animation
                     }
                     ship.addScore(50);

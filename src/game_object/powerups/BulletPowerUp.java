@@ -1,9 +1,16 @@
 package game_object.powerups;
 
 import animations.YellowExplosionEffect;
+import javafx.scene.media.AudioClip;
 
 public class BulletPowerUp extends PowerUp
 {
+    private static AudioClip collectSound;
+    static
+    {
+        collectSound = new AudioClip("file:res/sound/bullet_pickup_sound.mp3");
+    }
+
     public BulletPowerUp(double y)
     {
         super(y);
@@ -14,6 +21,8 @@ public class BulletPowerUp extends PowerUp
     @Override
     public void destroy()
     {
+        //play sound
+        collectSound.play();
         super.destroy();
         addEffect(new YellowExplosionEffect(getPosition()));
     }
