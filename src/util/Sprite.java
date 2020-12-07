@@ -28,6 +28,17 @@ public class Sprite implements Drawable
     private final static double screenOffset = 50;
     private ArrayList<AnimatedEffect> effects;
     private boolean renderEffects;
+    private boolean doShiftEffects;
+
+    public boolean isDoShiftEffects()
+    {
+        return doShiftEffects;
+    }
+
+    public void setDoShiftEffects(boolean doShiftEffects)
+    {
+        this.doShiftEffects = doShiftEffects;
+    }
 
     public boolean isActive()
     {
@@ -153,7 +164,7 @@ public class Sprite implements Drawable
         position.subtract(delta);
 
         //shift effects
-        if(!effects.isEmpty())
+        if(!effects.isEmpty() && doShiftEffects)
         {
             for(int i=0; i< effects.size(); i++)
             {
@@ -231,6 +242,7 @@ public class Sprite implements Drawable
         effects = new ArrayList<AnimatedEffect>();
         renderEffects=true;
         isActive=true;
+        doShiftEffects=true;
     }
 
     public CollisionRectangle getBoundary()

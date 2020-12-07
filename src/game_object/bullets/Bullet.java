@@ -4,7 +4,7 @@ import game_object.PlayerShip;
 import main.GlobalConfig;
 import util.Sprite;
 
-public class Bullet extends Sprite
+public abstract class Bullet extends Sprite
 {
     private PlayerShip ship;
     private static GlobalConfig config;

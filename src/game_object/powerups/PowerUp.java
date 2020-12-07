@@ -1,5 +1,6 @@
 package game_object.powerups;
 
+import animations.AnimatedEffect;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Rotate;
 import util.Sprite;
@@ -14,6 +15,8 @@ public abstract class PowerUp extends Sprite
         angle=0;
         setLocalShowBounds(false);
         setPosition(config.getSCREEN_WIDTH()/2, y);
+        setRenderEffects(false);
+        setDoShiftEffects(true);
     }
 
     @Override
@@ -47,6 +50,14 @@ public abstract class PowerUp extends Sprite
         {
             getBoundary().render(context);
         }
+        super.renderEffects(context);
+    }
+
+    @Override
+    public void addEffect(AnimatedEffect effect)
+    {
+        effect.getPosition().setX(config.getSCREEN_WIDTH()/2);
+        super.addEffect(effect);
     }
 
     public void destroy()

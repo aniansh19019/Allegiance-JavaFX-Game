@@ -19,7 +19,7 @@ abstract public class Obstacle implements Drawable
     private static double MAX_EXPLOSION_VELOCITY_Y = 14;
     private static double MAX_SPEED = 10;
     private static double MIN_SPEED=1;
-    private static int MAX_LEVEL = 100;
+    private static int MAX_LEVEL = 200;
     private static Random rand;
     private int level;
     private double speed;
@@ -212,7 +212,7 @@ abstract public class Obstacle implements Drawable
         return GameColor.NONE; // if not colliding
     }
 
-    public void destroy()
+    private void destroy()
     {
         //explosion at hitPosition
         //TODO add more explosions

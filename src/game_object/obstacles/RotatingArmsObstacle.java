@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Rotate;
 import main.GlobalConfig;
 import util.GameColor;
+import util.ObstaclePosition;
 
 //TODO add rotation direction switch
 public class RotatingArmsObstacle extends RotatingObstacle
@@ -12,6 +13,7 @@ public class RotatingArmsObstacle extends RotatingObstacle
     private final static String greenArm = "file:res/img/obstacles/rotating_arm_green.png";
     private final static String blueArm = "file:res/img/obstacles/rotating_arm_blue.png";
     private final static String yellowArm = "file:res/img/obstacles/rotating_arm_yellow.png";
+    private final static double xOffset = 60;
 
     private static final GlobalConfig config;
 
@@ -19,7 +21,7 @@ public class RotatingArmsObstacle extends RotatingObstacle
     {
         config = new GlobalConfig();
     }
-    public RotatingArmsObstacle(double x, double y, int level)
+    public RotatingArmsObstacle(double y, ObstaclePosition pos, int level)
     {
         super(level);
         //set sprite images
@@ -42,7 +44,22 @@ public class RotatingArmsObstacle extends RotatingObstacle
         }
         //after init segments, set position
 
-        setPosition(x,y);
+        if(pos == ObstaclePosition.LEFT)
+        {
+            setPosition(xOffset,y);
+            setCW(false);
+        }
+        else if(pos == ObstaclePosition.RIGHT)
+        {
+            setPosition(config.getSCREEN_WIDTH() - xOffset, y);
+            setCW(true);
+        }
+        else
+        {
+            setPosition(config.getSCREEN_WIDTH()/2, y);
+        }
+
+
     }
 
 //    @Override

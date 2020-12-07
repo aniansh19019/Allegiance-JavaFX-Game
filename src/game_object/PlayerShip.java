@@ -224,7 +224,7 @@ public class PlayerShip extends Sprite
 
         this.setColor(color);
 
-        setPosition(config.getSCREEN_WIDTH()/2, 0.5* config.getSCREEN_HEIGHT()); // set ship initial position
+        setPosition(config.getSCREEN_WIDTH()/2, 0.8* config.getSCREEN_HEIGHT()); // set ship initial position
         setImageScaleFactor(0.6);
         //TODO set this in setShip
 

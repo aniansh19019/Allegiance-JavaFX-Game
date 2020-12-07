@@ -4,9 +4,7 @@ import animations.AnimatedEffect;
 import game_object.*;
 import game_object.bullets.GrenadeBullet;
 import game_object.bullets.TimeBullet;
-import game_object.obstacles.Obstacle;
-import game_object.obstacles.RotatingArmsObstacle;
-import game_object.obstacles.RotatingSatellitesObstacle;
+import game_object.obstacles.*;
 import game_object.powerups.*;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
@@ -28,6 +26,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
+
+//TODO juice up the game!
+
+
 //TODO off center effects fix
 //TODO save game
 //TODO pause button
@@ -40,10 +42,10 @@ import java.util.Random;
 public class SinglePlayerGame implements Serializable
 {
     private static final int NUM_SCREENS = 3;
-    private static final double BULLET_POWERUP_PROB = 0.2;
-    private static final double TIME_BULLET_POWERUP_PROB = 0.2;
-    private static final double PROTECTION_POWERUP_PROB = 0.2;
-    private static final double TIME_POWERUP_PROB = 0.2;
+    private static final double BULLET_POWERUP_PROB = 0.1;
+    private static final double TIME_BULLET_POWERUP_PROB = 0.1;
+    private static final double PROTECTION_POWERUP_PROB = 0.1;
+    private static final double TIME_POWERUP_PROB = 0.1;
 
 
     private Scene scene;
@@ -157,7 +159,11 @@ public class SinglePlayerGame implements Serializable
         }
     }
 
-
+    private PowerUp getRandomPowerUp()
+    {
+        return null;
+        //TODO implement
+    }
 
     private void initPowerUps()
     {
@@ -173,7 +179,7 @@ public class SinglePlayerGame implements Serializable
 
     private Obstacle getRandomObstacle()
     {
-
+        //TODO IMPLEMENT
         return null;
     }
 
@@ -188,11 +194,11 @@ public class SinglePlayerGame implements Serializable
 
             if(i%2==0)
             {
-                obstacles[i] = new RotatingSatellitesObstacle(yVal, level);
+                obstacles[i] = new RotatingSatellitesObstacle(yVal, ObstaclePosition.CENTER, level);
             }
             else
             {
-                obstacles[i] = new RotatingSatellitesObstacle(yVal, level);
+                obstacles[i] = new DoubleRotatingSatellitesObstacle(yVal, level);
             }
         }
 
@@ -419,12 +425,11 @@ public class SinglePlayerGame implements Serializable
 
             if(obstacleCount%2==0)
             {
-                obstacles[NUM_SCREENS -1] = new RotatingArmsObstacle(50, yVal, level);
-                obstacles[NUM_SCREENS-1].setCW(false);
+                obstacles[NUM_SCREENS -1] = new RotatingArmsObstacle(yVal,ObstaclePosition.LEFT, level);
             }
             else
             {
-                obstacles[NUM_SCREENS -1] = new RotatingArmsObstacle(config.getSCREEN_WIDTH()-50, yVal, level);
+                obstacles[NUM_SCREENS -1] = new RotatingArmsObstacle(yVal,ObstaclePosition.RIGHT,level);
             }
 //            obstacles[NUM_OBSTACLES-1].setPosition(20,-(NUM_OBSTACLES-1)*config.getSCREEN_HEIGHT());
             obstacleCount++;
@@ -487,7 +492,7 @@ public class SinglePlayerGame implements Serializable
             //TODO randomise this
 
 
-            stars[NUM_SCREENS -1] = new StarPowerUp(-((NUM_SCREENS-1)*config.getSCREEN_HEIGHT() + 0*config.getSCREEN_HEIGHT()));
+            stars[NUM_SCREENS -1] = new StarPowerUp(-((NUM_SCREENS-1)*config.getSCREEN_HEIGHT()));
         }
 
         private void drawPowerUps(long l)
@@ -529,7 +534,7 @@ public class SinglePlayerGame implements Serializable
             //TODO randomise this
 
             //coordinate for new powerup
-            double yVal = -( (NUM_SCREENS-1)*config.getSCREEN_HEIGHT() + 0*config.getSCREEN_HEIGHT());
+            double yVal = -( (NUM_SCREENS-1)*config.getSCREEN_HEIGHT() );
 
 
             if(toss(BULLET_POWERUP_PROB))
