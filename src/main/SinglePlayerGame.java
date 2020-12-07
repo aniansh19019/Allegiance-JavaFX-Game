@@ -1,6 +1,7 @@
 package main;
 
 import animations.AnimatedEffect;
+import animations.TimeOverlayEffect;
 import game_object.*;
 import game_object.bullets.GrenadeBullet;
 import game_object.bullets.TimeBullet;
@@ -28,6 +29,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
+
+//TODO game lagging, optimise!!
+
 
 //TODO sounds: timeslow, music, game end, revive,
 //TODO juice up the game!
@@ -195,7 +199,7 @@ public class SinglePlayerGame implements Serializable
 
         for(int i = 0; i< NUM_SCREENS; i++)
         {
-            powerUps[i] = new ProtectionPowerUp(-(i*config.getSCREEN_HEIGHT() + 0.25*config.getSCREEN_HEIGHT()));
+            powerUps[i] = new TimePowerUp(-(i*config.getSCREEN_HEIGHT() + 0.25*config.getSCREEN_HEIGHT()));
         }
     }
 
@@ -261,7 +265,6 @@ public class SinglePlayerGame implements Serializable
     }
 
 
-
     private class GameAnimationTimer extends AnimationTimer
     {
         private int obstacleCount = NUM_SCREENS;
@@ -323,7 +326,6 @@ public class SinglePlayerGame implements Serializable
                             effects.get(i).shiftPosition(ship.getVelocity());
                         }
                     }
-
                 }
                 else // turn off shifting
                 {
@@ -339,6 +341,15 @@ public class SinglePlayerGame implements Serializable
                 slowTimeCounter++;
                 if (slowTimeCounter >= slowTimeLimit)
                 {
+                    //turn off overlay
+                    for(int i=0; i< effects.size(); i++)
+                    {
+                        if(effects.get(i).getClass() == TimeOverlayEffect.class)
+                        {
+                            effects.get(i).setLoopFrames(false);
+                        }
+                    }
+                    //play sound
                     timePowerupOffSound.play();
                     isSlow = false;
                     slowTimeCounter = 0;
@@ -661,9 +672,16 @@ public class SinglePlayerGame implements Serializable
                     else if(current.getClass() == TimePowerUp.class)
                     {
                         //TODO implement this
+
+                        //adding overlay
+                        if(!isSlow)
+                            effects.add(new TimeOverlayEffect(ship.getPosition()));
+
                         isSlow=true;
                         slowTimeCounter=0;
+                        //playing sound
                         timePowerupOnSound.play();
+
                         //TODO add screen overlay animation
                     }
                     ship.addScore(50);
