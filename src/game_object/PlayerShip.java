@@ -22,6 +22,7 @@ public class PlayerShip extends Sprite
     private static AudioClip protectionOffSound;
     private static AudioClip protectionSound;
     private static AudioClip thrustSound;
+    private static AudioClip reviveSound;
 
     //sounds
     private static int PROTECTION_MAX_LIMIT = 1000;
@@ -147,6 +148,8 @@ public class PlayerShip extends Sprite
         protectionOffSound = new AudioClip("file:res/sound/protection_off.mp3");
         protectionSound = new AudioClip("file:res/sound/protection_shield_effect.mp3");
         protectionSound.setCycleCount(AudioClip.INDEFINITE);
+
+        reviveSound = new AudioClip("file:res/sound/revive_sound.mp3");
     }
 
     @Override
@@ -376,15 +379,24 @@ public class PlayerShip extends Sprite
 //        AudioClip
         destroySound.play();
         //turn off all other sounds
+        thrustSound.stop();
+
 
     }
 
     public void revive()
     {
         //effect
-        addEffect(new ReviveEffect(getPosition()));
+        //TODO play sound
+        //init positions
+        reviveSound.play();
+
+
         setVisible(true);
         setActive(true);
+        setPosition(config.getSCREEN_WIDTH()/2, 0.8* config.getSCREEN_HEIGHT()); // set ship initial position
+        setVelocity(boostVelocity);
+        addEffect(new ReviveEffect(getPosition()));
     }
 
 

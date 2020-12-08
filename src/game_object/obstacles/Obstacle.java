@@ -230,7 +230,7 @@ abstract public class Obstacle implements Drawable
         return GameColor.NONE; // if not colliding
     }
 
-    private void destroy()
+    public void destroy()
     {
         //explosion at hitPosition
         //TODO add more explosions
@@ -253,7 +253,7 @@ abstract public class Obstacle implements Drawable
             //segments[i].addEffect(new ExplosionEffect(segments[i].getPosition()));
             //TODO testing
 
-            segments[i].setAcceleration(new Vector(0,0.1));
+            segments[i].setAcceleration(new Vector(0,0.1)); // set gravity
             segments[i].setVelocity(new Vector((rand.nextDouble()-0.5)*MAX_EXPLOSION_VELOCITY_X, (rand.nextDouble()-0.5)*MAX_EXPLOSION_VELOCITY_Y));
         }
     }
