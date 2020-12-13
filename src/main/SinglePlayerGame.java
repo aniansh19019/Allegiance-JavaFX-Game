@@ -17,7 +17,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -25,6 +24,7 @@ import javafx.stage.Stage;
 import main.menus.GameOverMenu;
 import main.menus.MenuButton;
 import main.menus.PauseMenu;
+import main.menus.main_menu.MainMenu;
 import util.*;
 import widget.AmmoDisplay;
 import widget.StarDisplay;
@@ -115,7 +115,21 @@ public class SinglePlayerGame implements Serializable
     private int starsRequired;
     private boolean isDestroyed;
     private transient SinglePlayerGameWrapper wrapper;
+
+    private transient MainMenu mainMenu;
 //    private AnimatedEffect effects;
+
+
+    public MainMenu getMainMenu()
+    {
+        return mainMenu;
+    }
+
+    public void setMainMenu(MainMenu mainMenu)
+    {
+        this.mainMenu = mainMenu;
+        this.mainStage = mainMenu.getWindow();
+    }
 
     public void setMainStage(Stage mainStage)
     {
@@ -149,11 +163,13 @@ public class SinglePlayerGame implements Serializable
 
 
 
-    public SinglePlayerGame(Stage mainStage, SinglePlayerGameWrapper wrapper)
+    public SinglePlayerGame(MainMenu menu, SinglePlayerGameWrapper wrapper)
     {
         //init utils
         this.wrapper=wrapper;
 
+        //init menu
+        mainMenu = menu;
         //init score to 0
         starCount =0;
         //init vars
@@ -163,7 +179,7 @@ public class SinglePlayerGame implements Serializable
         starsRequired=2;
 
         //init stage
-        this.mainStage = mainStage;
+        this.mainStage = menu.getWindow();
         //init gameLoop
         this.gameLoop = new GameAnimationTimer();
         //init canvas
@@ -178,7 +194,7 @@ public class SinglePlayerGame implements Serializable
         scene = new Scene(root);
         //init ship
         //TODO select ship from menu
-        ship = new PlayerShip(GameColor.values()[rand.nextInt(4)], 2);
+        ship = new PlayerShip(GameColor.values()[rand.nextInt(4)], mainMenu.getShipNum());
 
         //init ammoDisplay
 
@@ -517,7 +533,7 @@ public class SinglePlayerGame implements Serializable
             SinglePlayerGame test = (SinglePlayerGame) in.readObject();
             inFile.close();
             in.close();
-            test.setMainStage(mainStage);
+            test.setMainMenu(mainMenu);
             test.setWrapper(wrapper);
             wrapper.setGame(test);
             mainStage.setScene(test.getScene());
@@ -531,14 +547,16 @@ public class SinglePlayerGame implements Serializable
     }
     public void restartGame() //unlink current refernce and set new object
     {
-        SinglePlayerGame game = new SinglePlayerGame(mainStage, wrapper);
+        SinglePlayerGame game = new SinglePlayerGame(mainMenu, wrapper);
         wrapper.setGame(game);
         mainStage.setScene(game.getScene());
     }
 
     public void quitGame() // got to menu
     {
-
+        //TODO transition
+        backGroundMusic.stop();
+        mainStage.setScene(mainMenu.getMainMenu());
     }
 
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException

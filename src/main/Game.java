@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import main.menus.main_menu.MainMenu;
 
 import java.io.Serializable;
 import java.util.Hashtable;
@@ -13,7 +14,7 @@ import java.util.Hashtable;
 public class Game extends Application implements Serializable
 {
 //    private transient main.SinglePlayerGame game;
-    private transient Menu menu;
+    private transient MainMenu menu;
 
     private GlobalConfig config;
 
@@ -42,7 +43,7 @@ public class Game extends Application implements Serializable
     public void start(Stage stage) throws Exception
     {
         // init menu
-        menu = new Menu(stage);
+        menu = new MainMenu(stage);
         //stage setup
 
         stage.setHeight(config.getSCREEN_HEIGHT());
@@ -62,7 +63,7 @@ public class Game extends Application implements Serializable
 
         //go to menu
 
-        stage.setScene(menu.getScene());
+        stage.setScene(menu.getSplashScreen());
 
         // for now go to game
 

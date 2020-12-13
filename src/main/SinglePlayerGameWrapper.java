@@ -1,6 +1,7 @@
 package main;
 
 import javafx.stage.Stage;
+import main.menus.main_menu.MainMenu;
 
 public class SinglePlayerGameWrapper
 {
@@ -16,8 +17,8 @@ public class SinglePlayerGameWrapper
         this.game = game;
     }
 
-    public SinglePlayerGameWrapper(Stage stage)
+    public SinglePlayerGameWrapper(MainMenu menu)
     {
-        this.game = new SinglePlayerGame(stage, this);
+        this.game = new SinglePlayerGame(menu, this);
     }
 }

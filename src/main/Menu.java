@@ -55,8 +55,8 @@ public class Menu
         @Override
         public void handle(ActionEvent actionEvent)
         {
-            wrappedGame = new SinglePlayerGameWrapper(mainStage);
-            mainStage.setScene(wrappedGame.getGame().getScene());
+//            wrappedGame = new SinglePlayerGameWrapper(mainStage);
+//            mainStage.setScene(wrappedGame.getGame().getScene());
         }
     }
 }
