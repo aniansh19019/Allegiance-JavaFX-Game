@@ -7,10 +7,15 @@ import util.Sprite;
 
 public abstract class Bullet extends Sprite
 {
-    private PlayerShip ship;
+    private transient PlayerShip ship;
     private static GlobalConfig config;
     private boolean isFired;
     private static AudioClip fireSound;
+
+    public void setShip(PlayerShip ship)
+    {
+        this.ship = ship;
+    }
 
     public void destroy()
     {

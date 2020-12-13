@@ -6,9 +6,12 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 import javafx.scene.transform.Rotate;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
-public class CollisionRectangle implements Drawable
+public class CollisionRectangle implements Drawable, Serializable
 {
     private double x;
     private double y;
@@ -19,7 +22,9 @@ public class CollisionRectangle implements Drawable
     private double pivotX;
     private double pivotY;
 
-    private Polygon poly;
+    private double[] pointsBackup;
+
+    private transient Polygon poly;//check
 
     public double getAngle()
     {
@@ -226,15 +231,28 @@ public class CollisionRectangle implements Drawable
 
     }
 
-//    public boolean didCollide(CollisionRectangle other)
-//    {
-//        boolean didNotCollide =
-//                this.x + this.w < other.x ||
-//                        other.x + other.w <this.x ||
-//                        this.y + this.h < other.y ||
-//                        other.y + other.h < this.y;
-//        return !didNotCollide;
-//    }
+    //read for serialization
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException
+    {
+        //backup polygon points
+        Double[] tempArray = poly.getPoints().toArray(new Double[0]);
+        pointsBackup = new double[tempArray.length];
+        for(int i=0; i< tempArray.length; i++)
+        {
+            pointsBackup[i] = tempArray[i];
+        }
 
+
+        out.defaultWriteObject();
+    }
+
+    //write after deserialization
+
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
+        //restore polygon points
+        poly = new Polygon(pointsBackup);
+    }
 
 }

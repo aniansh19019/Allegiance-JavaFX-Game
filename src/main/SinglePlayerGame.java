@@ -29,7 +29,7 @@ import util.*;
 import widget.AmmoDisplay;
 import widget.StarDisplay;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -91,36 +91,49 @@ public class SinglePlayerGame implements Serializable
 
 
 
-    private Scene scene;
-    private Stage mainStage; //reference to the main stage
-    private GlobalConfig config;
+    private transient Scene scene;
+    private transient Stage mainStage; //reference to the main stage
+    private static final GlobalConfig config;
     private GameAnimationTimer gameLoop;
-    private Canvas gameCanvas;
-    private StackPane root;
-    private GraphicsContext context;
+    private transient Canvas gameCanvas;
+    private transient StackPane root;
+    private transient GraphicsContext context;
     private PlayerShip ship;
     private ArrayList<String> inputList;
-    private Sprite testSprite;
-    private RotatingArmsObstacle testObstacle;
     private Obstacle[] obstacles; // to store all obstacles
     private PowerUp[] powerUps; // to store all powerups/collectibles
     private StarPowerUp[] stars; // to store all the stars
     private Sprite bottomCollisionDetector; // to denote the bottom of the frame
-    private Random rand;
+    private static Random rand;
     private int starCount;
-    private AmmoDisplay ammoDisplay;
-    private StarDisplay starDisplay;
+    private transient AmmoDisplay ammoDisplay;
+    private transient StarDisplay starDisplay;
     private int level;
-    private PauseMenu pauseMenu;
-    private MenuButton pauseButton;
-    private GameOverMenu gameOverMenu;
+    private transient PauseMenu pauseMenu;
+    private transient MenuButton pauseButton;
+    private transient GameOverMenu gameOverMenu;
     private int starsRequired;
     private boolean isDestroyed;
+    private transient SinglePlayerGameWrapper wrapper;
 //    private AnimatedEffect effects;
 
+    public void setMainStage(Stage mainStage)
+    {
+        this.mainStage = mainStage;
+    }
+
+    public void setWrapper(SinglePlayerGameWrapper wrapper)
+    {
+        this.wrapper = wrapper;
+    }
     //user info
 
     static {
+        //init config
+        config = new GlobalConfig();
+        //init rand
+        rand = new Random();
+        //init sounds
         timePowerupOnSound = new AudioClip("file:res/sound/time_powerup_on.mp3");
         timePowerupOffSound = new AudioClip("file:res/sound/time_power_up_off.mp3");
 //        backGroundMusic = new AudioClip("file:res/sound/Automation.mp3");
@@ -136,10 +149,11 @@ public class SinglePlayerGame implements Serializable
 
 
 
-    public SinglePlayerGame(Stage maineStage)
+    public SinglePlayerGame(Stage mainStage, SinglePlayerGameWrapper wrapper)
     {
         //init utils
-        rand = new Random();
+        this.wrapper=wrapper;
+
         //init score to 0
         starCount =0;
         //init vars
@@ -147,10 +161,9 @@ public class SinglePlayerGame implements Serializable
         inputList = new ArrayList<String>();
         level=1;
         starsRequired=2;
-        //init config
-        this.config = new GlobalConfig();
+
         //init stage
-        this.mainStage = maineStage;
+        this.mainStage = mainStage;
         //init gameLoop
         this.gameLoop = new GameAnimationTimer();
         //init canvas
@@ -398,7 +411,7 @@ public class SinglePlayerGame implements Serializable
         context.drawImage(pauseOverlay, 0, 0);
 
         gameLoop.stop();
-        pauseMenu = new PauseMenu(e -> resumeGame(), null, null, null);
+        pauseMenu = new PauseMenu(e -> resumeGame(), e->restartGame(), e->saveGame(), e->quitGame());
         root.getChildren().add(pauseMenu.getLayer());
         root.getChildren().remove(pauseButton.getButton());
 
@@ -439,7 +452,7 @@ public class SinglePlayerGame implements Serializable
 
         gameLoop.stop();
 
-        gameOverMenu = new GameOverMenu(e->revivePlayer(), null, null,starsRequired,starCount);
+        gameOverMenu = new GameOverMenu(e->revivePlayer(), e->restartGame(), e->quitGame(),starsRequired,starCount);
 
         root.getChildren().add(gameOverMenu.getLayer());
         root.getChildren().remove(pauseButton.getButton());
@@ -484,11 +497,132 @@ public class SinglePlayerGame implements Serializable
         backGroundMusic.play();
     }
 
+    public void saveGame() //catch exceptions
+    {
+        //try stuff
+        try
+        {
+            //save effect
+            FileOutputStream outFile = new FileOutputStream("saves/test.sav");
+            ObjectOutputStream out = new ObjectOutputStream(outFile);
+            out.writeObject(this);
+            out.close();
+            outFile.close();
 
-    private class GameAnimationTimer extends AnimationTimer
+            System.out.println("Saved Successfully");
+
+            //read effect
+            FileInputStream inFile = new FileInputStream("saves/test.sav");
+            ObjectInputStream in = new ObjectInputStream(inFile);
+            SinglePlayerGame test = (SinglePlayerGame) in.readObject();
+            inFile.close();
+            in.close();
+            test.setMainStage(mainStage);
+            test.setWrapper(wrapper);
+            wrapper.setGame(test);
+            mainStage.setScene(test.getScene());
+            System.out.println("Success!");
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+    public void restartGame() //unlink current refernce and set new object
+    {
+        SinglePlayerGame game = new SinglePlayerGame(mainStage, wrapper);
+        wrapper.setGame(game);
+        mainStage.setScene(game.getScene());
+    }
+
+    public void quitGame() // got to menu
+    {
+
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
+
+        //init stage
+//        this.mainStage = maineStage;
+
+        //init canvas
+        this.gameCanvas = new Canvas(config.getSCREEN_WIDTH(), config.getSCREEN_HEIGHT());
+        //init context
+        this.context = gameCanvas.getGraphicsContext2D();
+        //init root node
+        this.root = new StackPane();
+        root.getChildren().add(gameCanvas);
+
+        //init scene
+        scene = new Scene(root);
+
+        //init ammoDisplay
+
+        ammoDisplay = new AmmoDisplay(ship.getBulletsAmmo());
+
+        //init starDisplay
+
+        starDisplay = new StarDisplay();
+
+        //init KeyEvents
+
+        scene.setOnKeyPressed((KeyEvent event) ->
+        {
+            String keyName = event.getCode().toString();
+            if(!inputList.contains(keyName))
+                inputList.add(keyName);
+        });
+        scene.setOnKeyReleased((KeyEvent event) ->
+        {
+            String keyName = event.getCode().toString();
+            inputList.remove(keyName);
+        });
+        // init cursor
+        Image cursorImage = new Image("file:res/img/ui_elements/cursor_arrow.png");
+        ImageCursor cursor = new ImageCursor(cursorImage);
+        backGroundMusic.play();
+
+        //init pause menu
+
+        pauseButton = new MenuButton(e -> pauseGame());
+        pauseButton.setNormalImageString("file:res/img/ui_elements/pause_blue.png");
+        pauseButton.setHoverImageString("file:res/img/ui_elements/pause_yellow.png");
+        pauseButton.setClickImageString("file:res/img/ui_elements/pause_orange.png");
+        pauseButton.loadImages();
+        pauseButton.getButton().setScaleX(0.13);
+        pauseButton.getButton().setScaleY(0.13);
+
+        //add pause button
+
+        this.root.getChildren().add(pauseButton.getButton());
+        this.root.setAlignment(pauseButton.getButton(), Pos.TOP_LEFT);
+        pauseButton.getButton().setTranslateX(-120);
+        pauseButton.getButton().setTranslateY(-110);
+
+
+        this.root.setCursor(cursor);
+
+
+
+        gameLoop.start();
+
+
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException
+    {
+
+
+        out.defaultWriteObject();
+    }
+
+
+    private class GameAnimationTimer extends AnimationTimer implements Serializable
     {
         private boolean shiftingWindow;
-        private final double windowShiftDelta;
         private final double lineOfControl;
         private CollisionRectangle screenRectangle;
         private long firedTime=0;
@@ -499,9 +633,13 @@ public class SinglePlayerGame implements Serializable
         private long slowTimeCounter;
         private int waitShipDestroy = 60;
         private int destroyTimeCounter;
-        private Image backgroundFill;
+        private final String backGroundImageString = "file:res/img/background/background.png";
+        private transient Image backgroundFill;
 
-
+        public ArrayList<AnimatedEffect> getEffects()
+        {
+            return effects;
+        }
 
         public GameAnimationTimer()
         {
@@ -509,11 +647,10 @@ public class SinglePlayerGame implements Serializable
             effects = new ArrayList<AnimatedEffect>();
             shiftingWindow=false;
             lineOfControl = config.getSCREEN_HEIGHT()*0.4;
-            windowShiftDelta = 1.5;
             screenRectangle = new CollisionRectangle(0,0,config.getSCREEN_WIDTH(), config.getSCREEN_HEIGHT());
             slowTimeCounter = 0;
             destroyTimeCounter=0;
-            backgroundFill = new Image("file:res/img/background/background.png");
+            backgroundFill = new Image(backGroundImageString);
         }
 
         public void cleanSlate()
@@ -910,6 +1047,12 @@ public class SinglePlayerGame implements Serializable
                     //TODO change thi®s
                 }
             }
+        }
+
+        private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+        {
+            in.defaultReadObject();
+            backgroundFill = new Image(backGroundImageString);
         }
     }
 }

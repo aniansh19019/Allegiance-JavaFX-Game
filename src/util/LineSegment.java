@@ -1,6 +1,8 @@
 package util;
 
-public class LineSegment
+import java.io.Serializable;
+
+public class LineSegment implements Serializable
 {
     private Vector a; // one end
     private Vector b; // other end

@@ -5,9 +5,10 @@ import javafx.scene.canvas.GraphicsContext;
 import main.GlobalConfig;
 import util.Drawable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class AmmoDisplay implements Drawable
+public class AmmoDisplay implements Drawable, Serializable
 {
     private ArrayList<Bullet> ammo;
     static GlobalConfig config;

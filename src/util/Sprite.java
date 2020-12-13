@@ -5,28 +5,31 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import main.GlobalConfig;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 //TODO sprite implements an interface drawable which obstacle also implements
 
-public class Sprite implements Drawable
+public class Sprite implements Drawable, Serializable
 {
+    private String imageBackup;
     private boolean localShowBounds;
     private Vector position;
     private Vector velocity;
     private Vector acceleration;
-    private Image image;
+    private transient Image image;
     private boolean isVisible;
     private boolean isMovable;
     private boolean isInFrame;
     private boolean isActive;
-    private CollisionRectangle boundary;
+    private CollisionRectangle boundary; // check for serialisation
     private double imageScaleFactor;
     private GameColor color;
     public final static GlobalConfig config;
     private final static double screenOffset = 50;
-    private ArrayList<AnimatedEffect> effects;
+    private ArrayList<AnimatedEffect> effects; // check
     private boolean renderEffects;
     private boolean doShiftEffects;
 
@@ -372,5 +375,23 @@ public class Sprite implements Drawable
                 ", isMovable=" + isMovable +
                 ", color=" + color +
                 '}';
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException
+    {
+        if(image!=null)
+        {
+            imageBackup = image.getUrl();
+        }
+        out.defaultWriteObject();
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();//read object
+        if(imageBackup!=null)
+        {
+            image = new Image(imageBackup);
+        }
     }
 }

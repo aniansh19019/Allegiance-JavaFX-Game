@@ -18,7 +18,7 @@ public class Menu
     private Stage mainStage;
     private Scene scene;
     private GlobalConfig config;
-    private SinglePlayerGame game;
+    private SinglePlayerGameWrapper wrappedGame;
 
     public Menu(Stage mainStage)
     {
@@ -55,8 +55,8 @@ public class Menu
         @Override
         public void handle(ActionEvent actionEvent)
         {
-            game = new SinglePlayerGame(mainStage);
-            mainStage.setScene(game.getScene());
+            wrappedGame = new SinglePlayerGameWrapper(mainStage);
+            mainStage.setScene(wrappedGame.getGame().getScene());
         }
     }
 }

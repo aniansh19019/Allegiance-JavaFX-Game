@@ -9,12 +9,13 @@ import game_object.bullets.GrenadeBullet;
 import javafx.scene.media.AudioClip;
 import util.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
 //TODO another interface needed for sprite and Obstacle
-abstract public class Obstacle implements Drawable
+abstract public class Obstacle implements Drawable, Serializable
 {
     private static double MAX_EXPLOSION_VELOCITY_X = 22;
     private static double MAX_EXPLOSION_VELOCITY_Y = 14;
@@ -22,6 +23,7 @@ abstract public class Obstacle implements Drawable
     private static double MIN_SPEED=1;
     private static int MAX_LEVEL = 200;
     private static Random rand;
+
     private int level;
     private double speed;
     private Vector position;

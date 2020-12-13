@@ -1,6 +1,8 @@
 package util;
 
-public enum GameColor
+import java.io.Serializable;
+
+public enum GameColor implements Serializable
 {
     RED, GREEN, BLUE, YELLOW, ALL, NONE
 }

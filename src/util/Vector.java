@@ -1,6 +1,8 @@
 package util;
 
-public class Vector
+import java.io.Serializable;
+
+public class Vector implements Serializable
 {
     private double x;
     private double y;

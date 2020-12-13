@@ -4,12 +4,14 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import util.Sprite;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
-
+//in progress
 public abstract class AnimatedEffect extends Sprite
 {
     private double animationSpeed;
-    private ArrayList<Image> frames;
+    private transient ArrayList<Image> frames;
     private long counter;
     private int frameNumber;
     private boolean isFinished;
@@ -97,5 +99,15 @@ public abstract class AnimatedEffect extends Sprite
             }
 
         }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();//read object
+        //check frame number
+        frames = new ArrayList<Image>();
+        loadFrames();
+        switchImage(frames.get(frameNumber%frames.size()));
+//        setPosition(getPosition());
     }
 }

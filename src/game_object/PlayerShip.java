@@ -9,11 +9,13 @@ import javafx.scene.media.Media;
 import main.GlobalConfig;
 import util.*;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
-public class PlayerShip extends Sprite
+public class PlayerShip extends Sprite implements Serializable
 {
 
     //sounds
@@ -27,10 +29,11 @@ public class PlayerShip extends Sprite
     //sounds
     private static int PROTECTION_MAX_LIMIT = 1000;
     private static Random rand;
+
     private int shipType;
     private boolean isBoosted;
-    private Image normalImage;
-    private Image thrustImage;
+    transient private Image normalImage;
+    transient private Image thrustImage;
 //    private static Media thrustSound;
     private static Vector gravity;
     private static Vector boostVelocity;
@@ -283,6 +286,7 @@ public class PlayerShip extends Sprite
         //stop sound
         thrustSound.stop();
     }
+
     public void fire()
     {
         if(!bulletsAmmo.isEmpty())
@@ -305,8 +309,6 @@ public class PlayerShip extends Sprite
             }
         }
     }
-
-
 
     @Override
     public void update()
@@ -419,5 +421,23 @@ public class PlayerShip extends Sprite
     public String toString()
     {
         return super.toString();
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+    {
+        in.defaultReadObject();
+        setShip();
+        //set ship reference to bullets
+
+        for(int i=0; i<bulletsFired.size(); i++)
+        {
+            bulletsFired.get(i).setShip(this);
+        }
+
+        for(int i=0; i<bulletsAmmo.size(); i++)
+        {
+            bulletsAmmo.get(i).setShip(this);
+        }
+
     }
 }

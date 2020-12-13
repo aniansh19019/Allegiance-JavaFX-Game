@@ -4,6 +4,8 @@ import javafx.scene.canvas.GraphicsContext;
 import main.GlobalConfig;
 import util.GameColor;
 
+//TODO fix bugs when effects dont show and bulbs bounce around on being destroyed
+
 public class SlidingBulbsObstacle extends Obstacle
 {
 
