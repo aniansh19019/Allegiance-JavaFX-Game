@@ -14,7 +14,7 @@ public class TimeOverlayEffect extends AnimatedEffect
             String filePath = fileBasePath;
             filePath= filePath + i + ".png";
 
-            System.out.println(filePath);
+//            System.out.println(filePath);
 
             //load image
 

@@ -79,6 +79,8 @@ public class NestedRotatingSatellitesObstacle extends Obstacle
         outerObstacle.setAxisLength(120);
 
         setPosition(config.getSCREEN_WIDTH()/2, y);
+
+//        outerObstacle.setDouble(true);
     }
 
     @Override
@@ -117,5 +119,19 @@ public class NestedRotatingSatellitesObstacle extends Obstacle
         super.shiftPosition(delta);
         innerObstacle.shiftPosition(delta);
         outerObstacle.shiftPosition(delta);
+    }
+
+    @Override
+    public void slow()
+    {
+        innerObstacle.slow();
+        outerObstacle.slow();
+    }
+
+    @Override
+    public void destroy()
+    {
+        innerObstacle.destroy();
+        outerObstacle.destroy();
     }
 }

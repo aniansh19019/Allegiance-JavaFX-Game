@@ -38,13 +38,16 @@ import java.util.Random;
 
 //TODO add animation to menu
 
-//TODO sounds: timeslow, music, game end, revive,
+
 //TODO juice up the game!
 //TODO add overlays
 //TODO adjust volumes
 //TODO fix collection effects
+
 //TODO off center effects fix
+
 //TODO save game
+
 //TODO pause button
 // TODO store all references in Game SinglePLayerGame Menu
 //TODO detect placement overlaps
@@ -52,15 +55,31 @@ import java.util.Random;
 //TODO add global sound controls
 //TODO add delay between gameover and menu
 //TODO randomise everything, cleanup code, prepare demo game, add other menu options, save game, oad game
+
 //TODO animate background
+
+
+//TODO check for direct powerup overlap
 
 public class SinglePlayerGame implements Serializable
 {
+    //number of entites that exist at a time in the game
     private static final int NUM_SCREENS = 3;
+    //powerup probabilities
     private static final double BULLET_POWERUP_PROB = 0.1;
-    private static final double TIME_BULLET_POWERUP_PROB = 0.2;
-    private static final double PROTECTION_POWERUP_PROB = 0.8;
-    private static final double TIME_POWERUP_PROB = 0.4;
+    private static final double TIME_BULLET_POWERUP_PROB = 0.1;
+    private static final double PROTECTION_POWERUP_PROB = 0.1;
+    private static final double TIME_POWERUP_PROB = 0.1;
+    //obstacle probabilities
+    private static final double ROTATING_ARMS_OBSTACLE_SINGLE_PROB = 0.1;
+    private static final double ROTATING_ARMS_OBSTACLE_DOUBLE_PROB = 0.1;
+    private static final double ROTATING_SATELLITES_OBSTACLE_SINGLE_PROB = 0.1;
+    private static final double ROTATING_SATELLITES_OBSTACLE_DOUBLE_PROB = 0.1;
+    private static final double SLIDING_BULBS_OBSTACLE_DOUBLE_PROB = 0.1;
+    private static final double NESTED_ROTATING_SATELLITE_OBSTACLE_DOUBLE_PROB = 0.1;
+    // misc
+    private static final int HARD_THRESHOLD = 10;
+
 
     //init sounds
     private static AudioClip timePowerupOnSound;
@@ -104,7 +123,8 @@ public class SinglePlayerGame implements Serializable
     static {
         timePowerupOnSound = new AudioClip("file:res/sound/time_powerup_on.mp3");
         timePowerupOffSound = new AudioClip("file:res/sound/time_power_up_off.mp3");
-        backGroundMusic = new AudioClip("file:res/sound/Automation.mp3");
+//        backGroundMusic = new AudioClip("file:res/sound/Automation.mp3");
+        backGroundMusic = new AudioClip("file:res/sound/astro.mp3");
         backGroundMusic.setCycleCount(AudioClip.INDEFINITE);
 
         resumeSound = new AudioClip("file:res/sound/resume_sound.mp3");
@@ -227,50 +247,145 @@ public class SinglePlayerGame implements Serializable
         }
     }
 
-    private PowerUp getRandomPowerUp()
+    private PowerUp getRandomPowerUp(double y)
     {
-        return null;
-        //TODO implement
+        ArrayList<PowerUp> candidates = new ArrayList<PowerUp>();
+
+        if(toss(PROTECTION_POWERUP_PROB))
+        {
+            candidates.add(new ProtectionPowerUp(y));
+        }
+        if(toss(TIME_POWERUP_PROB))
+        {
+            candidates.add(new TimePowerUp(y));
+        }
+        if(toss(BULLET_POWERUP_PROB))
+        {
+            candidates.add(new BulletPowerUp(y));
+        }
+        if(toss(TIME_BULLET_POWERUP_PROB))
+        {
+            candidates.add(new TimeBulletPowerUp(y));
+        }
+        if(candidates.isEmpty())
+        {
+            candidates.add(new ColorSwitcher(y));
+        }
+
+        PowerUp selected = candidates.get(rand.nextInt(candidates.size())); // return a random powerup from the selected powerups
+
+
+        return selected;
     }
 
     private void initPowerUps()
     {
-        //TODO change this to be random
         //randomly with low chance spawn other powerups
         powerUps = new PowerUp[NUM_SCREENS];
 
         for(int i = 0; i< NUM_SCREENS; i++)
         {
-            powerUps[i] = new ColorSwitcher(-(i*config.getSCREEN_HEIGHT() + 0.25*config.getSCREEN_HEIGHT()));
+            powerUps[i] = getRandomPowerUp(-(i*config.getSCREEN_HEIGHT() + 0.25*config.getSCREEN_HEIGHT()));
         }
     }
 
-    private Obstacle getRandomObstacle()
+
+    private ObstaclePosition getRandomPosition(boolean includeCenter)
     {
-        //TODO IMPLEMENT
-        return null;
+        if(!includeCenter)
+        {
+            if (rand.nextInt() % 2 == 0)
+            {
+                return ObstaclePosition.LEFT;
+            }
+            return ObstaclePosition.RIGHT;
+        }
+        else
+        {
+            int toss = rand.nextInt(3);
+            if(toss==0)
+            {
+                return ObstaclePosition.LEFT;
+            }
+            else if(toss == 1)
+            {
+                return ObstaclePosition.RIGHT;
+            }
+            return ObstaclePosition.CENTER;
+        }
+    }
+
+    private Obstacle getRandomObstacle(double y)
+    {
+        ArrayList<Obstacle> candidates = new ArrayList<Obstacle>();
+        boolean isHard=false;
+        if(level>HARD_THRESHOLD)
+        {
+            isHard=true;
+        }
+
+        if(toss(ROTATING_ARMS_OBSTACLE_SINGLE_PROB))
+        {
+            if(isHard && toss(0.5))
+            {
+                candidates.add(new HardRotatingArmsObstacle(y, getRandomPosition(false), level/2));
+            }
+            else
+            {
+                candidates.add(new RotatingArmsObstacle(y, getRandomPosition(false), level));
+            }
+        }
+        if(toss(ROTATING_ARMS_OBSTACLE_DOUBLE_PROB))
+        {
+            if(isHard && toss(0.5))
+            {
+                candidates.add(new HardDoubleRotatingArmsObstacle(y, level/2));
+            }
+            else
+            {
+                candidates.add(new DoubleRotatingArmsObstacle(y, level));
+            }
+        }
+        if(toss(ROTATING_SATELLITES_OBSTACLE_SINGLE_PROB))
+        {
+            candidates.add(new RotatingSatellitesObstacle(y, getRandomPosition(true),level));
+        }
+        if(toss(ROTATING_SATELLITES_OBSTACLE_DOUBLE_PROB))
+        {
+            if(isHard && toss(0.5))
+            {
+                candidates.add(new HardDoubleRotatingSatellitesObstacle(y, level/2));
+            }
+            else
+            {
+                candidates.add(new DoubleRotatingSatellitesObstacle(y, level));
+            }
+        }
+        if(toss(NESTED_ROTATING_SATELLITE_OBSTACLE_DOUBLE_PROB))
+        {
+            candidates.add(new NestedRotatingSatellitesObstacle(y, level/4));
+        }
+        if(toss(SLIDING_BULBS_OBSTACLE_DOUBLE_PROB))
+        {
+            candidates.add(new SlidingBulbsObstacle(y,level));
+        }
+        if(candidates.isEmpty())
+        {
+            candidates.add(new RotatingSatellitesObstacle(y, ObstaclePosition.CENTER, level));
+        }
+
+        return candidates.get(rand.nextInt(candidates.size())); // return one of the above
     }
 
     private void initObstacles()
     {
-        //TODO change this to be random
         obstacles = new Obstacle[NUM_SCREENS];
 
         for(int i = 0; i< NUM_SCREENS; i++)
         {
             double yVal = -i*config.getSCREEN_HEIGHT();
-
-            if(i%2==0)
-            {
-                obstacles[i] = new RotatingSatellitesObstacle(yVal, ObstaclePosition.CENTER, level);
-            }
-            else
-            {
-                obstacles[i] = new SlidingBulbsObstacle(yVal, level);
-            }
+            obstacles[i] = getRandomObstacle(yVal);
         }
-
-
     }
 
     private void pauseGame()
@@ -343,7 +458,15 @@ public class SinglePlayerGame implements Serializable
         root.getChildren().remove(gameOverMenu.getLayer());
         root.getChildren().add(pauseButton.getButton());
         ship.revive();
-        obstacles[0].destroy();
+
+        //destroy obstacles
+        for(int i=0; i<NUM_SCREENS; i++)
+        {
+            if(obstacles[i].isInFrame())
+            {
+                obstacles[i].destroy();
+            }
+        }
         backGroundMusic.play();
 
 
@@ -364,7 +487,6 @@ public class SinglePlayerGame implements Serializable
 
     private class GameAnimationTimer extends AnimationTimer
     {
-        private int obstacleCount = NUM_SCREENS;
         private boolean shiftingWindow;
         private final double windowShiftDelta;
         private final double lineOfControl;
@@ -404,9 +526,6 @@ public class SinglePlayerGame implements Serializable
         @Override
         public void handle(long l)
         {
-            //erase stuff
-
-
             if(shiftingWindow && ship.isActive())  //shift everything
             {
                 if(ship.getPosition().getY()<lineOfControl && ship.getVelocity().getY()<=0) // bring everything down in the frame
@@ -437,9 +556,6 @@ public class SinglePlayerGame implements Serializable
                 }
             }
              //draw stuff
-
-
-
             if(isSlow) //draw stuff
             {
                 slowTimeCounter++;
@@ -460,20 +576,15 @@ public class SinglePlayerGame implements Serializable
                 }
             }
 
-                cleanSlate();
-                drawShip(l);
-
-                drawObstacles(l);
-
-                drawStars(l);
-
-                drawPowerUps(l);
-
-                drawScore();
-                drawMisc(l);
-
-
-
+            //draw stuff
+            cleanSlate(); // clean slate
+            //draw
+            drawShip(l);
+            drawObstacles(l);
+            drawStars(l);
+            drawPowerUps(l);
+            drawScore();
+            drawMisc(l);
             //check for collisions
             checkCollisions();
 
@@ -516,7 +627,7 @@ public class SinglePlayerGame implements Serializable
 
 
         }
-//TODO move update inside render
+
         private void drawObstacles(long l)
         {
             for(int i = 0; i< NUM_SCREENS; i++)
@@ -556,22 +667,9 @@ public class SinglePlayerGame implements Serializable
             //create new obstacle
             //TODO randomise this
 
-            double yVal = -(NUM_SCREENS -1)*config.getSCREEN_HEIGHT();
-
-
-//            obstacles[NUM_SCREENS -1] = new RotatingArmsObstacle();
-
-            if(obstacleCount%2==0)
-            {
-                obstacles[NUM_SCREENS -1] = new RotatingArmsObstacle(yVal,ObstaclePosition.LEFT, level);
-            }
-            else
-            {
-                obstacles[NUM_SCREENS -1] = new RotatingArmsObstacle(yVal,ObstaclePosition.RIGHT,level);
-            }
-//            obstacles[NUM_OBSTACLES-1].setPosition(20,-(NUM_OBSTACLES-1)*config.getSCREEN_HEIGHT());
-            obstacleCount++;
-            //increment level
+//            double yVal = -(NUM_SCREENS -1)*config.getSCREEN_HEIGHT();
+            double yVal = obstacles[NUM_SCREENS-2].getPosition().getY()-config.getSCREEN_HEIGHT();
+            obstacles[NUM_SCREENS-1] = getRandomObstacle(yVal);
             level++;
         }
 
@@ -666,35 +764,32 @@ public class SinglePlayerGame implements Serializable
             for(int i = 0; i< NUM_SCREENS -1; i++)
             {
                 powerUps[i] = powerUps[i+1];
-//                System.out.println(powerups[i]);
             }
             //create new obstacle
-            //TODO randomise this
-
             //coordinate for new powerup
-            double yVal = -( (NUM_SCREENS-1)*config.getSCREEN_HEIGHT() );
+            double yVal = powerUps[NUM_SCREENS-2].getPosition().getY()-config.getSCREEN_HEIGHT();
+
+            PowerUp selected;
+            boolean overlap;
+
+            //check for obstacle overlap
+            do
+            {
+                overlap=false;
+                selected = getRandomPowerUp(yVal); // return a random powerup from the selected powerups
+                for(int i=0; i<NUM_SCREENS; i++)
+                {
+                    if(obstacles[i].didCollide(selected)!=GameColor.NONE)
+                    {
+                        overlap=true;
+                        yVal-=0.3*config.getSCREEN_HEIGHT();
+                    }
+                }
+            }while(overlap);
+
+            powerUps[NUM_SCREENS-1] = selected;
 
 
-            if(toss(BULLET_POWERUP_PROB))
-            {
-                powerUps[NUM_SCREENS-1] = new BulletPowerUp(yVal);
-            }
-            else if(toss(TIME_BULLET_POWERUP_PROB))
-            {
-                powerUps[NUM_SCREENS-1] = new TimeBulletPowerUp(yVal);
-            }
-            else if(toss(TIME_POWERUP_PROB))
-            {
-                powerUps[NUM_SCREENS-1] = new TimePowerUp(yVal);
-            }
-            else if(toss(PROTECTION_POWERUP_PROB))
-            {
-                powerUps[NUM_SCREENS-1] = new ProtectionPowerUp(yVal);
-            }
-            else
-            {
-                powerUps[NUM_SCREENS-1] = new ColorSwitcher(yVal);
-            }
         }
 
         private void drawShip(long l)

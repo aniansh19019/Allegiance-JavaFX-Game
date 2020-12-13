@@ -67,6 +67,10 @@ public class DoubleRotatingSatellitesObstacle extends Obstacle
         leftObstacle.setCW(false);
 
         setPosition(config.getSCREEN_WIDTH()/2, y);
+
+        //set double for right to prevent bullet destruction
+
+        rightObstacle.setDouble(true);
     }
 
     @Override
@@ -96,7 +100,10 @@ public class DoubleRotatingSatellitesObstacle extends Obstacle
     @Override
     public boolean didCollisionWithShip(PlayerShip ship)
     {
-        return rightObstacle.didCollisionWithShip(ship) || leftObstacle.didCollisionWithShip(ship);
+        boolean right = rightObstacle.didCollisionWithShip(ship);
+        boolean left = leftObstacle.didCollisionWithShip(ship);
+//        System.out.println("Left: " + left + "Right: "+ right);
+        return left || right;
     }
 
     @Override
@@ -105,5 +112,21 @@ public class DoubleRotatingSatellitesObstacle extends Obstacle
         super.shiftPosition(delta);
         rightObstacle.shiftPosition(delta);
         leftObstacle.shiftPosition(delta);
+    }
+
+    @Override
+    public void destroy()
+    {
+        System.out.println("Destroyed!");
+        leftObstacle.destroy();
+        rightObstacle.destroy();
+    }
+
+    @Override
+    public void slow()
+    {
+        System.out.println("I was called!");
+        leftObstacle.slow();
+        rightObstacle.slow();
     }
 }

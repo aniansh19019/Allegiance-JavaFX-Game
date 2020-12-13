@@ -26,6 +26,7 @@ abstract public class Obstacle implements Drawable
     private double speed;
     private Vector position;
     private boolean isDestroyed;
+    private boolean isDouble;
     //sounds
     private static AudioClip timeBulletSound;
     private static AudioClip bulletHitSound;
@@ -33,6 +34,17 @@ abstract public class Obstacle implements Drawable
     private static AudioClip destroyByShieldSound;
     private static AudioClip tickTickSound;
     //sounds
+
+
+    public boolean isDouble()
+    {
+        return isDouble;
+    }
+
+    public void setDouble(boolean aDouble)
+    {
+        isDouble = aDouble;
+    }
 
     public void setCW(boolean CW)
     {
@@ -139,6 +151,7 @@ abstract public class Obstacle implements Drawable
             segments[i] = new ObstacleSegment();
         }
         calcSpeedFromLevel();
+        isDouble=false;
 
     }
 
@@ -197,14 +210,17 @@ abstract public class Obstacle implements Drawable
                         timeBulletSound.play();
                         tickTickSound.play();
                         //slow down obstacle
-                        this.setSpeed(this.getSpeed()/2);
+                        slow();
                         this.segments[0].addEffect(new TimeEffect(current.getPosition()));
                         ship.addScore(100);
                         //TODO implement this and use speed in rotating obstacle to get delta angle
                     }
 
-                    current.destroy();
-                    itr.remove();
+                    if(!isDouble)
+                    {
+                        current.destroy();
+                        itr.remove();
+                    }
                 }
             }
         }
@@ -215,7 +231,13 @@ abstract public class Obstacle implements Drawable
         return false;
     }
 
-    private GameColor didCollide(Sprite other)
+
+    public void slow()
+    {
+        this.setSpeed(this.getSpeed()/2);
+    }
+
+    public GameColor didCollide(Sprite other)
     {
         if(!isDestroyed())
         {
@@ -232,13 +254,7 @@ abstract public class Obstacle implements Drawable
 
     public void destroy()
     {
-        //explosion at hitPosition
         //TODO add more explosions
-
-
-
-        //sounds
-
 
         //set destroyed flag
         isDestroyed=true;
@@ -248,11 +264,6 @@ abstract public class Obstacle implements Drawable
         for(int i=0; i<4; i++)
         {
             segments[i].setActive(false);//avoid collision
-
-            //TODO testing
-            //segments[i].addEffect(new ExplosionEffect(segments[i].getPosition()));
-            //TODO testing
-
             segments[i].setAcceleration(new Vector(0,0.1)); // set gravity
             segments[i].setVelocity(new Vector((rand.nextDouble()-0.5)*MAX_EXPLOSION_VELOCITY_X, (rand.nextDouble()-0.5)*MAX_EXPLOSION_VELOCITY_Y));
         }
