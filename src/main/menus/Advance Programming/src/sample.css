@@ -1,0 +1,11 @@
+.button{
+	-fx-background-color: #d5d0d2;
+	-fx-font: normal bold 11pt 'kenvector future thin' ;
+    -fx-text-align: center;
+    -fx-background-radius: 4;
+}
+.label-main{
+	-fx-font: italic bold 14pt 'Sheepman W03 Light';
+	-fx-text-fill: #d5d0d2;
+	-fx-text-align: center;
+}
