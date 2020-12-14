@@ -22,6 +22,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import main.menu.GameOverMenu;
+import main.menu.SaveSuccessMenu;
 import widget.MenuButton;
 import main.menu.PauseMenu;
 import main.menu.main_menu.MainMenu;
@@ -35,6 +36,8 @@ import java.util.Iterator;
 import java.util.Random;
 
 //TODO game lagging, optimise!!
+
+//TODO storyboarding
 
 //TODO add animation to menu
 
@@ -111,6 +114,7 @@ public class SinglePlayerGame implements Serializable
     private int level;
     private transient PauseMenu pauseMenu;
     private transient MenuButton pauseButton;
+    private transient SaveSuccessMenu saveSuccessMenu;
     private transient GameOverMenu gameOverMenu;
     private int starsRequired;
     private boolean isDestroyed;
@@ -246,6 +250,7 @@ public class SinglePlayerGame implements Serializable
         pauseButton.loadImages();
         pauseButton.getButton().setScaleX(0.13);
         pauseButton.getButton().setScaleY(0.13);
+
 
         //add pause button
 
@@ -513,6 +518,16 @@ public class SinglePlayerGame implements Serializable
         backGroundMusic.play();
     }
 
+
+    private void confirmGameSave()
+    {
+        root.getChildren().remove(saveSuccessMenu.getLayer());
+        root.getChildren().add(pauseMenu.getLayer());
+    }
+
+
+
+
     public void saveGame() //catch exceptions
     {
         //try stuff
@@ -534,17 +549,23 @@ public class SinglePlayerGame implements Serializable
 
             System.out.println("Saved Game Successfully!");
 
-            //read effect
-            FileInputStream inStream = new FileInputStream(outFile);
-            ObjectInputStream in = new ObjectInputStream(inStream);
-            SinglePlayerGame test = (SinglePlayerGame) in.readObject();
-            inStream.close();
-            in.close();
-            test.setMainMenu(mainMenu);
-            test.setWrapper(wrapper);
-            wrapper.setGame(test);
-            mainStage.setScene(test.getScene());
-            System.out.println("Success!");
+            //display confirm menu
+
+            root.getChildren().remove(pauseMenu.getLayer()); // remove pause menu
+            saveSuccessMenu = new SaveSuccessMenu(e->confirmGameSave());
+            root.getChildren().add(saveSuccessMenu.getLayer());
+
+//            //read effect
+//            FileInputStream inStream = new FileInputStream(outFile);
+//            ObjectInputStream in = new ObjectInputStream(inStream);
+//            SinglePlayerGame test = (SinglePlayerGame) in.readObject();
+//            inStream.close();
+//            in.close();
+//            test.setMainMenu(mainMenu);
+//            test.setWrapper(wrapper);
+//            wrapper.setGame(test);
+//            mainStage.setScene(test.getScene());
+//            System.out.println("Success!");
         }
         catch(Exception e)
         {
