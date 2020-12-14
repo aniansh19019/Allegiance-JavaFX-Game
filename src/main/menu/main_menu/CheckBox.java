@@ -1,12 +1,15 @@
-package widget;
+package main.menu.main_menu;
+
 
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.media.AudioClip;
 
-public class MenuButton {
+public class CheckBox {
+
     private String normalImageString;
     private String hoverImageString;
     private String clickImageString;
@@ -46,17 +49,16 @@ public class MenuButton {
         normalImage = new Image(normalImageString);
         hoverImage = new Image(hoverImageString);
         clickImage = new Image(clickImageString);
-        button.setImage(normalImage);
-        button.setPreserveRatio(true);
+        button.setImage(clickImage);
     }
 
-    public MenuButton(EventHandler<? super javafx.scene.input.MouseEvent> handler )
+    public CheckBox()
     {
         button = new ImageView();
         button.setOnMouseEntered(e -> hover());
         button.setOnMouseExited(e-> button.setImage(normalImage));
         button.setOnMousePressed(e -> press());
-        button.setOnMouseReleased(handler);
+
     }
 
     private void hover()

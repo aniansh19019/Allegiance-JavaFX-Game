@@ -1,10 +1,15 @@
 package main.menu.main_menu;
 
+import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import widget.MenuButton;
 
 public class UserInterfaceElements
 {
+	private static double scale =0.6;
 	public UserInterfaceElements() {
 		
 	}
@@ -23,70 +28,52 @@ public class UserInterfaceElements
         view7.setFitHeight(40);
         return view7;
 	}
-	public static ImageView getPause() {
-		Image image1 = new Image("file:res/img/ui_elements/pause_blue.png");
-		Image image_1 =new Image("file:res/img/ui_elements/pause_yellow.png");
-		Image imageclicked1=new Image("file:res/img/ui_elements/pause_orange.png");
-		ImageView pause=new ImageView(image1);
-		pause.setOnMousePressed(e->{
-			Sound.click().play();
-			pause.setImage(imageclicked1);
-		});
-		pause.setOnMouseEntered(e->pause.setImage(image_1));
-		pause.setOnMouseExited(e->pause.setImage(image1));
-		return pause;
+	public Node getPause() {
+		CheckBox pause=new CheckBox();
+		pause.setNormalImageString("file:res/img/ui_elements/pause_blue.png");
+		pause.setHoverImageString("file:res/img/ui_elements/pause_yellow.png");
+		pause.setClickImageString("file:res/img/ui_elements/pause_orange.png");
+		pause.loadImages();
+		pause.getButton().setScaleX(scale);
+		pause.getButton().setScaleY(scale);
+		return pause.getButton();
 	}
-	public static ImageView getNewGame() {
-		Image image1 = new Image("file:res/img/ui_elements/new_game_blue.png");
-		Image image_1 =new Image("file:res/img/ui_elements/new_game_yellow.png");
-		Image imageclicked1=new Image("file:res/img/ui_elements/new_game_orange.png");
-		ImageView NewGame=new ImageView(image1);
-		NewGame.setOnMousePressed(e->{
-			Sound.click().play();
-			NewGame.setImage(imageclicked1);
-		});
-		NewGame.setOnMouseEntered(e->NewGame.setImage(image_1));
-		NewGame.setOnMouseExited(e->NewGame.setImage(image1));
-        return NewGame;
+	public Node getNewGame(EventHandler<? super javafx.scene.input.MouseEvent> handler) {
+		MenuButton newGame=new MenuButton(handler);
+		newGame.setNormalImageString("file:res/img/ui_elements/new_game_blue.png");
+		newGame.setHoverImageString("file:res/img/ui_elements/new_game_yellow.png");
+		newGame.setClickImageString("file:res/img/ui_elements/new_game_orange.png");
+		newGame.loadImages();
+		newGame.getButton().setScaleX(scale);
+		newGame.getButton().setScaleY(scale);
+        return newGame.getButton();
 	}
-	public static ImageView getLoadGame() {
-		Image image1 = new Image("file:res/img/ui_elements/load_game_blue.png");
-		Image image_1 =new Image("file:res/img/ui_elements/load_game_yellow.png");
-		Image imageclicked1=new Image("file:res/img/ui_elements/load_game_orange.png");
-        ImageView LoadGame =new ImageView(image1);
-        LoadGame.setOnMousePressed(e->{
-        	Sound.click().play();
-        	LoadGame.setImage(imageclicked1);
-        });
-        LoadGame.setOnMouseEntered(e->LoadGame.setImage(image_1));
-        LoadGame.setOnMouseExited(e->LoadGame.setImage(image1));
-        return LoadGame;
+	public Node getLoadGame(EventHandler<? super javafx.scene.input.MouseEvent> handler) {
+		MenuButton loadGame=new MenuButton(handler);
+		loadGame.setNormalImageString("file:res/img/ui_elements/load_game_blue.png");
+		loadGame.setHoverImageString("file:res/img/ui_elements/load_game_yellow.png");
+		loadGame.setClickImageString("file:res/img/ui_elements/load_game_orange.png");
+        loadGame.loadImages();
+        loadGame.getButton().setScaleX(scale);
+        return loadGame.getButton();
 	}
-	public static ImageView getLeaderBoard() {
-		Image image3 = new Image("file:res/img/ui_elements/leaderboards_blue.png");
-		Image image_3 =new Image("file:res/img/ui_elements/leaderboards_yellow.png");
-		Image imageclicked3=new Image("file:res/img/ui_elements/leaderboards_orange.png");
-        ImageView LeaderBoard=new ImageView(image3);
-        LeaderBoard.setOnMousePressed(e->{
-        	Sound.click().play();
-        	LeaderBoard.setImage(imageclicked3);
-        });
-        LeaderBoard.setOnMouseEntered(e->LeaderBoard.setImage(image_3));
-        LeaderBoard.setOnMouseExited(e->LeaderBoard.setImage(image3));
-		return LeaderBoard;
+	public Node getLeaderBoard(EventHandler<? super MouseEvent> handler) {
+		MenuButton leaderBoard =new MenuButton(handler);
+		leaderBoard.setNormalImageString("file:res/img/ui_elements/leaderboards_blue.png");
+		leaderBoard.setHoverImageString("file:res/img/ui_elements/leaderboards_yellow.png");
+		leaderBoard.setClickImageString("file:res/img/ui_elements/leaderboards_orange.png");
+        leaderBoard.loadImages();
+        leaderBoard.getButton().setScaleY(scale);
+		return leaderBoard.getButton();
 	}
-	public static ImageView getSettings() {
-		Image image4 = new Image("file:res/img/ui_elements/settings_blue.png");
-		Image image_4 =new Image("file:res/img/ui_elements/settings_yellow.png");
-		Image imageclicked4=new Image("file:res/img/ui_elements/settings_orange.png");
-		ImageView Settings=new ImageView(image4);
-		Settings.setOnMousePressed(e->{
-			Sound.click().play();
-			Settings.setImage(imageclicked4);
-		});
-		Settings.setOnMouseEntered(e->Settings.setImage(image_4));
-		Settings.setOnMouseExited(e->Settings.setImage(image4));
-		return Settings;
+	public Node getSettings(EventHandler<? super javafx.scene.input.MouseEvent> handler) {
+		MenuButton settings =new MenuButton(handler);
+		settings.setNormalImageString("file:res/img/ui_elements/settings_blue.png");
+		settings.setHoverImageString("file:res/img/ui_elements/settings_yellow.png");
+		settings.setClickImageString("file:res/img/ui_elements/settings_orange.png");
+		settings.loadImages();
+		settings.getButton().setScaleX(scale);
+		return settings.getButton();
 	}
 	public static ImageView getHelp() {
 		Image image5 = new Image("file:res/img/ui_elements/help_blue.png");
@@ -180,7 +167,7 @@ public class UserInterfaceElements
         ImageView Sound=new ImageView(image8);
 		return Sound;
 	}
-	public static ImageView getHelpInfo() {
+	public Node getHelpInfo() {
 		Image image8 = new Image("file:res/img/ui_elements/instructions_box.png");
         ImageView HelpInfo=new ImageView(image8);
         return HelpInfo;
@@ -298,7 +285,7 @@ public class UserInterfaceElements
         ImageView Choose=new ImageView(image8);
 		return Choose;
 	}
-	public static ImageView getInstruction() {
+	public Node getInstruction() {
 		Image image8 = new Image("file:res/img/ui_elements/instructions_label.png");
         ImageView Instruction=new ImageView(image8);
 		return Instruction;
