@@ -5,6 +5,7 @@ import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -18,16 +19,19 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import main.GlobalConfig;
 import main.SinglePlayerGameWrapper;
 import widget.MenuButton;
 
 @SuppressWarnings("static-access")
-public class MainMenu
+public class MenuManager
 {
-	Stage window;
-	Scene MainMenu, newGame, loadGame,Leaderboard,Setting,help,SingleIntermediate,TwoIntermediate,
-	SingleGameplay,TwoGameplay,SingleSaved,TwoSaved,Control,splashscreen,pauseMenu,SavedIntermediate,ChooseShip;
-	StackPane pane;
+	private static GlobalConfig config;
+	private Stage window;
+	private HelpMenu helpMenu;
+	private Node mainMenuLayout;
+	private StackPane pane;
+	private Scene root;
 	private boolean soundOn;
 	private int shipNum =1;
 	private static final double scale =0.6;
@@ -41,15 +45,33 @@ public class MainMenu
 	}
 	private SinglePlayerGameWrapper gameWrapper;
 
+	static
+	{
+		config = new GlobalConfig();
+	}
 
+	public Scene getRoot()
+	{
+		return root;
+	}
 
-	public MainMenu(Stage window)
+	public MenuManager(Stage window)
 	{
 		this.window = window;
 		soundOn=true;
+
+		//init pane
+		pane = new StackPane();
+		pane.getChildren().add(getMainMenu());
+
+		//init root
+
+		root= new Scene(pane, config.getSCREEN_WIDTH(), config.getSCREEN_HEIGHT());
+
+
 	}
 
-	public Scene getMainMenu() {
+	public Node getMainMenu() {
 //		Image image=new Image("file:res/download.gif");
 //		ImageView view=new ImageView(image);
 		Label label1=new Label("Allegiance");
@@ -68,7 +90,7 @@ public class MainMenu
 
 		//Button2
 		MenuButton load_Game=new MenuButton(e->{
-			window.setScene(SavedIntermediate);
+//			window.setScene(SavedIntermediate);
 		});
 		load_Game .setNormalImageString("file:res/img/ui_elements/load_game_blue.png");
 		load_Game.setHoverImageString("file:res/img/ui_elements/load_game_yellow.png");
@@ -78,7 +100,7 @@ public class MainMenu
 		load_Game.getButton().setScaleY(scale);
 		//Button3
 		MenuButton leaderBoard=new MenuButton(e->{
-			window.setScene(Leaderboard);
+//			window.setScene(Leaderboard);
 		});
 		leaderBoard.setNormalImageString("file:res/img/ui_elements/leaderboards_blue.png");
 		leaderBoard.setHoverImageString("file:res/img/ui_elements/leaderboards_yellow.png");
@@ -91,7 +113,7 @@ public class MainMenu
 
 		MenuButton settings =new MenuButton(e ->
 		{
-			window.setScene(Setting);
+//			window.setScene(Setting);
 		});
 		settings.setNormalImageString("file:res/img/ui_elements/settings_blue.png");
 		settings.setHoverImageString("file:res/img/ui_elements/settings_yellow.png");
@@ -100,7 +122,7 @@ public class MainMenu
 		settings.getButton().setScaleX(scale);
 		settings.getButton().setScaleY(scale);
 		//Button5
-		MenuButton Help=new MenuButton(e -> { window.setScene(help); });
+		MenuButton Help=new MenuButton(e -> help());
 		Help.setNormalImageString("file:res/img/ui_elements/help_blue.png");
 		Help.setHoverImageString("file:res/img/ui_elements/help_yellow.png");
 		Help.setClickImageString("file:res/img/ui_elements/help_orange.png");
@@ -125,8 +147,21 @@ public class MainMenu
 		layout1.setAlignment(Pos.CENTER);
 		label1.setTranslateY(75);
 		layout1.setBackground(BackgroundgifClass.getBackground());
-		MainMenu =new Scene(layout1 ,500,700);
-		return MainMenu;
+//		MainMenu =new Scene(layout1 ,500,700);
+		return layout1;
+	}
+
+
+	public void help()
+	{
+		helpMenu = new HelpMenu(f->enterMainMenu());
+
+	}
+
+	public void enterMainMenu()
+	{
+
+
 	}
 
 

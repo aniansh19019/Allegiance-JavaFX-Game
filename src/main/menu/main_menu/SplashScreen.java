@@ -1,7 +1,6 @@
 package main.menu.main_menu;
 
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -9,22 +8,21 @@ import javafx.scene.media.MediaView;
 import main.GlobalConfig;
 
 import java.io.File;
-import java.util.Stack;
 
 public class SplashScreen
 {
     static private GlobalConfig config;
     private Scene scene;
-    private MainMenu mainMenu;
+    private MenuManager menuManager;
 
     static
     {
         config = new GlobalConfig();
     }
 
-    public SplashScreen(MainMenu menu)
+    public SplashScreen(MenuManager menu)
     {
-        mainMenu = menu;
+        menuManager = menu;
 
         //init borderpane
         StackPane pane = new StackPane();
@@ -62,7 +60,7 @@ public class SplashScreen
         @Override
         public void run()
         {
-            mainMenu.getWindow().setScene(mainMenu.getMainMenu());
+            menuManager.getWindow().setScene(menuManager.getRoot());
         }
     }
 

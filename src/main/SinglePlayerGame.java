@@ -25,7 +25,7 @@ import main.menu.GameOverMenu;
 import main.menu.SaveSuccessMenu;
 import widget.MenuButton;
 import main.menu.PauseMenu;
-import main.menu.main_menu.MainMenu;
+import main.menu.main_menu.MenuManager;
 import util.*;
 import widget.AmmoDisplay;
 import widget.StarDisplay;
@@ -120,19 +120,19 @@ public class SinglePlayerGame implements Serializable
     private boolean isDestroyed;
     private transient SinglePlayerGameWrapper wrapper;
 
-    private transient MainMenu mainMenu;
+    private transient MenuManager menuManager;
 //    private AnimatedEffect effects;
 
 
-    public MainMenu getMainMenu()
+    public MenuManager getMainMenu()
     {
-        return mainMenu;
+        return menuManager;
     }
 
-    public void setMainMenu(MainMenu mainMenu)
+    public void setMainMenu(MenuManager menuManager)
     {
-        this.mainMenu = mainMenu;
-        this.mainStage = mainMenu.getWindow();
+        this.menuManager = menuManager;
+        this.mainStage = menuManager.getWindow();
     }
 
     public void setMainStage(Stage mainStage)
@@ -167,13 +167,13 @@ public class SinglePlayerGame implements Serializable
 
 
 
-    public SinglePlayerGame(MainMenu menu, SinglePlayerGameWrapper wrapper)
+    public SinglePlayerGame(MenuManager menu, SinglePlayerGameWrapper wrapper)
     {
         //init utils
         this.wrapper=wrapper;
 
         //init menu
-        mainMenu = menu;
+        menuManager = menu;
         //init score to 0
         starCount =0;
         //init vars
@@ -198,7 +198,7 @@ public class SinglePlayerGame implements Serializable
         scene = new Scene(root);
         //init ship
         //TODO select ship from menu
-        ship = new PlayerShip(GameColor.values()[rand.nextInt(4)], mainMenu.getShipNum());
+        ship = new PlayerShip(GameColor.values()[rand.nextInt(4)], menuManager.getShipNum());
 
         //init ammoDisplay
 
@@ -575,7 +575,7 @@ public class SinglePlayerGame implements Serializable
     }
     public void restartGame() //unlink current refernce and set new object
     {
-        SinglePlayerGame game = new SinglePlayerGame(mainMenu, wrapper);
+        SinglePlayerGame game = new SinglePlayerGame(menuManager, wrapper);
         wrapper.setGame(game);
         mainStage.setScene(game.getScene());
     }
@@ -584,7 +584,7 @@ public class SinglePlayerGame implements Serializable
     {
         //TODO transition
         backGroundMusic.stop();
-        mainStage.setScene(mainMenu.getMainMenu());
+        mainStage.setScene(menuManager.getRoot());
     }
 
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException

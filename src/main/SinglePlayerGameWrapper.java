@@ -1,6 +1,6 @@
 package main;
 
-import main.menu.main_menu.MainMenu;
+import main.menu.main_menu.MenuManager;
 
 public class SinglePlayerGameWrapper
 {
@@ -16,7 +16,7 @@ public class SinglePlayerGameWrapper
         this.game = game;
     }
 
-    public SinglePlayerGameWrapper(MainMenu menu)
+    public SinglePlayerGameWrapper(MenuManager menu)
     {
         this.game = new SinglePlayerGame(menu, this);
     }
