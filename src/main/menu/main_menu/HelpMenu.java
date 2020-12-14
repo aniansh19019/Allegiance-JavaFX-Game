@@ -11,7 +11,7 @@ import widget.MenuButton;
 
 public class HelpMenu {
     private BorderPane pane;
-    private static final double scale=0.6;
+    private static final double scale=0.1;
 
     public HelpMenu(EventHandler<? super MouseEvent> BackHandler){
         MenuButton backButton=new MenuButton(BackHandler);
@@ -20,6 +20,7 @@ public class HelpMenu {
             backButton.setClickImageString("file:res/img/ui_elements/back_orange.png");
             backButton.loadImages();
             backButton.getButton().setScaleX(scale);
+            backButton.getButton().setScaleY(scale);
             backButton.getButton().setTranslateX(10);
             backButton.getButton().setTranslateY(10);
 

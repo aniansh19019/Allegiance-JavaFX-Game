@@ -9,7 +9,7 @@ import javafx.scene.layout.BackgroundSize;
 
 public class BackgroundgifClass {
 	public static Background getBackground() {
-		Image image=new Image("file:res/img/background/xx.png");
+		Image image=new Image("file:res/img/background/animated_background.gif");
 		BackgroundImage background=new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
 				BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
 		Background xx=new Background(background);

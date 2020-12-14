@@ -37,6 +37,9 @@ public class CheckBox {
         hoverImageString="file:res/img/ui_elements/checkbox_unchecked_orange.png";
         clickImageString="file:res/img/ui_elements/checkbox_checked_yellow.png";
         button = new ImageView();
+
+        loadImages();
+
         button.setOnMouseEntered(e -> hover());
         button.setOnMouseExited(e-> button.setImage(normalImage));
         button.setOnMousePressed(e -> press());

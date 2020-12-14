@@ -1,4 +1,11 @@
 package main.menu.main_menu;
 
-public class ShipMenu {
+import com.sun.glass.ui.Menu;
+
+public class ShipMenu
+{
+    public ShipMenu(MenuManager menuManager)
+    {
+
+    }
 }

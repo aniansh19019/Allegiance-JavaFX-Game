@@ -44,6 +44,15 @@ public class SplashScreen
         pane.getChildren().add(mediaView);
         System.out.println("Scene Set!");
 
+        //space to skip
+        scene.setOnKeyPressed(e->{
+            if(e.getCode().isWhitespaceKey())
+            {
+                mediaPlayer.stop();
+                menuManager.getWindow().setScene(menuManager.getRoot());//set scene to menu
+            }
+        });
+
         mediaPlayer.setOnEndOfMedia(new StartMenuAfterSplashScreen());
 
     }
