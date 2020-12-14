@@ -21,10 +21,10 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-import main.menus.GameOverMenu;
-import main.menus.MenuButton;
-import main.menus.PauseMenu;
-import main.menus.main_menu.MainMenu;
+import main.menu.GameOverMenu;
+import widget.MenuButton;
+import main.menu.PauseMenu;
+import main.menu.main_menu.MainMenu;
 import util.*;
 import widget.AmmoDisplay;
 import widget.StarDisplay;
@@ -151,7 +151,7 @@ public class SinglePlayerGame implements Serializable
         timePowerupOnSound = new AudioClip("file:res/sound/time_powerup_on.mp3");
         timePowerupOffSound = new AudioClip("file:res/sound/time_power_up_off.mp3");
 //        backGroundMusic = new AudioClip("file:res/sound/Automation.mp3");
-        backGroundMusic = new AudioClip("file:res/sound/astro.mp3");
+        backGroundMusic = new AudioClip("file:res/sound/Automation.mp3");
         backGroundMusic.setCycleCount(AudioClip.INDEFINITE);
 
         resumeSound = new AudioClip("file:res/sound/resume_sound.mp3");
@@ -368,7 +368,7 @@ public class SinglePlayerGame implements Serializable
         {
             if(isHard && toss(0.5))
             {
-                candidates.add(new HardDoubleRotatingArmsObstacle(y, level/2));
+                candidates.add(new HardDoubleRotatingArmsObstacle(y, level/4));
             }
             else
             {
@@ -383,7 +383,7 @@ public class SinglePlayerGame implements Serializable
         {
             if(isHard && toss(0.5))
             {
-                candidates.add(new HardDoubleRotatingSatellitesObstacle(y, level/2));
+                candidates.add(new HardDoubleRotatingSatellitesObstacle(y, level/4));
             }
             else
             {
@@ -518,20 +518,27 @@ public class SinglePlayerGame implements Serializable
         //try stuff
         try
         {
+            //set file name to current system time in milliseconds
+            String fileName = "saves/"+System.currentTimeMillis() + ".sav";
+
+            //open file and create new file if file doesn't exist
+            File outFile = new File(fileName);
+            outFile.createNewFile();
+
             //save effect
-            FileOutputStream outFile = new FileOutputStream("saves/test.sav");
-            ObjectOutputStream out = new ObjectOutputStream(outFile);
+            FileOutputStream outStream = new FileOutputStream(outFile, false);
+            ObjectOutputStream out = new ObjectOutputStream(outStream);
             out.writeObject(this);
             out.close();
-            outFile.close();
+            outStream.close();
 
-            System.out.println("Saved Successfully");
+            System.out.println("Saved Game Successfully!");
 
             //read effect
-            FileInputStream inFile = new FileInputStream("saves/test.sav");
-            ObjectInputStream in = new ObjectInputStream(inFile);
+            FileInputStream inStream = new FileInputStream(outFile);
+            ObjectInputStream in = new ObjectInputStream(inStream);
             SinglePlayerGame test = (SinglePlayerGame) in.readObject();
-            inFile.close();
+            inStream.close();
             in.close();
             test.setMainMenu(mainMenu);
             test.setWrapper(wrapper);

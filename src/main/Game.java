@@ -4,7 +4,7 @@ import javafx.application.Application;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import main.menus.main_menu.MainMenu;
+import main.menu.main_menu.MainMenu;
 
 import java.io.Serializable;
 import java.util.Hashtable;

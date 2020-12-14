@@ -1,7 +1,6 @@
 package main;
 
-import javafx.stage.Stage;
-import main.menus.main_menu.MainMenu;
+import main.menu.main_menu.MainMenu;
 
 public class SinglePlayerGameWrapper
 {

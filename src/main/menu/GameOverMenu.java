@@ -1,4 +1,4 @@
-package main.menus;
+package main.menu;
 
 
 import javafx.event.EventHandler;
@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import main.GlobalConfig;
+import widget.MenuButton;
 
 public class GameOverMenu
 {

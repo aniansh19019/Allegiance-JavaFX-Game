@@ -1,4 +1,4 @@
-package main.menus.main_menu;
+package main.menu.main_menu;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

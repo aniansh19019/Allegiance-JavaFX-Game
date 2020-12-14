@@ -1,12 +1,10 @@
-package main.menus;
+package widget;
 
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.AudioClip;
-import org.w3c.dom.events.MouseEvent;
 
 public class MenuButton
 {
