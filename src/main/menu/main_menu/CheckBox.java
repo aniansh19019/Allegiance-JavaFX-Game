@@ -17,32 +17,9 @@ public class CheckBox {
     private Image hoverImage;
     private Image clickImage;
 
-    private static AudioClip hoverSound;
-    private static AudioClip clickSound;
-
-    static
-    {
-        hoverSound = new AudioClip("file:res/sound/hover.mp3");
-        clickSound = new AudioClip("file:res/sound/click.mp3");
-    }
-
+    private Sound sound;
+    private static final double scale=0.5;
     private ImageView button;
-
-    public void setNormalImageString(String normalImageString)
-    {
-        this.normalImageString = normalImageString;
-    }
-
-    public void setHoverImageString(String hoverImageString)
-    {
-        this.hoverImageString = hoverImageString;
-    }
-
-    public void setClickImageString(String clickImageString)
-    {
-        this.clickImageString = clickImageString;
-    }
-
 
     public void loadImages()
     {
@@ -50,10 +27,15 @@ public class CheckBox {
         hoverImage = new Image(hoverImageString);
         clickImage = new Image(clickImageString);
         button.setImage(clickImage);
+        button.setScaleX(scale);
+        button.setScaleY(scale);
     }
 
     public CheckBox()
     {
+        normalImageString="file:res/img/ui_elements/checkbox_unchecked_blue.png";
+        hoverImageString="file:res/img/ui_elements/checkbox_unchecked_orange.png";
+        clickImageString="file:res/img/ui_elements/checkbox_checked_yellow.png";
         button = new ImageView();
         button.setOnMouseEntered(e -> hover());
         button.setOnMouseExited(e-> button.setImage(normalImage));
@@ -64,13 +46,22 @@ public class CheckBox {
     private void hover()
     {
         button.setImage(hoverImage);
-        hoverSound.play();
+        sound.hover().play();
     }
 
     private void press()
     {
-        button.setImage(clickImage);
-        clickSound.play();
+
+        if(button.getImage().equals(clickImage)){
+            button.setImage(normalImage);
+            sound.music().stop();
+        }else if(button.getImage().equals(normalImage)){
+            button.setImage(clickImage);
+            sound.music().play();
+        }
+        sound.click().play();
+
+
     }
 
     public Node getButton()

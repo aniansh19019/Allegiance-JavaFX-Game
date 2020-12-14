@@ -47,7 +47,6 @@ public class MenuButton {
         hoverImage = new Image(hoverImageString);
         clickImage = new Image(clickImageString);
         button.setImage(normalImage);
-        button.setPreserveRatio(true);
     }
 
     public MenuButton(EventHandler<? super javafx.scene.input.MouseEvent> handler )

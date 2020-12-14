@@ -12,7 +12,7 @@ import widget.MenuButton;
 public class HelpMenu {
     private BorderPane pane;
     private static final double scale=0.6;
-    
+
     public HelpMenu(EventHandler<? super MouseEvent> BackHandler){
         MenuButton backButton=new MenuButton(BackHandler);
             backButton.setNormalImageString("file:res/img/ui_elements/back_blue.png");

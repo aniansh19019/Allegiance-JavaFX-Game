@@ -63,7 +63,7 @@ public class Game extends Application implements Serializable
 
         //go to menu
 
-        stage.setScene(menu.getSplashScreen());
+        stage.setScene(menu.getMainMenu());
 
         // for now go to game
 
