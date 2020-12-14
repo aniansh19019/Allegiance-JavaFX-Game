@@ -47,9 +47,8 @@ public class MainMenu
 	{
 		this.window = window;
 		soundOn=true;
-
-
 	}
+
 	public Scene getMainMenu() {
 //		Image image=new Image("file:res/download.gif");
 //		ImageView view=new ImageView(image);
@@ -65,6 +64,7 @@ public class MainMenu
 		new_Game.setClickImageString("file:res/img/ui_elements/new_game_orange.png");
 		new_Game.loadImages();
 		new_Game.getButton().setScaleX(scale);
+		new_Game.getButton().setScaleY(scale);
 
 		//Button2
 		MenuButton load_Game=new MenuButton(e->{
@@ -75,6 +75,7 @@ public class MainMenu
 		load_Game.setClickImageString("file:res/img/ui_elements/load_game_orange.png");
 		load_Game.loadImages();
 		load_Game.getButton().setScaleX(scale);
+		load_Game.getButton().setScaleY(scale);
 		//Button3
 		MenuButton leaderBoard=new MenuButton(e->{
 			window.setScene(Leaderboard);
@@ -84,6 +85,7 @@ public class MainMenu
 		leaderBoard.setClickImageString("file:res/img/ui_elements/leaderboards_orange.png");
 		leaderBoard.loadImages();
 		leaderBoard.getButton().setScaleX(scale);
+		leaderBoard.getButton().setScaleY(scale);
 
 		//Button4
 
@@ -96,6 +98,7 @@ public class MainMenu
 		settings.setClickImageString("file:res/img/ui_elements/settings_orange.png");
 		settings.loadImages();
 		settings.getButton().setScaleX(scale);
+		settings.getButton().setScaleY(scale);
 		//Button5
 		MenuButton Help=new MenuButton(e -> { window.setScene(help); });
 		Help.setNormalImageString("file:res/img/ui_elements/help_blue.png");
@@ -116,7 +119,7 @@ public class MainMenu
 
 		// Layout1
 
-		VBox layout1=new VBox(10);
+		VBox layout1=new VBox(-10);
 		layout1.getChildren().addAll(new_Game.getButton(),load_Game.getButton(),
 				leaderBoard.getButton(), settings.getButton(),Help.getButton(),Exit.getButton());
 		layout1.setAlignment(Pos.CENTER);
@@ -140,18 +143,3 @@ public class MainMenu
 	}
 }
 
-class StartGameEventHandler implements EventHandler<ActionEvent>
-{
-	private MainMenu menu;
-	public StartGameEventHandler(MainMenu menu)
-	{
-		this.menu = menu;
-	}
-
-	@Override
-	public void handle(ActionEvent actionEvent)
-	{
-            SinglePlayerGameWrapper wrappedGame = new SinglePlayerGameWrapper(menu);
-            menu.window.setScene(wrappedGame.getGame().getScene());
-	}
-}

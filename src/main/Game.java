@@ -5,6 +5,7 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import main.menu.main_menu.MainMenu;
+import main.menu.main_menu.SplashScreen;
 
 import java.io.Serializable;
 import java.util.Hashtable;
@@ -15,6 +16,7 @@ public class Game extends Application implements Serializable
 {
 //    private transient main.SinglePlayerGame game;
     private transient MainMenu menu;
+    private transient SplashScreen splashScreen;
 
     private GlobalConfig config;
 
@@ -44,6 +46,10 @@ public class Game extends Application implements Serializable
     {
         // init menu
         menu = new MainMenu(stage);
+
+        //init splash screen
+
+        splashScreen = new SplashScreen(menu);
         //stage setup
 
         stage.setHeight(config.getSCREEN_HEIGHT());
@@ -63,8 +69,7 @@ public class Game extends Application implements Serializable
 
         //go to menu
 
-        stage.setScene(menu.getMainMenu());
-
+        stage.setScene(splashScreen.getScene());
         // for now go to game
 
 
