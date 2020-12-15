@@ -7,6 +7,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.media.AudioClip;
 
 public class MenuButton {
+
+    private static final double scale = 0.65;
     private String normalImageString;
     private String hoverImageString;
     private String clickImageString;
@@ -47,6 +49,8 @@ public class MenuButton {
         hoverImage = new Image(hoverImageString);
         clickImage = new Image(clickImageString);
         button.setImage(normalImage);
+        button.setScaleX(0.65);
+        button.setScaleY(0.65);//check for shady stuff
     }
 
     public MenuButton(EventHandler<? super javafx.scene.input.MouseEvent> handler )

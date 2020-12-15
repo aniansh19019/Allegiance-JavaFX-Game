@@ -25,7 +25,7 @@ import widget.MenuButton;
 
 import java.util.Set;
 
-@SuppressWarnings("static-access")
+
 public class MenuManager
 {
 	private static GlobalConfig config;
@@ -34,7 +34,7 @@ public class MenuManager
 	private StackPane animatedBackground;
 	private Scene root;
 	private boolean soundOn;
-	private int shipNum =1;
+	private int shipNum = 1;
 	private static final double scale =0.6;
 	public int getShipNum()
 	{
@@ -177,7 +177,7 @@ public class MenuManager
 
 	public void settings()
 	{
-		SettingsMenu settingsMenu = new SettingsMenu(e->enterMainMenu());
+		SettingsMenu settingsMenu = new SettingsMenu(e->enterMainMenu(), e->{soundOn=!soundOn;});//toggle sound
 		clearStackPane();
 		pane.getChildren().add(settingsMenu.getLayer());
 	}

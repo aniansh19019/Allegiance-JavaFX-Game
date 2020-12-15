@@ -66,6 +66,7 @@ import java.util.Random;
 
 public class SinglePlayerGame implements Serializable
 {
+    private static final double pauseButtonScale = 0.17;
     //number of entites that exist at a time in the game
     private static final int NUM_SCREENS = 3;
     //powerup probabilities
@@ -248,16 +249,16 @@ public class SinglePlayerGame implements Serializable
         pauseButton.setHoverImageString("file:res/img/ui_elements/pause_yellow.png");
         pauseButton.setClickImageString("file:res/img/ui_elements/pause_orange.png");
         pauseButton.loadImages();
-        pauseButton.getButton().setScaleX(0.13);
-        pauseButton.getButton().setScaleY(0.13);
+        pauseButton.getButton().setScaleX(pauseButtonScale);
+        pauseButton.getButton().setScaleY(pauseButtonScale);
 
 
         //add pause button
 
         this.root.getChildren().add(pauseButton.getButton());
         this.root.setAlignment(pauseButton.getButton(), Pos.TOP_LEFT);
-        pauseButton.getButton().setTranslateX(-120);
-        pauseButton.getButton().setTranslateY(-110);
+        pauseButton.getButton().setTranslateX(-110);
+        pauseButton.getButton().setTranslateY(-100);
 
 
         this.root.setCursor(cursor);
@@ -638,15 +639,15 @@ public class SinglePlayerGame implements Serializable
         pauseButton.setHoverImageString("file:res/img/ui_elements/pause_yellow.png");
         pauseButton.setClickImageString("file:res/img/ui_elements/pause_orange.png");
         pauseButton.loadImages();
-        pauseButton.getButton().setScaleX(0.13);
-        pauseButton.getButton().setScaleY(0.13);
+        pauseButton.getButton().setScaleX(pauseButtonScale);
+        pauseButton.getButton().setScaleY(pauseButtonScale);
 
         //add pause button
 
         this.root.getChildren().add(pauseButton.getButton());
         this.root.setAlignment(pauseButton.getButton(), Pos.TOP_LEFT);
-        pauseButton.getButton().setTranslateX(-120);
-        pauseButton.getButton().setTranslateY(-110);
+        pauseButton.getButton().setTranslateX(-110);
+        pauseButton.getButton().setTranslateY(-100);
 
 
         this.root.setCursor(cursor);

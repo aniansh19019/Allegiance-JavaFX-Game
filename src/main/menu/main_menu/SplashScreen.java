@@ -30,7 +30,7 @@ public class SplashScreen
 
 
         //init video
-        File videoFile = new File("res/video/splash_screen.mp4");
+        File videoFile = new File("res/video/splash_screen_trimmed.mp4");
         Media media = new Media(videoFile.toURI().toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setAutoPlay(true);
