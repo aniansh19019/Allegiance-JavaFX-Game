@@ -1,5 +1,7 @@
 package widget;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -14,15 +16,35 @@ import javafx.scene.text.Font;
 import main.GlobalConfig;
 import org.w3c.dom.Text;
 
+import javax.swing.*;
+
 public class TextBox
 {
     private String text;
     private Group group;
+    private TextField input;
     private static final GlobalConfig config;
+    private EventHandler<ActionEvent> handler;
+
+    public void setHandler(EventHandler<ActionEvent> handler)
+    {
+        this.handler = handler;
+    }
 
     static
     {
         config = new GlobalConfig();
+    }
+
+
+    public TextField getInput()
+    {
+        return input;
+    }
+
+    public void setInput(TextField input)
+    {
+        this.input = input;
     }
 
     public String getText()
@@ -42,10 +64,11 @@ public class TextBox
         ImageView textBoxBackground = new ImageView(textBoxImage);
         //init Text Box
 
-        TextField input = new TextField();
+        input = new TextField();
+        input.setOnAction(handler);
         input.setPromptText("Enter Player Name");
         input.setFont(Font.loadFont(config.getPRIMARY_FONT(), 30));
-        input.setOnInputMethodTextChanged(e->{ this.text = input.getText();});
+//        input.setOnInputMethodTextChanged(e->{ this.text = input.getText();});
         input.setBorder(Border.EMPTY);
         input.setBackground(Background.EMPTY);
 //        input.setAlignment(Pos.CENTER);

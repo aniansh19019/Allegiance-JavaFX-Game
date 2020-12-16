@@ -11,7 +11,12 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import main.GlobalConfig;
 import main.SinglePlayerGameWrapper;
+import main.menu.LoadGameMenu;
 import widget.MenuButton;
+
+//TODO add cursor
+//TODO sound
+//TODO base for ship start
 
 
 public class MenuManager
@@ -32,7 +37,6 @@ public class MenuManager
 	{
 		this.shipNum = shipNum;
 	}
-	private SinglePlayerGameWrapper gameWrapper;
 	private String playerName;
 
 	public String getPlayerName()
@@ -194,6 +198,9 @@ public class MenuManager
 	public void loadGame()
 	{
 		//to be done by aniansh
+		clearStackPane();
+		LoadGameMenu loadGameMenu = new LoadGameMenu(this);
+		pane.getChildren().add(loadGameMenu.getLayer());
 	}
 
 	public void quit()

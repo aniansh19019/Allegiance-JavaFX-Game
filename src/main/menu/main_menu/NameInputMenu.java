@@ -21,6 +21,11 @@ public class NameInputMenu
         pane = new StackPane();
         //init textBox
         TextBox textBox = new TextBox();
+        textBox.setHandler(e->{
+            menuManager.setPlayerName(textBox.getInput().getText());
+            SinglePlayerGameWrapper singlePlayerGameWrapper = new SinglePlayerGameWrapper(menuManager);
+            menuManager.getWindow().setScene(singlePlayerGameWrapper.getGame().getScene());
+        });
         textBox.getLayer().setTranslateX(20);
 
         //init Start Game Button
@@ -28,7 +33,7 @@ public class NameInputMenu
         //TODO stop sound
         MenuButton startGameButton = new MenuButton(e->
         {
-            menuManager.setPlayerName(textBox.getText());
+            menuManager.setPlayerName(textBox.getInput().getText());
             SinglePlayerGameWrapper singlePlayerGameWrapper = new SinglePlayerGameWrapper(menuManager);
             menuManager.getWindow().setScene(singlePlayerGameWrapper.getGame().getScene());
         });

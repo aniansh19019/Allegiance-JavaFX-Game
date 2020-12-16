@@ -20,4 +20,11 @@ public class SinglePlayerGameWrapper
     {
         this.game = new SinglePlayerGame(menu, this);
     }
+
+    public SinglePlayerGameWrapper(SinglePlayerGame game, MenuManager menu)
+    {
+        this.game=game;
+        game.setWrapper(this);
+        game.setMainMenu(menu);
+    }
 }

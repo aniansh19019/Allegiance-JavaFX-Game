@@ -126,6 +126,34 @@ public class SinglePlayerGame implements Serializable
 //    private AnimatedEffect effects;
 
 
+    public void startTimer()
+    {
+        gameLoop.start();
+        backGroundMusic.play();
+    }
+
+    public void stopTimer()
+    {
+        gameLoop.stop();
+        backGroundMusic.stop();
+    }
+
+
+    public PlayerShip getShip()
+    {
+        return ship;
+    }
+
+    public int getStarCount()
+    {
+        return starCount;
+    }
+
+    public void setStarCount(int starCount)
+    {
+        this.starCount = starCount;
+    }
+
     public MenuManager getMainMenu()
     {
         return menuManager;
@@ -165,9 +193,15 @@ public class SinglePlayerGame implements Serializable
         gameOverSound = new AudioClip("file:res/sound/game_over_sound.mp3");
     }
 
+    public String getName()
+    {
+        return name;
+    }
 
-
-
+    public void setName(String name)
+    {
+        this.name = name;
+    }
 
     public SinglePlayerGame(MenuManager menu, SinglePlayerGameWrapper wrapper)
     {
@@ -177,7 +211,7 @@ public class SinglePlayerGame implements Serializable
         //init menu
         menuManager = menu;
         //init player name
-        this.name= menu.getPlayerName();
+        this.name=  menu.getPlayerName();
         //init score to 0
         starCount =0;
         //init vars
@@ -634,7 +668,7 @@ public class SinglePlayerGame implements Serializable
         // init cursor
         Image cursorImage = new Image("file:res/img/ui_elements/cursor_arrow.png");
         ImageCursor cursor = new ImageCursor(cursorImage);
-        backGroundMusic.play();
+
 
         //init pause menu
 
@@ -658,7 +692,7 @@ public class SinglePlayerGame implements Serializable
 
 
 
-        gameLoop.start();
+//        gameLoop.start();
 
 
     }
