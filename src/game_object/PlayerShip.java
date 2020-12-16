@@ -247,14 +247,27 @@ public class PlayerShip extends Sprite implements Serializable
 
     public PlayerShip(GameColor color, int shipType)
     {
-
         this.shipType=shipType;
-
         this.setColor(color);
 
         setPosition(config.getSCREEN_WIDTH()/2, 0.8* config.getSCREEN_HEIGHT()); // set ship initial position
-        setImageScaleFactor(0.6);
-        //TODO set this in setShip
+//        setImageScaleFactor(0.6);
+        //TODO add specs and names to ships
+
+        //set scale according to ship
+        switch (shipType)//can also alter speed as per ship
+        {
+            case 1:
+                setImageScaleFactor(0.45);
+                break;
+            case 2:
+                setImageScaleFactor(0.6);
+            case 3:
+                setImageScaleFactor(0.6);
+            case 4:
+                setImageScaleFactor(0.6);
+                break;
+        }
 
         setAcceleration(gravity);// gravity
         bulletsFired = new ArrayList<Bullet>();

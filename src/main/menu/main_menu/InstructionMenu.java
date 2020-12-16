@@ -12,18 +12,18 @@ import widget.MenuButton;
 
 public class InstructionMenu {
     private VBox pane;
-    private UserInterfaceElements elements;
+//    private UserInterfaceElements elements;
     private static final double scale=0.6;
     public InstructionMenu(EventHandler<? super MouseEvent > Handler){
         pane=new VBox(20);
-        elements=new UserInterfaceElements();
+//        elements=new UserInterfaceElements();
         MenuButton continueButton=new MenuButton(Handler);
         continueButton.setNormalImageString("file:res/img/ui_elements/continue_blue.png");
         continueButton.setHoverImageString("file:res/img/ui_elements/continue_yellow.png");
         continueButton.setClickImageString("file:res/img/ui_elements/continue_orange.png");
         continueButton.loadImages();
         continueButton.getButton().setScaleX(scale);
-        pane.getChildren().addAll(elements.getInstruction(),continueButton.getButton());
+//        pane.getChildren().addAll(elements.getInstruction(),continueButton.getButton());
         pane.setAlignment(Pos.CENTER);
 
     }

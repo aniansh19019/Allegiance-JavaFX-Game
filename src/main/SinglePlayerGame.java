@@ -119,6 +119,7 @@ public class SinglePlayerGame implements Serializable
     private transient GameOverMenu gameOverMenu;
     private int starsRequired;
     private boolean isDestroyed;
+    private String name;
     private transient SinglePlayerGameWrapper wrapper;
 
     private transient MenuManager menuManager;
@@ -175,6 +176,8 @@ public class SinglePlayerGame implements Serializable
 
         //init menu
         menuManager = menu;
+        //init player name
+        this.name= menu.getPlayerName();
         //init score to 0
         starCount =0;
         //init vars
@@ -586,6 +589,7 @@ public class SinglePlayerGame implements Serializable
         //TODO transition
         backGroundMusic.stop();
         mainStage.setScene(menuManager.getRoot());
+        menuManager.enterMainMenu();
     }
 
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException

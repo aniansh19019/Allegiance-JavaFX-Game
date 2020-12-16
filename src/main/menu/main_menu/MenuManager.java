@@ -1,41 +1,29 @@
 package main.menu.main_menu;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.PauseTransition;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import main.GlobalConfig;
 import main.SinglePlayerGameWrapper;
 import widget.MenuButton;
 
-import java.util.Set;
-
 
 public class MenuManager
 {
-	private static GlobalConfig config;
-	private Stage window;
+	private static final GlobalConfig config;
+	private final Stage window;
 	private StackPane pane;
 	private StackPane animatedBackground;
 	private Scene root;
 	private boolean soundOn;
 	private int shipNum = 1;
-	private static final double scale =0.6;
+	private static final double scale =0.65;
 	public int getShipNum()
 	{
 		return shipNum;
@@ -45,6 +33,17 @@ public class MenuManager
 		this.shipNum = shipNum;
 	}
 	private SinglePlayerGameWrapper gameWrapper;
+	private String playerName;
+
+	public String getPlayerName()
+	{
+		return playerName;
+	}
+
+	public void setPlayerName(String playerName)
+	{
+		this.playerName = playerName;
+	}
 
 	static
 	{
@@ -67,7 +66,7 @@ public class MenuManager
 
 		//init background pane
 		animatedBackground = new StackPane();
-		animatedBackground.setBackground(BackgroundgifClass.getBackground());
+		animatedBackground.setBackground(MenuBackground.getBackground());
 
 
 		//add to pane
@@ -170,8 +169,11 @@ public class MenuManager
 	public void newGame()
 	{
 
-		gameWrapper = new SinglePlayerGameWrapper(this);
-		window.setScene(gameWrapper.getGame().getScene());
+//		gameWrapper = new SinglePlayerGameWrapper(this);
+//		window.setScene(gameWrapper.getGame().getScene());
+		clearStackPane();
+		ShipMenu shipMenu = new ShipMenu(this);
+		pane.getChildren().add(shipMenu.getLayer());
 
 	}
 
@@ -180,6 +182,13 @@ public class MenuManager
 		SettingsMenu settingsMenu = new SettingsMenu(e->enterMainMenu(), e->{soundOn=!soundOn;});//toggle sound
 		clearStackPane();
 		pane.getChildren().add(settingsMenu.getLayer());
+	}
+
+	public void enterName()
+	{
+		NameInputMenu nameInputMenu = new NameInputMenu(this);
+		clearStackPane();
+		pane.getChildren().add(nameInputMenu.getLayer());
 	}
 
 	public void loadGame()

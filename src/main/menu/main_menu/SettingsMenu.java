@@ -16,7 +16,6 @@ import widget.MenuButton;
 public class SettingsMenu
 {
     private StackPane pane;
-    private UserInterfaceElements elements;
 
 
     public SettingsMenu(EventHandler<? super MouseEvent> BackHandler, EventHandler<? super javafx.scene.input.MouseEvent> checkToggleHandler )
@@ -46,6 +45,7 @@ public class SettingsMenu
         ImageView soundLabel = new ImageView(soundImage);
         soundLabel.setScaleX(0.65);
         soundLabel.setScaleY(0.65);
+        soundLabel.setTranslateX(-16);
 //        soundSettingLabel.setTranslateY(200);
 
 

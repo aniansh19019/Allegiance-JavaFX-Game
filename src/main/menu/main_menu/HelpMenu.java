@@ -16,10 +16,10 @@ public class HelpMenu {
     private StackPane pane;
 //    private static final double scale=0.13;
 
-    public HelpMenu(EventHandler<? super MouseEvent> BackHandler)
+    public HelpMenu(EventHandler<? super MouseEvent> backHandler)
     {
         //init back button
-        MenuButton backButton=new MenuButton(BackHandler);
+        MenuButton backButton=new MenuButton(backHandler);
         backButton.setNormalImageString("file:res/img/ui_elements/back_blue.png");
         backButton.setHoverImageString("file:res/img/ui_elements/back_yellow.png");
         backButton.setClickImageString("file:res/img/ui_elements/back_orange.png");
