@@ -1,6 +1,8 @@
 package main.menu.main_menu;
 
+import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -11,9 +13,9 @@ import java.io.File;
 
 public class SplashScreen
 {
-    static private GlobalConfig config;
-    private Scene scene;
-    private MenuManager menuManager;
+    static private final GlobalConfig config;
+    private final Scene scene;
+    private final MenuManager menuManager;
 
     static
     {
@@ -27,6 +29,10 @@ public class SplashScreen
         //init borderpane
         StackPane pane = new StackPane();
         scene = new Scene(pane, config.getSCREEN_WIDTH(), config.getSCREEN_HEIGHT());
+        //set cursor
+        Image cursorImage = new Image("file:res/img/ui_elements/cursor_arrow.png");
+        ImageCursor cursor = new ImageCursor(cursorImage);
+        this.scene.setCursor(cursor);
 
 
         //init video
@@ -50,6 +56,7 @@ public class SplashScreen
             {
                 mediaPlayer.stop();
                 menuManager.getWindow().setScene(menuManager.getRoot());//set scene to menu
+                MenuManager.getMenuBackgroundMusic().play();
             }
         });
 
@@ -70,6 +77,7 @@ public class SplashScreen
         public void run()
         {
             menuManager.getWindow().setScene(menuManager.getRoot());
+            MenuManager.getMenuBackgroundMusic().play();
         }
     }
 

@@ -1,22 +1,19 @@
 package main.menu.main_menu;
 
-import com.sun.glass.ui.Menu;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
 import main.SinglePlayerGameWrapper;
 import widget.ChooseShipTilePane;
 import widget.MenuButton;
 
 public class ShipMenu
 {
-    private StackPane pane;
+    private final StackPane pane;
     private ChooseShipTilePane shipSelector;
-    private MenuManager menuManager;
+    private final MenuManager menuManager;
 
     private void startGame()
     {

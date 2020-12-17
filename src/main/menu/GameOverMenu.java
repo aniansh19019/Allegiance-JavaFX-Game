@@ -20,8 +20,8 @@ import widget.MenuButton;
 
 public class GameOverMenu
 {
-    private StackPane pane;
-    private static GlobalConfig config;
+    private final StackPane pane;
+    private static final GlobalConfig config;
     private static final double scale = 0.65;
 
     static
@@ -97,9 +97,6 @@ public class GameOverMenu
         youHave.setPadding(new Insets(-20, 36, -6, -20));
         required.setPadding(new Insets(0, 36, -16, -20));
 
-//        youHave.setAlignment(Pos.CENTER_LEFT);
-//        required.setAlignment(Pos.CENTER_LEFT);
-
         youHave.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
         required.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
 
@@ -121,9 +118,6 @@ public class GameOverMenu
         buttonLayer.getChildren().addAll(required, youHave, continueButton.getButton(), restartButton.getButton(), quitButton.getButton());
         buttonLayer.setAlignment(Pos.CENTER);
 
-//        buttonLayer.setAlignment(youHave, Pos.BASELINE_LEFT);
-//        buttonLayer.setSpacing(2);
-
         Image background = new Image("file:res/img/ui_elements/menu_background.png");
         ImageView backgroundBox = new ImageView(background);
         BorderPane bgLayer = new BorderPane();
@@ -138,7 +132,7 @@ public class GameOverMenu
 
 
         pane.getChildren().addAll(bgLayer,buttonLayer, overLabel);
-        pane.setAlignment(overLabel, Pos.TOP_CENTER);
+        StackPane.setAlignment(overLabel, Pos.TOP_CENTER);
 
 
 

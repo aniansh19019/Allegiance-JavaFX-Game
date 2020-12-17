@@ -3,10 +3,11 @@ package game_object.powerups;
 import animations.PurpleExplosionEffect;
 import animations.TimeEffect;
 import javafx.scene.media.AudioClip;
+import main.GlobalConfig;
 
 public class TimePowerUp extends PowerUp
 {
-    private static AudioClip collectSound;
+    private static final AudioClip collectSound;
     static
     {
         collectSound = new AudioClip("file:res/sound/time_effect.mp3");
@@ -23,6 +24,7 @@ public class TimePowerUp extends PowerUp
     public void destroy()
     {
         //play sound
+        if(GlobalConfig.isSoundOn())
         collectSound.play();
 
         super.destroy();

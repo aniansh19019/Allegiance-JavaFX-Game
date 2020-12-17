@@ -1,18 +1,15 @@
 package main.menu.main_menu;
 
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import main.GlobalConfig;
 import main.SinglePlayerGame;
-import main.menu.main_menu.MenuManager;
 import widget.LoadGameListItem;
 import widget.MenuButton;
 
@@ -22,7 +19,7 @@ import java.io.ObjectInputStream;
 
 public class LoadGameMenu
 {
-    private StackPane pane;
+    private final StackPane pane;
     private static final GlobalConfig config;
     static
     {
@@ -72,22 +69,25 @@ public class LoadGameMenu
         //TODO check for file deletions
 
         //traverse all the files in the directory
-        for(int i=0; i< saveFiles.length; i++)
+        if (saveFiles != null)
         {
-            try
+            for(int i=0; i< saveFiles.length; i++)
             {
-                FileInputStream inStream = new FileInputStream(saveFiles[i]);
-                ObjectInputStream in = new ObjectInputStream(inStream);
-                //read game object
-                SinglePlayerGame game = (SinglePlayerGame)in.readObject();
-                box.getChildren().add(new LoadGameListItem(game, menu).getLayer());
-                //close file
-                inStream.close();
-                in.close();
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
+                try
+                {
+                    FileInputStream inStream = new FileInputStream(saveFiles[i]);
+                    ObjectInputStream in = new ObjectInputStream(inStream);
+                    //read game object
+                    SinglePlayerGame game = (SinglePlayerGame)in.readObject();
+                    box.getChildren().add(new LoadGameListItem(game, menu).getLayer());
+                    //close file
+                    inStream.close();
+                    in.close();
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
         pane.getChildren().addAll(scrollPane, backButton.getButton(), loadGameLabel);

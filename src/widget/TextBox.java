@@ -66,7 +66,8 @@ public class TextBox
 
         input = new TextField();
         input.setOnAction(handler);
-        input.setPromptText("Enter Player Name");
+//        input.setPromptText("Enter Player Name");
+        input.setText("anonymous");
         input.setFont(Font.loadFont(config.getPRIMARY_FONT(), 30));
 //        input.setOnInputMethodTextChanged(e->{ this.text = input.getText();});
         input.setBorder(Border.EMPTY);

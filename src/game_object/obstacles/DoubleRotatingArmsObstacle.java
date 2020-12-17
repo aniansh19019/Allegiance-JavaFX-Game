@@ -10,7 +10,7 @@ public class DoubleRotatingArmsObstacle extends Obstacle
 {
     private RotatingArmsObstacle rightObstacle;
     private RotatingArmsObstacle leftObstacle;
-    private static GlobalConfig config;
+    private static final GlobalConfig config;
 
     public RotatingArmsObstacle getRightObstacle()
     {

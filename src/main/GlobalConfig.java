@@ -2,9 +2,8 @@ package main;
 
 public class GlobalConfig
 {
-
+    private static boolean soundOn=true;
     final private boolean SHOW_COLLISION_BOUNDS = false;
-    final private boolean DEMO_MODE = false;
     final private int SCREEN_WIDTH = 500;
     final private int SCREEN_HEIGHT = 700;
 
@@ -53,5 +52,15 @@ public class GlobalConfig
     public String getBACKGROUND_COLOR()
     {
         return BACKGROUND_COLOR;
+    }
+
+    public static boolean isSoundOn()
+    {
+        return soundOn;
+    }
+
+    public static void setSoundOn(boolean soundOn)
+    {
+        GlobalConfig.soundOn = soundOn;
     }
 }

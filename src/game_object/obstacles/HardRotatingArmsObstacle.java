@@ -1,6 +1,5 @@
 package game_object.obstacles;
 
-import util.GameColor;
 import util.ObstaclePosition;
 
 public class HardRotatingArmsObstacle extends RotatingArmsObstacle

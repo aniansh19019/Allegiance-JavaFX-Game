@@ -3,17 +3,15 @@ package main.menu.main_menu;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import widget.MenuButton;
 
 public class HelpMenu {
-    private StackPane pane;
+    private final StackPane pane;
 //    private static final double scale=0.13;
 
     public HelpMenu(EventHandler<? super MouseEvent> backHandler)

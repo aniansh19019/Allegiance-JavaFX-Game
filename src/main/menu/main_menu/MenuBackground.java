@@ -13,8 +13,7 @@ public class MenuBackground
 		Image image=new Image("file:res/img/background/animated_background.gif");
 		BackgroundImage background=new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
 				BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-		Background xx=new Background(background);
-		return xx;
+		return new Background(background);
 	}
 	
 

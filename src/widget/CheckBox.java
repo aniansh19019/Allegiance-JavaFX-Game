@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.AudioClip;
+import main.GlobalConfig;
 
 public class CheckBox
 {
@@ -72,6 +73,7 @@ public class CheckBox
                 finalButton.setImage(uncheckedBoxHover);
             }
             setScale();
+            if(GlobalConfig.isSoundOn())
             hoverSound.play();
         });
 
@@ -99,6 +101,7 @@ public class CheckBox
                 finalButton.setImage(uncheckedBoxClicked);
             }
             setScale();
+            if(GlobalConfig.isSoundOn())
             clickSound.play();
         });
 

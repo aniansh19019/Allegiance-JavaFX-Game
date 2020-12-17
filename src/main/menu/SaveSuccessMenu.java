@@ -18,8 +18,8 @@ import widget.MenuButton;
 
 public class SaveSuccessMenu
 {
-    private StackPane pane;
-    private static GlobalConfig config;
+    private final StackPane pane;
+    private static final GlobalConfig config;
     private static final double scale = 0.65;
 
     static
@@ -72,7 +72,7 @@ public class SaveSuccessMenu
 
 
         pane.getChildren().addAll(bgLayer,buttonLayer, pausedLabel);
-        pane.setAlignment(pausedLabel, Pos.TOP_CENTER);
+        StackPane.setAlignment(pausedLabel, Pos.TOP_CENTER);
 
 
 

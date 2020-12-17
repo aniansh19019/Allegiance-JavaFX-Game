@@ -64,6 +64,7 @@ public class LoadGameListItem
         this.game =singlePlayerGame;
         //init button
         button = new MenuButton(e->{
+            MenuManager.getMenuBackgroundMusic().stop();
             SinglePlayerGameWrapper singlePlayerGameWrapper = new SinglePlayerGameWrapper(game, menu);
             menu.getWindow().setScene(singlePlayerGameWrapper.getGame().getScene());
             game.startTimer();

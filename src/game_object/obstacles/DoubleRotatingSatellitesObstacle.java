@@ -10,7 +10,7 @@ public class DoubleRotatingSatellitesObstacle extends Obstacle
 {
     private RotatingSatellitesObstacle rightObstacle;
     private RotatingSatellitesObstacle leftObstacle;
-    private static GlobalConfig config;
+    private static final GlobalConfig config;
 
     public RotatingSatellitesObstacle getRightObstacle()
     {

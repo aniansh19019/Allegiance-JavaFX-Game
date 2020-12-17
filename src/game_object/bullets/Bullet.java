@@ -8,9 +8,9 @@ import util.Sprite;
 public abstract class Bullet extends Sprite
 {
     private transient PlayerShip ship;
-    private static GlobalConfig config;
+    private static final GlobalConfig config;
     private boolean isFired;
-    private static AudioClip fireSound;
+    private static final AudioClip fireSound;
 
     public void setShip(PlayerShip ship)
     {
@@ -51,6 +51,7 @@ public abstract class Bullet extends Sprite
     public void fire()
     {
         //play sound
+        if(GlobalConfig.isSoundOn())
         fireSound.play();
 
         setPosition(ship.getPosition());
@@ -58,10 +59,4 @@ public abstract class Bullet extends Sprite
         isFired=true;
     }
 
-//    @Override
-//    public void render(GraphicsContext context)
-//    {
-//        if(isFired)
-//            super.render(context);
-//    }
 }

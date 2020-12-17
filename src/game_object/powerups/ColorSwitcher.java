@@ -1,13 +1,13 @@
 package game_object.powerups;
 
 import animations.ColorSwitchEffect;
-import game_object.powerups.PowerUp;
 import javafx.scene.media.AudioClip;
+import main.GlobalConfig;
 
 public class ColorSwitcher extends PowerUp
 {
 
-    private static AudioClip collectSound;
+    private static final AudioClip collectSound;
     static
     {
         collectSound = new AudioClip("file:res/sound/color_switcher_effect.mp3");
@@ -18,13 +18,13 @@ public class ColorSwitcher extends PowerUp
         super(y);
         setImage("file:res/img/powerups/color_switcher.png");
         setImageScaleFactor(0.3);
-        //TODO better graphics for this
     }
 
     @Override
     public void destroy()
     {
         //play sound
+        if(GlobalConfig.isSoundOn())
         collectSound.play();
 
         super.destroy();

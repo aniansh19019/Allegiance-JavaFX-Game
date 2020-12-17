@@ -5,9 +5,10 @@ import game_object.bullets.Bullet;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.media.AudioClip;
-import javafx.scene.media.Media;
 import main.GlobalConfig;
-import util.*;
+import util.GameColor;
+import util.Sprite;
+import util.Vector;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -19,23 +20,23 @@ public class PlayerShip extends Sprite implements Serializable
 {
 
     //sounds
-    private static AudioClip destroySound;
-    private static AudioClip protectionOnSound;
-    private static AudioClip protectionOffSound;
-    private static AudioClip protectionSound;
-    private static AudioClip thrustSound;
-    private static AudioClip reviveSound;
+    private static final AudioClip destroySound;
+    private static final AudioClip protectionOnSound;
+    private static final AudioClip protectionOffSound;
+    private static final AudioClip protectionSound;
+    private static final AudioClip thrustSound;
+    private static final AudioClip reviveSound;
 
     //sounds
-    private static int PROTECTION_MAX_LIMIT = 1000;
-    private static Random rand;
+    private static final int PROTECTION_MAX_LIMIT = 1000;
+    private static final Random rand;
 
     private int shipType;
     private boolean isBoosted;
     transient private Image normalImage;
     transient private Image thrustImage;
 //    private static Media thrustSound;
-    private static Vector gravity;
+    private static final Vector gravity;
     private static Vector boostVelocity;
     private static final int maxBulletNum = 5;
     private ArrayList<Bullet> bulletsFired;
@@ -136,6 +137,17 @@ public class PlayerShip extends Sprite implements Serializable
         setNormalImage(new Image(file));
     }
 
+    public void mute()
+    {
+        destroySound.stop();
+        protectionOnSound.stop();
+        protectionOffSound.stop();
+        protectionSound.stop();
+        thrustSound.stop();
+        reviveSound.stop();
+    }
+
+
     static
     {
         config = new GlobalConfig();
@@ -199,16 +211,14 @@ public class PlayerShip extends Sprite implements Serializable
         {
             switchImage(thrustImage);
         }
-
-//        System.out.println("file:res/img/ships/ship_"+shipType+"_"+colorStr+".png");
-
-        //TODO set appropriate scale factors
     }
 
 
     public void protectionOn()
     {
+        if(GlobalConfig.isSoundOn())
         protectionOnSound.play();
+        if(GlobalConfig.isSoundOn())
         protectionSound.play();
         //sound on
         protectionCounter=0;
@@ -220,6 +230,7 @@ public class PlayerShip extends Sprite implements Serializable
 
     public void protectionOff()
     {
+        if(GlobalConfig.isSoundOn())
         protectionOffSound.play();
         protectionSound.stop();
         //sound off
@@ -231,20 +242,6 @@ public class PlayerShip extends Sprite implements Serializable
         }
     }
 
-//    @Override
-//    public CollisionRectangle getBoundary()
-//    {
-//        if(isProtected)
-//        {
-//            protectionPowerUpEffect.getBoundary();
-//        }
-//        else
-//        {
-//            return super.getBoundary();
-//        }
-//
-//    }
-
     public PlayerShip(GameColor color, int shipType)
     {
         this.shipType=shipType;
@@ -252,7 +249,7 @@ public class PlayerShip extends Sprite implements Serializable
 
         setPosition(config.getSCREEN_WIDTH()/2, 0.8* config.getSCREEN_HEIGHT()); // set ship initial position
 //        setImageScaleFactor(0.6);
-        //TODO add specs and names to ships
+
 
         //set scale according to ship
         switch (shipType)//can also alter speed as per ship
@@ -288,6 +285,7 @@ public class PlayerShip extends Sprite implements Serializable
         setAcceleration(0,0); // switch off acceleration
         switchImage(thrustImage);
         //play sound
+        if(GlobalConfig.isSoundOn())
         thrustSound.play();
     }
 
@@ -392,6 +390,7 @@ public class PlayerShip extends Sprite implements Serializable
         addEffect(effect);
 
 //        AudioClip
+        if(GlobalConfig.isSoundOn())
         destroySound.play();
         //turn off all other sounds
         thrustSound.stop();
@@ -402,8 +401,8 @@ public class PlayerShip extends Sprite implements Serializable
     public void revive()
     {
         //effect
-        //TODO play sound
         //init positions
+        if(GlobalConfig.isSoundOn())
         reviveSound.play();
 
 
@@ -426,7 +425,6 @@ public class PlayerShip extends Sprite implements Serializable
 
         setColor(GameColor.values()[choice]);
 //        addCollectEffect();
-        //TODO change this effect
     }
 
 

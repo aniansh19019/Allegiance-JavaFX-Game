@@ -11,13 +11,10 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import main.GlobalConfig;
-import main.SinglePlayerGame;
-import main.menu.main_menu.MenuManager;
 import widget.LeaderBoardListItem;
-import widget.LoadGameListItem;
 import widget.MenuButton;
 
-import java.io.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -74,7 +71,7 @@ class PlayerRecord implements Comparable<PlayerRecord>
 
 public class LeaderBoardMenu
 {
-    private StackPane pane;
+    private final StackPane pane;
     private static final GlobalConfig config;
     static
     {
@@ -121,6 +118,7 @@ public class LeaderBoardMenu
 
 
         //TODO check for file deletions
+        //TODO cursor problem
 
         //read and parse files and create tiles
 

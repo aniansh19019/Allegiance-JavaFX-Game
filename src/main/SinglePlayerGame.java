@@ -2,6 +2,7 @@ package main;
 
 import animations.AnimatedEffect;
 import animations.TimeOverlayEffect;
+import animations.YellowExplosionEffect;
 import game_object.*;
 import game_object.bullets.GrenadeBullet;
 import game_object.bullets.TimeBullet;
@@ -35,39 +36,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
-//TODO game lagging, optimise!!
 
-//TODO storyboarding
-
-//TODO add animation to menu
-
-
-//TODO juice up the game!
-//TODO add overlays
-//TODO adjust volumes
-//TODO fix collection effects
-
-//TODO off center effects fix
-
-//TODO save game
-
-//TODO pause button
-// TODO store all references in Game SinglePLayerGame Menu
-//TODO detect placement overlaps
-//TODO normalise ship widths
-//TODO add global sound controls
-//TODO add delay between gameover and menu
-//TODO randomise everything, cleanup code, prepare demo game, add other menu options, save game, oad game
-
-//TODO animate background
-
-
-//TODO check for direct powerup overlap
 
 public class SinglePlayerGame implements Serializable
 {
     private static final double pauseButtonScale = 0.17;
-    //number of entites that exist at a time in the game
+    //number of entities that exist at a time in the game
     private static final int NUM_SCREENS = 3;
     //powerup probabilities
     private static final double BULLET_POWERUP_PROB = 0.1;
@@ -86,12 +60,12 @@ public class SinglePlayerGame implements Serializable
 
 
     //init sounds
-    private static AudioClip timePowerupOnSound;
-    private static AudioClip timePowerupOffSound;
-    private static AudioClip backGroundMusic;
-    private static AudioClip pauseSound;
-    private static AudioClip resumeSound;
-    private static AudioClip gameOverSound;
+    private static final AudioClip timePowerupOnSound;
+    private static final AudioClip timePowerupOffSound;
+    private static final AudioClip backGroundMusic;
+    private static final AudioClip pauseSound;
+    private static final AudioClip resumeSound;
+    private static final AudioClip gameOverSound;
 
 
 
@@ -102,7 +76,7 @@ public class SinglePlayerGame implements Serializable
     private transient Canvas gameCanvas;
     private transient StackPane root;
     private transient GraphicsContext context;
-    private PlayerShip ship;
+    private final PlayerShip ship;
     private ArrayList<String> inputList;
     private Obstacle[] obstacles; // to store all obstacles
     private PowerUp[] powerUps; // to store all powerups/collectibles
@@ -129,6 +103,7 @@ public class SinglePlayerGame implements Serializable
     public void startTimer()
     {
         gameLoop.start();
+        if(GlobalConfig.isSoundOn())
         backGroundMusic.play();
     }
 
@@ -235,7 +210,7 @@ public class SinglePlayerGame implements Serializable
         //init scene
         scene = new Scene(root);
         //init ship
-        //TODO select ship from menu
+
         ship = new PlayerShip(GameColor.values()[rand.nextInt(4)], menuManager.getShipNum());
 
         //init ammoDisplay
@@ -277,6 +252,7 @@ public class SinglePlayerGame implements Serializable
         // init cursor
         Image cursorImage = new Image("file:res/img/ui_elements/cursor_arrow.png");
         ImageCursor cursor = new ImageCursor(cursorImage);
+        this.root.setCursor(cursor);
         backGroundMusic.play();
 
         //init pause menu
@@ -293,12 +269,12 @@ public class SinglePlayerGame implements Serializable
         //add pause button
 
         this.root.getChildren().add(pauseButton.getButton());
-        this.root.setAlignment(pauseButton.getButton(), Pos.TOP_LEFT);
+        StackPane.setAlignment(pauseButton.getButton(), Pos.TOP_LEFT);
         pauseButton.getButton().setTranslateX(-110);
         pauseButton.getButton().setTranslateY(-100);
 
 
-        this.root.setCursor(cursor);
+
 
 
 
@@ -309,7 +285,7 @@ public class SinglePlayerGame implements Serializable
 
     private void initStars()
     {
-        //TODO change this to be random
+
         //randomly with low chance spawn other powerups
         stars = new StarPowerUp[NUM_SCREENS];
 
@@ -462,7 +438,7 @@ public class SinglePlayerGame implements Serializable
 
     private void pauseGame()
     {
-        //TODO draw overlay and play sound
+
         backGroundMusic.stop();
         pauseSound.play();
 
@@ -504,7 +480,6 @@ public class SinglePlayerGame implements Serializable
 
         backGroundMusic.stop();
 
-        //TODO play sound
         gameOverSound.play();
         Image pauseOverlay = new Image("file:res/img/overlays/pause_overlay.png");
         context.drawImage(pauseOverlay, 0, 0);
@@ -521,7 +496,7 @@ public class SinglePlayerGame implements Serializable
 
     private void revivePlayer()
     {
-        //TODO dramatic reveal
+
 
         //update stars
         starCount-=starsRequired;
@@ -590,17 +565,6 @@ public class SinglePlayerGame implements Serializable
             saveSuccessMenu = new SaveSuccessMenu(e->confirmGameSave());
             root.getChildren().add(saveSuccessMenu.getLayer());
 
-//            //read effect
-//            FileInputStream inStream = new FileInputStream(outFile);
-//            ObjectInputStream in = new ObjectInputStream(inStream);
-//            SinglePlayerGame test = (SinglePlayerGame) in.readObject();
-//            inStream.close();
-//            in.close();
-//            test.setMainMenu(mainMenu);
-//            test.setWrapper(wrapper);
-//            wrapper.setGame(test);
-//            mainStage.setScene(test.getScene());
-//            System.out.println("Success!");
         }
         catch(Exception e)
         {
@@ -635,12 +599,14 @@ public class SinglePlayerGame implements Serializable
 
     public void quitGame() // got to menu
     {
-        //TODO transition
+
         //add record to leaderboards
         addToLeaderBoard();
 
+        ship.mute();
         //proceed to the menu
         backGroundMusic.stop();
+        MenuManager.getMenuBackgroundMusic().play();
         mainStage.setScene(menuManager.getRoot());
         menuManager.enterMainMenu();
     }
@@ -702,16 +668,12 @@ public class SinglePlayerGame implements Serializable
         //add pause button
 
         this.root.getChildren().add(pauseButton.getButton());
-        this.root.setAlignment(pauseButton.getButton(), Pos.TOP_LEFT);
+        StackPane.setAlignment(pauseButton.getButton(), Pos.TOP_LEFT);
         pauseButton.getButton().setTranslateX(-110);
         pauseButton.getButton().setTranslateY(-100);
 
 
         this.root.setCursor(cursor);
-
-
-
-//        gameLoop.start();
 
 
     }
@@ -739,6 +701,8 @@ public class SinglePlayerGame implements Serializable
         private int destroyTimeCounter;
         private final String backGroundImageString = "file:res/img/background/background.png";
         private transient Image backgroundFill;
+        private boolean isNewGame=true;
+        private Sprite launchPad;
 
         public ArrayList<AnimatedEffect> getEffects()
         {
@@ -755,12 +719,14 @@ public class SinglePlayerGame implements Serializable
             slowTimeCounter = 0;
             destroyTimeCounter=0;
             backgroundFill = new Image(backGroundImageString);
+            launchPad = new Sprite();
+            launchPad.setImage(new Image("file:res/img/ships/launch_pad.png.png"));
+            launchPad.setImageScaleFactor(0.8);
+            launchPad.setPosition(config.getSCREEN_WIDTH()/2, 0.9*config.getSCREEN_HEIGHT());
         }
 
         public void cleanSlate()
         {
-//            context.setFill(Color.web(config.getBACKGROUND_COLOR()));
-//            context.fillRect(0, 0, config.getSCREEN_WIDTH(), 3*config.getSCREEN_HEIGHT());//replace with background
             context.drawImage(backgroundFill,0,0);
         }
 
@@ -773,6 +739,8 @@ public class SinglePlayerGame implements Serializable
                 {
                     //shift ship and bullets
                     ship.shiftPosition(ship.getVelocity());
+                    //shift launchpad
+                    launchPad.shiftPosition(ship.getVelocity());
 
                     //shift obstacles and powerups and stars
                     for(int i = 0; i< NUM_SCREENS; i++)
@@ -833,6 +801,9 @@ public class SinglePlayerGame implements Serializable
 
         private void drawMisc(long l)
         {
+            //draw launchpad
+            launchPad.render(context);
+
             if(config.getSHOW_COLLISION_BOUNDS())
             {
                 bottomCollisionDetector.render(context);
@@ -906,7 +877,7 @@ public class SinglePlayerGame implements Serializable
 //                System.out.println(obstacles[i]);
             }
             //create new obstacle
-            //TODO randomise this
+
 
 //            double yVal = -(NUM_SCREENS -1)*config.getSCREEN_HEIGHT();
             double yVal = obstacles[NUM_SCREENS-2].getPosition().getY()-config.getSCREEN_HEIGHT();
@@ -966,7 +937,7 @@ public class SinglePlayerGame implements Serializable
 //                System.out.println(powerups[i]);
             }
             //create new obstacle
-            //TODO randomise this
+
 
 
             stars[NUM_SCREENS -1] = new StarPowerUp(-((NUM_SCREENS-1)*config.getSCREEN_HEIGHT()));
@@ -1035,6 +1006,11 @@ public class SinglePlayerGame implements Serializable
 
         private void drawShip(long l)
         {
+            if(inputList.contains("SPACE") && isNewGame)
+            {
+                isNewGame=false;
+                effects.add(new YellowExplosionEffect(launchPad.getPosition()));
+            }
 
             if(inputList.contains("SPACE") && !ship.isBoosted())// if not already boosted, call boost
             {
@@ -1059,6 +1035,13 @@ public class SinglePlayerGame implements Serializable
                 shiftWindow();
             }
 
+            if(ship.didCollide(launchPad))
+            {
+                isNewGame = true;
+                ship.shiftPosition(new Vector(0,10));
+            }
+
+            if(!isNewGame)
             ship.update();
             ship.render(context);
         }
@@ -1097,7 +1080,6 @@ public class SinglePlayerGame implements Serializable
                 if(obstacles[i].didCollisionWithShip(ship))
                 {
                     //game over
-                    //TODO implement this
                     ship.destroy();
                     isDestroyed=true;
                 }
@@ -1124,7 +1106,6 @@ public class SinglePlayerGame implements Serializable
                     }
                     else if(current.getClass() == TimePowerUp.class)
                     {
-                        //TODO implement this
 
                         //adding overlay
                         if(!isSlow)
@@ -1135,7 +1116,6 @@ public class SinglePlayerGame implements Serializable
                         //playing sound
                         timePowerupOnSound.play();
 
-                        //TODO add screen overlay animation
                     }
                     ship.addScore(50);
                     current.destroy();// destroy powerup from canvas
@@ -1148,7 +1128,6 @@ public class SinglePlayerGame implements Serializable
                     ship.addScore(50);
                     stars[i].destroy();
 //                    ship.addCollectEffect();
-                    //TODO change thi®s
                 }
             }
         }

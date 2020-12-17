@@ -1,31 +1,30 @@
 package main.menu.main_menu;
 
 import javafx.geometry.Pos;
+import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import main.GlobalConfig;
-import main.menu.main_menu.LeaderBoardMenu;
 import widget.MenuButton;
 
-//TODO add cursor
-//TODO sound
-//TODO base for ship start
 
 
 public class MenuManager
 {
 	private static final GlobalConfig config;
+	private static final AudioClip menuBackgroundMusic;
 	private final Stage window;
-	private StackPane pane;
-	private StackPane animatedBackground;
-	private Scene root;
-	private boolean soundOn;
+	private final StackPane pane;
+	private final StackPane animatedBackground;
+	private final Scene root;
 	private int shipNum = 1;
 	private static final double scale =0.65;
 	public int getShipNum()
@@ -51,6 +50,13 @@ public class MenuManager
 	static
 	{
 		config = new GlobalConfig();
+		menuBackgroundMusic = new AudioClip("file:res/sound/Game_Menu.mp3");
+		menuBackgroundMusic.setCycleCount(AudioClip.INDEFINITE);
+	}
+
+	public static AudioClip getMenuBackgroundMusic()
+	{
+		return menuBackgroundMusic;
 	}
 
 	public Scene getRoot()
@@ -61,7 +67,7 @@ public class MenuManager
 	public MenuManager(Stage window)
 	{
 		this.window = window;
-		soundOn=true;
+
 
 		//init pane
 		pane = new StackPane();
@@ -78,6 +84,10 @@ public class MenuManager
 		//init root
 
 		root= new Scene(pane, config.getSCREEN_WIDTH(), config.getSCREEN_HEIGHT());
+		//set cursor
+		Image cursorImage = new Image("file:res/img/ui_elements/cursor_arrow.png");
+		ImageCursor cursor = new ImageCursor(cursorImage);
+		this.root.setCursor(cursor);
 
 
 		//initially in main menu
@@ -86,8 +96,6 @@ public class MenuManager
 	}
 
 	public Node getMainMenu() {
-//		Image image=new Image("file:res/download.gif");
-//		ImageView view=new ImageView(image);
 		Label label1=new Label("Allegiance");
 		label1.setFont(Font.loadFont("file:res/font/AlphaCentauri500.ttf", 52));
 		label1.setTextFill(Color.web("#d5d0d2"));
@@ -150,8 +158,6 @@ public class MenuManager
 				leaderBoard.getButton(), settings.getButton(),Help.getButton(),Exit.getButton());
 		layout1.setAlignment(Pos.CENTER);
 		label1.setTranslateY(75);
-//		layout1.setBackground(BackgroundgifClass.getBackground());
-//		MainMenu =new Scene(layout1 ,500,700);
 		return layout1;
 	}
 
@@ -172,8 +178,6 @@ public class MenuManager
 	public void newGame()
 	{
 
-//		gameWrapper = new SinglePlayerGameWrapper(this);
-//		window.setScene(gameWrapper.getGame().getScene());
 		clearStackPane();
 		ShipMenu shipMenu = new ShipMenu(this);
 		pane.getChildren().add(shipMenu.getLayer());
@@ -182,7 +186,18 @@ public class MenuManager
 
 	public void settings()
 	{
-		SettingsMenu settingsMenu = new SettingsMenu(e->enterMainMenu(), e->{soundOn=!soundOn;});//toggle sound
+		SettingsMenu settingsMenu = new SettingsMenu(e->enterMainMenu(), e->{
+			if(GlobalConfig.isSoundOn())
+			{
+				GlobalConfig.setSoundOn(false);
+				menuBackgroundMusic.stop();
+			}
+			else
+			{
+				GlobalConfig.setSoundOn(true);
+				menuBackgroundMusic.play();
+			}
+		});//toggle sound
 		clearStackPane();
 		pane.getChildren().add(settingsMenu.getLayer());
 	}
@@ -222,14 +237,6 @@ public class MenuManager
 		for(int i=1; i<size; i++) // remove everything except background
 		{
 			pane.getChildren().remove(i);
-		}
-	}
-
-
-	public void closeProgram() {
-		boolean answer=Box.displayexit("Exit", "Are you sure, you want to Exit?");
-		if(answer) {
-			window.close();
 		}
 	}
 

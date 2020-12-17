@@ -5,15 +5,13 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import main.SinglePlayerGame;
 import main.SinglePlayerGameWrapper;
 import widget.MenuButton;
 import widget.TextBox;
 
 public class NameInputMenu
 {
-    private StackPane pane;
+    private final StackPane pane;
 
     public NameInputMenu(MenuManager menuManager)
     {
@@ -30,10 +28,10 @@ public class NameInputMenu
 
         //init Start Game Button
 
-        //TODO stop sound
         MenuButton startGameButton = new MenuButton(e->
         {
             menuManager.setPlayerName(textBox.getInput().getText());
+            MenuManager.getMenuBackgroundMusic().stop();
             SinglePlayerGameWrapper singlePlayerGameWrapper = new SinglePlayerGameWrapper(menuManager);
             menuManager.getWindow().setScene(singlePlayerGameWrapper.getGame().getScene());
         });

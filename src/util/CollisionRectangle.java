@@ -1,6 +1,5 @@
 package util;
 
-import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
@@ -8,7 +7,6 @@ import javafx.scene.transform.Rotate;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.List;
 
 public class CollisionRectangle implements Drawable, Serializable
@@ -112,12 +110,10 @@ public class CollisionRectangle implements Drawable, Serializable
     public void updatePoly()
     {
         this.poly = new Polygon();
-        this.poly.getPoints().addAll(new Double[]{
-                x, y,
+        this.poly.getPoints().addAll(x, y,
                 x+w, y,
                 x+w, y+h,
-                x, y+h
-        });
+                x, y+h);
     }
 
     public CollisionRectangle(double x, double y, double w, double h)
@@ -163,7 +159,6 @@ public class CollisionRectangle implements Drawable, Serializable
     public boolean didCollide(CollisionRectangle other)
     {
         //if any of the lines intersect with each other, the polygons have collided
-        //TODO include the case when one rectangle contains the other
 
         List<Double> myList = this.rotate().getPoints();
         List<Double> otherList = other.rotate().getPoints();

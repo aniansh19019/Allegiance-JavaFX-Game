@@ -6,16 +6,13 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import widget.CheckBox;
 import widget.MenuButton;
 
 public class SettingsMenu
 {
-    private StackPane pane;
+    private final StackPane pane;
 
 
     public SettingsMenu(EventHandler<? super MouseEvent> BackHandler, EventHandler<? super javafx.scene.input.MouseEvent> checkToggleHandler )

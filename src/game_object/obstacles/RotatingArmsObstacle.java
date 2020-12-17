@@ -6,7 +6,7 @@ import main.GlobalConfig;
 import util.GameColor;
 import util.ObstaclePosition;
 
-//TODO add rotation direction switch
+
 public class RotatingArmsObstacle extends RotatingObstacle
 {
     private final static String redArm = "file:res/img/obstacles/rotating_arm_red.png";
@@ -66,7 +66,7 @@ public class RotatingArmsObstacle extends RotatingObstacle
 
 
 
-//TODO add connector
+
     @Override
     public void render(GraphicsContext context)
     {

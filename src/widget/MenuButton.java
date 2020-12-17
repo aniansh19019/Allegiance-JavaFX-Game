@@ -5,6 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.AudioClip;
+import main.GlobalConfig;
 
 public class MenuButton {
 
@@ -65,13 +66,15 @@ public class MenuButton {
     private void hover()
     {
         button.setImage(hoverImage);
+        if(GlobalConfig.isSoundOn())
         hoverSound.play();
     }
 
     private void press()
     {
         button.setImage(clickImage);
-        clickSound.play();
+        if(GlobalConfig.isSoundOn())
+            clickSound.play();
     }
 
     public Node getButton()

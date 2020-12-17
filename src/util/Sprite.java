@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-//TODO sprite implements an interface drawable which obstacle also implements
+
 
 public class Sprite implements Drawable, Serializable
 {
@@ -85,7 +85,6 @@ public class Sprite implements Drawable, Serializable
 
 
 
-    //TODO implement standard animation routines
 
 
     //getters and setters

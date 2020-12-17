@@ -7,6 +7,7 @@ import game_object.PlayerShip;
 import game_object.bullets.Bullet;
 import game_object.bullets.GrenadeBullet;
 import javafx.scene.media.AudioClip;
+import main.GlobalConfig;
 import util.*;
 
 import java.io.Serializable;
@@ -14,15 +15,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
-//TODO another interface needed for sprite and Obstacle
+
 abstract public class Obstacle implements Drawable, Serializable
 {
-    private static double MAX_EXPLOSION_VELOCITY_X = 22;
-    private static double MAX_EXPLOSION_VELOCITY_Y = 14;
-    private static double MAX_SPEED = 10;
-    private static double MIN_SPEED=1;
-    private static int MAX_LEVEL = 200;
-    private static Random rand;
+    private static final double MAX_EXPLOSION_VELOCITY_X = 22;
+    private static final double MAX_EXPLOSION_VELOCITY_Y = 14;
+    private static final double MAX_SPEED = 10;
+    private static final double MIN_SPEED=1;
+    private static final int MAX_LEVEL = 200;
+    private static final Random rand;
 
     private int level;
     private double speed;
@@ -30,11 +31,11 @@ abstract public class Obstacle implements Drawable, Serializable
     private boolean isDestroyed;
     private boolean isDouble;
     //sounds
-    private static AudioClip timeBulletSound;
-    private static AudioClip bulletHitSound;
+    private static final AudioClip timeBulletSound;
+    private static final AudioClip bulletHitSound;
     private static AudioClip destroySound;
-    private static AudioClip destroyByShieldSound;
-    private static AudioClip tickTickSound;
+    private static final AudioClip destroyByShieldSound;
+    private static final AudioClip tickTickSound;
     //sounds
 
 
@@ -165,7 +166,7 @@ abstract public class Obstacle implements Drawable, Serializable
         if(collisionColor == ship.getColor()) // passing through
         {
             //can add effects here
-            //TODO beware! multiple executions!
+            // beware! multiple executions!
 //            ship.addScore(50);
 
         }
@@ -178,6 +179,7 @@ abstract public class Obstacle implements Drawable, Serializable
             if(ship.isProtected())
             {
                 ship.addEffect(new PurpleExplosionEffect(ship.getPosition()));
+                if(GlobalConfig.isSoundOn())
                 destroyByShieldSound.play();
                 destroy();
             }
@@ -205,17 +207,20 @@ abstract public class Obstacle implements Drawable, Serializable
                         destroy();
                         segments[0].addEffect(new ExplosionEffect(current.getPosition()));
                         ship.addScore(200);
+                        if(GlobalConfig.isSoundOn())
                         bulletHitSound.play();
                     }
                     else // ice bullet
                     {
+                        if(GlobalConfig.isSoundOn())
                         timeBulletSound.play();
+                        if(GlobalConfig.isSoundOn())
                         tickTickSound.play();
                         //slow down obstacle
                         slow();
                         this.segments[0].addEffect(new TimeEffect(current.getPosition()));
                         ship.addScore(100);
-                        //TODO implement this and use speed in rotating obstacle to get delta angle
+
                     }
 
                     if(!isDouble)
@@ -256,7 +261,7 @@ abstract public class Obstacle implements Drawable, Serializable
 
     public void destroy()
     {
-        //TODO add more explosions
+
 
         //set destroyed flag
         isDestroyed=true;

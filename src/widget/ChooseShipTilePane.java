@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.TilePane;
 import javafx.scene.media.AudioClip;
+import main.GlobalConfig;
 
 public class ChooseShipTilePane
 {
@@ -78,6 +79,7 @@ public class ChooseShipTilePane
                 else
                 {
                     tiles[finalI].setImage(shipTileImages[finalI][1]);
+                    if(GlobalConfig.isSoundOn())
                     hoverSound.play();
                 }
             });
@@ -101,6 +103,7 @@ public class ChooseShipTilePane
                 {
                     clearTiles();//clear all tiles
                     tiles[finalI].setImage(shipTileImages[finalI][2]);
+                    if(GlobalConfig.isSoundOn())
                     clickSound.play();
                 }
             });

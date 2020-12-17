@@ -1,12 +1,11 @@
 package animations;
 
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import util.Sprite;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
+
 //in progress
 public abstract class AnimatedEffect extends Sprite
 {

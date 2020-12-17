@@ -8,7 +8,7 @@ import util.Sprite;
 public abstract class PowerUp extends Sprite
 {
     private double angle;
-    private double angleDelta = 2;
+    private final double angleDelta = 2;
 
     public PowerUp(double y)
     {
@@ -64,8 +64,6 @@ public abstract class PowerUp extends Sprite
     {
         setActive(false);
         setVisible(false);
-
-        //addEffect(new PurpleExplosionEffect(getPosition()));//TODO change this
     }
 }
 

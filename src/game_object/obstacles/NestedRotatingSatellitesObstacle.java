@@ -10,7 +10,7 @@ public class NestedRotatingSatellitesObstacle extends Obstacle
 {
     private RotatingSatellitesObstacle innerObstacle;
     private RotatingSatellitesObstacle outerObstacle;
-    private static GlobalConfig config;
+    private static final GlobalConfig config;
 
     public RotatingSatellitesObstacle getInnerObstacle()
     {
