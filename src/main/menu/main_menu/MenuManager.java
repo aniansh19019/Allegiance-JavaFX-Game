@@ -1,21 +1,25 @@
 package main.menu.main_menu;
 
+import javafx.animation.Animation;
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import main.GlobalConfig;
 import widget.MenuButton;
 
-
+// TODO use preloading for load game
 
 public class MenuManager
 {
@@ -96,6 +100,24 @@ public class MenuManager
 	}
 
 	public Node getMainMenu() {
+
+
+		//init Title
+		Image gameTitleImage = new Image("file:res/img/ui_elements/game_title.png");
+		ImageView gameTitle = new ImageView(gameTitleImage);
+		gameTitle.setScaleX(0.85);
+		gameTitle.setScaleY(0.85);
+		gameTitle.setTranslateY(-40);
+
+		//init title animation
+		TranslateTransition translateTransition = new TranslateTransition(Duration.millis(2500), gameTitle);
+
+		translateTransition.setByY(10);
+		translateTransition.setCycleCount(Animation.INDEFINITE);
+		translateTransition.setAutoReverse(true);
+		translateTransition.play();
+
+
 		Label label1=new Label("Allegiance");
 		label1.setFont(Font.loadFont("file:res/font/AlphaCentauri500.ttf", 52));
 		label1.setTextFill(Color.web("#d5d0d2"));
@@ -154,7 +176,7 @@ public class MenuManager
 		// Layout1
 
 		VBox layout1=new VBox(-10);
-		layout1.getChildren().addAll(new_Game.getButton(),load_Game.getButton(),
+		layout1.getChildren().addAll(gameTitle,new_Game.getButton(),load_Game.getButton(),
 				leaderBoard.getButton(), settings.getButton(),Help.getButton(),Exit.getButton());
 		layout1.setAlignment(Pos.CENTER);
 		label1.setTranslateY(75);
