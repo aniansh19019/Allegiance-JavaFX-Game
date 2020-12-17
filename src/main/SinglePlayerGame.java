@@ -563,9 +563,6 @@ public class SinglePlayerGame implements Serializable
         root.getChildren().add(pauseMenu.getLayer());
     }
 
-
-
-
     public void saveGame() //catch exceptions
     {
         //try stuff
@@ -618,9 +615,31 @@ public class SinglePlayerGame implements Serializable
         mainStage.setScene(game.getScene());
     }
 
+    private void addToLeaderBoard()
+    {
+        File leaderBoardFile = new File("leaderboard/leaderboard.csv");
+        String line = "\n" + name + ", " + starCount + ", " + ship.getScore();
+
+        try
+        {
+            FileWriter out = new FileWriter(leaderBoardFile, true);
+            out.write(line);
+            out.close();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
     public void quitGame() // got to menu
     {
         //TODO transition
+        //add record to leaderboards
+        addToLeaderBoard();
+
+        //proceed to the menu
         backGroundMusic.stop();
         mainStage.setScene(menuManager.getRoot());
         menuManager.enterMainMenu();

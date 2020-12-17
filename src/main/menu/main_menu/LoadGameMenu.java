@@ -1,4 +1,4 @@
-package main.menu;
+package main.menu.main_menu;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;

@@ -10,8 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import main.GlobalConfig;
-import main.SinglePlayerGameWrapper;
-import main.menu.LoadGameMenu;
+import main.menu.main_menu.LeaderBoardMenu;
 import widget.MenuButton;
 
 //TODO add cursor
@@ -211,6 +210,9 @@ public class MenuManager
 	public void leaderBoards()
 	{
 		//to be done by aniansh
+		clearStackPane();
+		LeaderBoardMenu leaderBoardMenu = new LeaderBoardMenu(e->enterMainMenu());
+		pane.getChildren().add(leaderBoardMenu.getLayer());
 	}
 
 
