@@ -18,7 +18,7 @@ import main.SinglePlayerGame;
 import main.SinglePlayerGameWrapper;
 import main.menu.main_menu.MenuManager;
 
-//TODO fix alignment
+
 
 public class LeaderBoardListItem
 {
@@ -79,7 +79,7 @@ public class LeaderBoardListItem
         ImageView stars = new ImageView(starImage);
         stars.setScaleX(0.3);
         stars.setScaleY(0.3);
-        System.out.println(nameLabel.getText().length());
+//        System.out.println(nameLabel.getText().length());
 
         Label starsLabel = new Label(trimPadString( ""+starCount, 3), stars);
 

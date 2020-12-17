@@ -19,8 +19,6 @@ import javafx.util.Duration;
 import main.GlobalConfig;
 import widget.MenuButton;
 
-// TODO use preloading for load game
-
 public class MenuManager
 {
 	private static final GlobalConfig config;
@@ -89,9 +87,10 @@ public class MenuManager
 
 		root= new Scene(pane, config.getSCREEN_WIDTH(), config.getSCREEN_HEIGHT());
 		//set cursor
-		Image cursorImage = new Image("file:res/img/ui_elements/cursor_arrow.png");
-		ImageCursor cursor = new ImageCursor(cursorImage);
-		this.root.setCursor(cursor);
+
+//		Image cursorImage = new Image("file:res/img/ui_elements/cursor_arrow.png");
+//		ImageCursor cursor = new ImageCursor(cursorImage);
+//		this.root.setCursor(cursor);
 
 
 		//initially in main menu

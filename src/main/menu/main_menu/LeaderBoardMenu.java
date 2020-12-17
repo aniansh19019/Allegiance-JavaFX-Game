@@ -117,8 +117,7 @@ public class LeaderBoardMenu
         ArrayList<PlayerRecord> records = new ArrayList<PlayerRecord>();
 
 
-        //TODO check for file deletions
-        //TODO cursor problem
+
 
         //read and parse files and create tiles
 

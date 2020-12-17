@@ -250,9 +250,12 @@ public class SinglePlayerGame implements Serializable
             inputList.remove(keyName);
         });
         // init cursor
-        Image cursorImage = new Image("file:res/img/ui_elements/cursor_arrow.png");
-        ImageCursor cursor = new ImageCursor(cursorImage);
-        this.root.setCursor(cursor);
+
+//        Image cursorImage = new Image("file:res/img/ui_elements/cursor_arrow.png");
+//        ImageCursor cursor = new ImageCursor(cursorImage);
+//        this.root.setCursor(cursor);
+
+        if(GlobalConfig.isSoundOn())
         backGroundMusic.play();
 
         //init pause menu

@@ -66,7 +66,7 @@ public class LoadGameMenu
         File saveDirectory = new File("saves");
         File saveFiles[] = saveDirectory.listFiles();
 
-        //TODO check for file deletions
+
 
         //traverse all the files in the directory
         if (saveFiles != null)

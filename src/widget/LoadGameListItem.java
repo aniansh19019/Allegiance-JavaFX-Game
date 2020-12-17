@@ -85,7 +85,7 @@ public class LoadGameListItem
         ImageView stars = new ImageView(starImage);
         stars.setScaleX(0.3);
         stars.setScaleY(0.3);
-        System.out.println(nameLabel.getText().length());
+//        System.out.println(nameLabel.getText().length());
 
         Label starsLabel = new Label(trimPadString( ""+singlePlayerGame.getStarCount(), 3), stars);
 //        starsLabel.setGraphicTextGap(-15);
@@ -102,7 +102,7 @@ public class LoadGameListItem
         scoreLabel.setTextFill(Paint.valueOf("000000"));
         starsLabel.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
         starsLabel.setGraphicTextGap(-30);
-        starsLabel.setPadding(new Insets(0,50,0,10));
+        starsLabel.setPadding(new Insets(0,20,0,10));
 //        starsLabel.setLayoutY(-100);
 //        nameLabel.setLayoutX(200);
 

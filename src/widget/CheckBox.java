@@ -43,7 +43,7 @@ public class CheckBox
 
     public CheckBox(EventHandler<? super MouseEvent> handler)
     {
-        this.isChecked = true;
+        this.isChecked = GlobalConfig.isSoundOn();
         //init images
 
         Image checkedBoxNormal = new Image("file:res/img/ui_elements/checkbox_checked_blue.png");
@@ -56,7 +56,11 @@ public class CheckBox
         //init button
 
         finalButton = new ImageView();
-        finalButton.setImage(checkedBoxNormal);
+        if(GlobalConfig.isSoundOn())
+            finalButton.setImage(checkedBoxNormal);
+        else
+            finalButton.setImage(uncheckedBoxNormal);
+
         finalButton.setScaleX(scale);
         finalButton.setScaleY(scale);
 

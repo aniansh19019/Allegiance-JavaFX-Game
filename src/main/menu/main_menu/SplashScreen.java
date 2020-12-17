@@ -30,9 +30,9 @@ public class SplashScreen
         StackPane pane = new StackPane();
         scene = new Scene(pane, config.getSCREEN_WIDTH(), config.getSCREEN_HEIGHT());
         //set cursor
-        Image cursorImage = new Image("file:res/img/ui_elements/cursor_arrow.png");
-        ImageCursor cursor = new ImageCursor(cursorImage);
-        this.scene.setCursor(cursor);
+//        Image cursorImage = new Image("file:res/img/ui_elements/cursor_arrow.png");
+//        ImageCursor cursor = new ImageCursor(cursorImage);
+//        this.scene.setCursor(cursor);
 
 
         //init video
@@ -48,7 +48,7 @@ public class SplashScreen
 
         //set center
         pane.getChildren().add(mediaView);
-        System.out.println("Scene Set!");
+//        System.out.println("Scene Set!");
 
         //space to skip
         scene.setOnKeyPressed(e->{
@@ -66,7 +66,7 @@ public class SplashScreen
 
     public Scene getScene()
     {
-        System.out.println("Scene returned!");
+//        System.out.println("Scene returned!");
         return scene;
     }
 
