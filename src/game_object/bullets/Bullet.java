@@ -5,6 +5,8 @@ import javafx.scene.media.AudioClip;
 import main.GlobalConfig;
 import util.Sprite;
 
+//parent cass for all bullets
+
 public abstract class Bullet extends Sprite
 {
     private transient PlayerShip ship;

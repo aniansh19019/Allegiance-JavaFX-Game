@@ -10,7 +10,6 @@ import game_object.obstacles.*;
 import game_object.powerups.*;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Pos;
-import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -44,10 +43,10 @@ public class SinglePlayerGame implements Serializable
     //number of entities that exist at a time in the game
     private static final int NUM_SCREENS = 3;
     //powerup probabilities
-    private static final double BULLET_POWERUP_PROB = 0.1;
-    private static final double TIME_BULLET_POWERUP_PROB = 0.1;
-    private static final double PROTECTION_POWERUP_PROB = 0.1;
-    private static final double TIME_POWERUP_PROB = 0.1;
+    private static final double BULLET_POWERUP_PROB = 0.2;
+    private static final double TIME_BULLET_POWERUP_PROB = 0.2;
+    private static final double PROTECTION_POWERUP_PROB = 0.2;
+    private static final double TIME_POWERUP_PROB = 0.2;
     //obstacle probabilities
     private static final double ROTATING_ARMS_OBSTACLE_SINGLE_PROB = 0.1;
     private static final double ROTATING_ARMS_OBSTACLE_DOUBLE_PROB = 0.1;
@@ -107,12 +106,6 @@ public class SinglePlayerGame implements Serializable
         backGroundMusic.play();
     }
 
-    public void stopTimer()
-    {
-        gameLoop.stop();
-        backGroundMusic.stop();
-    }
-
 
     public PlayerShip getShip()
     {
@@ -124,25 +117,10 @@ public class SinglePlayerGame implements Serializable
         return starCount;
     }
 
-    public void setStarCount(int starCount)
-    {
-        this.starCount = starCount;
-    }
-
-    public MenuManager getMainMenu()
-    {
-        return menuManager;
-    }
-
     public void setMainMenu(MenuManager menuManager)
     {
         this.menuManager = menuManager;
         this.mainStage = menuManager.getWindow();
-    }
-
-    public void setMainStage(Stage mainStage)
-    {
-        this.mainStage = mainStage;
     }
 
     public void setWrapper(SinglePlayerGameWrapper wrapper)
@@ -171,11 +149,6 @@ public class SinglePlayerGame implements Serializable
     public String getName()
     {
         return name;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
     }
 
     public SinglePlayerGame(MenuManager menu, SinglePlayerGameWrapper wrapper)
@@ -250,10 +223,6 @@ public class SinglePlayerGame implements Serializable
             inputList.remove(keyName);
         });
         // init cursor
-
-//        Image cursorImage = new Image("file:res/img/ui_elements/cursor_arrow.png");
-//        ImageCursor cursor = new ImageCursor(cursorImage);
-//        this.root.setCursor(cursor);
 
         if(GlobalConfig.isSoundOn())
         backGroundMusic.play();
@@ -339,7 +308,6 @@ public class SinglePlayerGame implements Serializable
             powerUps[i] = getRandomPowerUp(-(i*config.getSCREEN_HEIGHT() + 0.25*config.getSCREEN_HEIGHT()));
         }
     }
-
 
     private ObstaclePosition getRandomPosition(boolean includeCenter)
     {
@@ -452,12 +420,6 @@ public class SinglePlayerGame implements Serializable
         pauseMenu = new PauseMenu(e -> resumeGame(), e->restartGame(), e->saveGame(), e->quitGame());
         root.getChildren().add(pauseMenu.getLayer());
         root.getChildren().remove(pauseButton.getButton());
-
-        //darken screen
-
-        //display menu
-
-        //resume maybe
     }
 
     private boolean toss(double probability)
@@ -499,8 +461,6 @@ public class SinglePlayerGame implements Serializable
 
     private void revivePlayer()
     {
-
-
         //update stars
         starCount-=starsRequired;
         starsRequired*=2;
@@ -518,10 +478,7 @@ public class SinglePlayerGame implements Serializable
             }
         }
         backGroundMusic.play();
-
-
         gameLoop.start();
-
     }
 
     private void resumeGame()
@@ -541,9 +498,8 @@ public class SinglePlayerGame implements Serializable
         root.getChildren().add(pauseMenu.getLayer());
     }
 
-    public void saveGame() //catch exceptions
+    public void saveGame()
     {
-        //try stuff
         try
         {
             //set file name to current system time in milliseconds
@@ -600,7 +556,7 @@ public class SinglePlayerGame implements Serializable
 
     }
 
-    public void quitGame() // got to menu
+    public void quitGame() // go to menu
     {
 
         //add record to leaderboards
@@ -614,6 +570,7 @@ public class SinglePlayerGame implements Serializable
         menuManager.enterMainMenu();
     }
 
+    // finish up after reading
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
@@ -653,11 +610,6 @@ public class SinglePlayerGame implements Serializable
             String keyName = event.getCode().toString();
             inputList.remove(keyName);
         });
-        // init cursor
-        Image cursorImage = new Image("file:res/img/ui_elements/cursor_arrow.png");
-        ImageCursor cursor = new ImageCursor(cursorImage);
-
-
         //init pause menu
 
         pauseButton = new MenuButton(e -> pauseGame());
@@ -676,19 +628,9 @@ public class SinglePlayerGame implements Serializable
         pauseButton.getButton().setTranslateY(-100);
 
 
-        this.root.setCursor(cursor);
-
-
     }
 
-    private void writeObject(java.io.ObjectOutputStream out) throws IOException
-    {
-
-
-        out.defaultWriteObject();
-    }
-
-
+    // custom class for animation timer
     private class GameAnimationTimer extends AnimationTimer implements Serializable
     {
         private boolean shiftingWindow;

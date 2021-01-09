@@ -77,7 +77,6 @@ public class CollisionRectangle implements Drawable, Serializable
     }
 
 
-    //! only to be used while the initial scaling! Not afterwards!
     public double getW()
     {
         return w;

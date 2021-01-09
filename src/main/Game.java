@@ -6,7 +6,7 @@ import javafx.stage.StageStyle;
 import main.menu.main_menu.MenuManager;
 import main.menu.main_menu.SplashScreen;
 
-import java.io.Serializable;
+
 
 
 public class Game extends Application
@@ -38,14 +38,13 @@ public class Game extends Application
         stage.setWidth(config.getSCREEN_WIDTH());
         stage.setResizable(false);
         stage.setTitle("Allegiance - A Unique take on Color Switch!");
-        stage.setX(200);
-        stage.setY(200);
+//        stage.setX(200);
+//        stage.setY(200);
         stage.initStyle(StageStyle.UTILITY);
 
         //go to menu
-
         stage.setScene(splashScreen.getScene());
-        // for now go to game
+
 
 
 

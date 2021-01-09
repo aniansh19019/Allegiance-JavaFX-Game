@@ -16,6 +16,8 @@ import widget.MenuButton;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class LoadGameMenu
 {
@@ -66,12 +68,28 @@ public class LoadGameMenu
         File saveDirectory = new File("saves");
         File saveFiles[] = saveDirectory.listFiles();
 
-
-
         //traverse all the files in the directory
         if (saveFiles != null)
         {
-            for(int i=0; i< saveFiles.length; i++)
+            // sort by time modified
+            Arrays.sort(saveFiles, new Comparator<File>(){
+                public int compare(File f1, File f2)
+                {
+                    return Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
+                } });
+
+            int limit=0;
+
+            if(saveFiles.length>10)
+            {
+                limit = 10; // limit to showing 10 most recent saves
+            }
+            else
+            {
+                limit = saveFiles.length;
+            }
+
+            for(int i=0; i< limit; i++)
             {
                 try
                 {
@@ -87,6 +105,22 @@ public class LoadGameMenu
                 catch (Exception e)
                 {
                     e.printStackTrace();
+                }
+            }
+
+            if(limit < saveFiles.length) // delete any files older than the 10 most recent entries
+            {
+                for(int i=limit; i< saveFiles.length; i++)
+                {
+                    try
+                    {
+                        saveFiles[i].delete();
+                    }
+                    catch (Exception e)
+                    {
+                        System.out.println("Unable to delete files!");
+                        e.printStackTrace();
+                    }
                 }
             }
         }

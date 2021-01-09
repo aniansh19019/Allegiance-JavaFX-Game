@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
+// main player ship class
+
 public class PlayerShip extends Sprite implements Serializable
 {
 

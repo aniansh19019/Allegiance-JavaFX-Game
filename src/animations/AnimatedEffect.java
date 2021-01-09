@@ -6,7 +6,8 @@ import util.Sprite;
 import java.io.IOException;
 import java.util.ArrayList;
 
-//in progress
+// class for all vfx on screen
+
 public abstract class AnimatedEffect extends Sprite
 {
     private double animationSpeed;

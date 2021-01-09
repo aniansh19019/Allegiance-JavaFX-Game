@@ -5,6 +5,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Rotate;
 import util.Sprite;
 
+// parent class for all power ups
+
 public abstract class PowerUp extends Sprite
 {
     private double angle;
