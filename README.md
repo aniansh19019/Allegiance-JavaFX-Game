@@ -35,17 +35,6 @@ Some more features apart from the gameplay are:
 - **Sound Setting** - The user can also toggle gamewide sounds as per their preference.
 - **Ship Choice** - The player can choose from 4 different ships to play the game.
 
-### Noteworthy Features
-
-
-Some other noteworthy features of the game:
-
-- Complex Graphical Sprites instead of simple shapes.
-- Fluid Animated Visual Effects.
-- Sound Effects and Music.
-- 10 different obstacles.
-- Realistic Kinematics.
-
 
 ## Design Patterns Identified
 
