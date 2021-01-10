@@ -21,12 +21,10 @@ We also have a number of power ups to be collected by the player during gameplay
 - **Shield Power Up** - Spawns a protective shield around the player's ship for 10 seconds. When an obstacle comes into contact with the ship and is not of the same color as the ship, instead of destroying the ship, the obstacle is instead destroyed.
 - **Time Power Up** - Slows down the time by half for everything in the game except the player's ship for 10 seconds.
 <br>
-<br>
 The player can also pause the game and we also have the option of saving the game to load later from that very moment in the game.
 <br>
 Here's a demo video showing the gameplay:
-<br>
-[Allegiance Demo Video](https://youtu.be/xKSWd4SBy-U)
+https://youtu.be/xKSWd4SBy-U
 
 ## Other Functionality
 
@@ -58,7 +56,6 @@ The following design patterns have been employed in the Game:
 - Factory: Used to generate random obstacles and power ups as the game progresses.
 - Decorator: Used to wrap the main SinglePlayerGame class to implement the restart functionality.
 - Composite: Used to make new obstacles having two separate obstacles working in coordination.
-
 
 ## Screenshots
 <p float = "left" align = "center">
